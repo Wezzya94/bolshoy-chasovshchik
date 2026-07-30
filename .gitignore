@@ -1,0 +1,6 @@
+node_modules/
+*.log
+.DS_Store
+*.backup
+*-backup-*.html
+screenshots/

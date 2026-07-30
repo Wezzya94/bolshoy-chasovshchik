@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Созвон с Евгением — рабочая памятка</title>
+  <style>
+    :root {
+      --bg: #f1eee7;
+      --paper: #fffdf8;
+      --ink: #211f1a;
+      --muted: #6f6a60;
+      --line: #d8d1c4;
+      --accent: #784d25;
+      --accent-soft: #f1e3d1;
+      --green: #245b43;
+      --green-soft: #e2eee6;
+      --red: #8a352e;
+      --red-soft: #f7e5e1;
+      --blue: #315a74;
+      --blue-soft: #e5eef3;
+      --shadow: 0 18px 60px rgba(50, 39, 24, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto 96px;
+    }
+
+    .hero,
+    .section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: clamp(32px, 7vw, 72px);
+      border-top: 7px solid var(--accent);
+    }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 28px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -.035em;
+    }
+
+    h2 {
+      margin-bottom: 34px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -.025em;
+    }
+
+    h3 {
+      margin-bottom: 16px;
+      font-size: 21px;
+      line-height: 1.35;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    .lead {
+      max-width: 800px;
+      margin-bottom: 36px;
+      color: #464238;
+      font-size: 22px;
+      line-height: 1.55;
+    }
+
+    .hero-rule {
+      padding: 24px 28px;
+      background: var(--accent-soft);
+      border-left: 5px solid var(--accent);
+      font-size: 21px;
+      font-weight: 750;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 28px 0 72px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      min-height: 72px;
+      padding: 14px 16px;
+      background: #28251f;
+      color: #fffaf0;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .nav a:hover { background: var(--accent); }
+
+    .section {
+      margin: 0 0 72px;
+      padding: clamp(30px, 6vw, 64px);
+      scroll-margin-top: 24px;
+    }
+
+    .section-number {
+      display: block;
+      margin-bottom: 13px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .callout {
+      margin: 32px 0;
+      padding: 25px 28px;
+      border-left: 5px solid var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .callout.green {
+      border-color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .callout.red {
+      border-color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .callout.gold {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .callout strong:first-child { display: block; margin-bottom: 8px; }
+
+    .quote {
+      margin: 28px 0;
+      padding: 24px 28px;
+      background: #292620;
+      color: #fffaf0;
+      border-left: 6px solid #c79862;
+      font-size: 20px;
+      line-height: 1.65;
+    }
+
+    .quote.small { font-size: 17px; }
+
+    .micro {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .big-rule {
+      margin: 38px 0;
+      padding: 30px;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin: 28px 0;
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .card p { margin-bottom: 0; }
+
+    ol, ul {
+      margin: 22px 0 0;
+      padding-left: 28px;
+    }
+
+    li { margin-bottom: 16px; }
+
+    .anchors {
+      display: grid;
+      gap: 15px;
+      margin-top: 28px;
+    }
+
+    .anchor {
+      display: grid;
+      grid-template-columns: 82px 1fr 100px;
+      gap: 20px;
+      align-items: center;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .anchor .num {
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .anchor .name { font-weight: 800; }
+
+    .anchor .time {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .question {
+      margin: 0 0 34px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .question:last-child { margin-bottom: 0; }
+
+    .question-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .listen-for {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .process-step {
+      position: relative;
+      margin: 0 0 28px;
+      padding: 26px 28px 26px 88px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .process-step:last-child { margin-bottom: 0; }
+
+    .process-step .step-num {
+      position: absolute;
+      top: 24px;
+      left: 26px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-weight: 850;
+    }
+
+    .process-step h3 { margin-bottom: 8px; }
+
+    .price-section {
+      background: #211f1a;
+      color: #fffaf0;
+      border-color: #211f1a;
+    }
+
+    .price-section h2,
+    .price-section .section-number { color: #efd4ad; }
+
+    .price-main {
+      margin: 32px 0 40px;
+      padding: 35px;
+      border: 3px solid #d8ad76;
+      text-align: center;
+    }
+
+    .price-main .formula {
+      display: block;
+      color: #d9c8b1;
+      font-size: 19px;
+      font-weight: 750;
+    }
+
+    .price-main .total {
+      display: block;
+      margin: 8px 0;
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: clamp(48px, 9vw, 82px);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .price-main .note { color: #d9c8b1; font-size: 16px; }
+
+    .timeline {
+      margin-top: 34px;
+      border-top: 1px solid #5a544a;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 125px 1fr;
+      gap: 26px;
+      padding: 28px 0;
+      border-bottom: 1px solid #5a544a;
+    }
+
+    .timeline-time {
+      color: #d8ad76;
+      font-weight: 850;
+    }
+
+    .timeline-row p { margin-bottom: 12px; }
+
+    .say {
+      padding: 18px 20px;
+      background: #332f28;
+      border-left: 4px solid #d8ad76;
+      font-size: 19px;
+      line-height: 1.65;
+    }
+
+    .pause {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      background: #d8ad76;
+      color: #211f1a;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .warning {
+      margin: 35px 0 0;
+      padding: 28px;
+      background: #3a2420;
+      border: 1px solid #7e4a40;
+    }
+
+    .checks {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .checks li {
+      position: relative;
+      padding-left: 38px;
+    }
+
+    .checks li::before {
+      content: "□";
+      position: absolute;
+      left: 0;
+      top: -3px;
+      color: var(--accent);
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    .placeholder {
+      padding: 44px 32px;
+      border: 2px dashed #a59a89;
+      background: #f6f2ea;
+      text-align: center;
+    }
+
+    .placeholder strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 23px;
+    }
+
+    .site-blocks {
+      display: grid;
+      gap: 28px;
+      margin-top: 34px;
+    }
+
+    .site-block {
+      padding: 30px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .site-block-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .site-block-num {
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 31px;
+      font-weight: 800;
+    }
+
+    .site-block h3 { margin: 0; font-size: 24px; }
+
+    .arguments {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .argument {
+      padding: 18px;
+      background: #f5f1e8;
+      border-left: 4px solid var(--accent);
+      font-size: 16px;
+    }
+
+    .present-line {
+      margin: 0;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: #4d473d;
+      font-size: 16px;
+    }
+
+    .price-block-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 28px 0;
+    }
+
+    .price-block-item {
+      padding: 16px 18px;
+      border: 1px solid #5a544a;
+      background: #2b2822;
+      color: #fffaf0;
+      font-size: 15px;
+    }
+
+    .price-block-item b {
+      display: inline-block;
+      min-width: 30px;
+      color: #d8ad76;
+    }
+
+    .objection-framework {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 28px 0 38px;
+    }
+
+    .objection-framework div {
+      padding: 15px 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .objection-card {
+      margin-bottom: 30px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .objection-card h3 { margin-bottom: 8px; }
+
+    .objection-goal {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      body { font-size: 16px; line-height: 1.62; }
+      .page { width: calc(100% - 10px); margin: 5px auto 54px; }
+      .hero, .section { padding: 25px 18px; box-shadow: 0 8px 30px rgba(50, 39, 24, .08); }
+      .hero { border-top-width: 5px; }
+      h1 { font-size: 35px; line-height: 1.08; margin-bottom: 22px; }
+      h2 { font-size: 30px; margin-bottom: 26px; }
+      h3 { font-size: 19px; }
+      .lead { font-size: 18px; margin-bottom: 26px; }
+      .hero-rule, .big-rule { padding: 19px 17px; font-size: 18px; }
+      .section { margin-bottom: 36px; scroll-margin-top: 86px; }
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        gap: 7px;
+        margin: 8px 0 34px;
+        padding: 7px 0;
+        overflow-x: auto;
+        background: var(--bg);
+        scrollbar-width: thin;
+      }
+      .nav a { flex: 0 0 148px; min-height: 52px; padding: 10px 12px; font-size: 12px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .card, .question, .callout, .quote, .warning, .objection-card { padding: 20px 17px; }
+      .question { margin-bottom: 22px; }
+      .question-text { font-size: 20px; }
+      .quote { font-size: 17px; }
+      .anchor { grid-template-columns: 52px 1fr; }
+      .anchor .time { grid-column: 2; text-align: left; }
+      .timeline-row { grid-template-columns: 1fr; gap: 8px; }
+      .timeline-row { padding: 22px 0; }
+      .say { padding: 16px; font-size: 17px; }
+      .price-main { padding: 25px 12px; }
+      .price-main .total { font-size: 49px; }
+      .price-main .formula { font-size: 17px; }
+      .process-step { padding: 78px 22px 24px; }
+      .process-step .step-num { left: 22px; }
+      .site-block { padding: 22px 17px; }
+      .site-block-head { align-items: flex-start; gap: 11px; }
+      .site-block-num { font-size: 26px; }
+      .site-block h3 { font-size: 20px; }
+      .arguments, .price-block-list { grid-template-columns: 1fr; }
+      .argument { padding: 15px; }
+      .objection-framework { grid-template-columns: 1fr; }
+      .objection-framework div { text-align: left; padding: 12px 15px; }
+    }
+
+    @media print {
+      body { background: white; font-size: 13px; }
+      .page { width: 100%; margin: 0; }
+      .hero, .section { box-shadow: none; break-inside: avoid; margin-bottom: 22px; }
+      .nav { display: none; }
+      .price-section { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Рабочая памятка · первый созвон</p>
+      <h1>Спокойно провести разговор и договориться о следующем шаге</h1>
+      <p class="lead">Это не экзамен и не выступление. Евгений уже увидел твою работу, сказал, что дизайн ему понравился, сам спросил условия и вернулся к разговору в июле. Тебе не нужно заново доказывать право находиться на созвоне.</p>
+      <div class="hero-rule">Твоя задача — услышать его, показать подготовленное решение, ясно объяснить процесс и назвать цену. Не уговорить любой ценой.</div>
+    </header>
+
+    <nav class="nav" aria-label="Навигация по памятке">
+      <a href="#mindset">Настрой</a>
+      <a href="#before">До звонка</a>
+      <a href="#map">Карта созвона</a>
+      <a href="#opening">Начало</a>
+      <a href="#questions">5 вопросов</a>
+      <a href="#demo">Демонстрация</a>
+      <a href="#process">Как работаем</a>
+      <a href="#price">Цена 56 000 ₽</a>
+      <a href="#objections">Если сомневается</a>
+      <a href="#closing">Завершение</a>
+      <a href="#after">После звонка</a>
+      <a href="#emergency">Если растерялся</a>
+    </nav>
+
+    <section class="section" id="mindset">
+      <span class="section-number">01 · Внутренняя опора</span>
+      <h2>Как войти в созвон</h2>
+
+      <div class="big-rule">Я не прошу у него деньги. Я предлагаю понятную работу, которую уже начал продумывать конкретно под его мастерскую.</div>
+
+      <p>Ты можешь волноваться и всё равно хорошо провести разговор. Уверенность — это не отсутствие волнения. Это способность не убегать от пауз, не тараторить и держаться за понятный план.</p>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Что уже есть в твою пользу</h3>
+          <p>Он давно хотел сайт. Предыдущие варианты ему не нравились, а твой визуал понравился. Он несколько раз сам поддержал продолжение разговора. Сейчас обсуждается не абстрактная идея, а конкретная версия проекта.</p>
+        </article>
+        <article class="card">
+          <h3>Что от тебя не требуется</h3>
+          <p>Не нужно знать ответ на любой технический вопрос, выглядеть старше, говорить канцеляритом или превращаться в продавца. Достаточно быть подготовленным, честным и вести разговор по этапам.</p>
+        </article>
+      </div>
+
+      <div class="callout green">
+        <strong>Равные роли.</strong>
+        Евгений выбирает, доверить ли тебе проект. Ты выбираешь, сможешь ли сделать хороший результат и будет ли вам нормально работать вместе. Это деловой разговор двух людей, а не просьба взять тебя на работу.
+      </div>
+
+      <h3>Четыре правила состояния</h3>
+      <ol>
+        <li><strong>Говори на 15% медленнее обычного.</strong> Волнение ускоряет речь сильнее, чем тебе кажется.</li>
+        <li><strong>Не заполняй каждую тишину.</strong> Пауза после вопроса или цены — часть нормального разговора.</li>
+        <li><strong>Не читай текст дословно.</strong> Смотри на жирные якоря, затем говори своими словами.</li>
+        <li><strong>Записывай формулировки Евгения.</strong> Его слова потом становятся основой структуры, текстов и резюме звонка.</li>
+      </ol>
+
+      <div class="callout gold">
+        <strong>Главный критерий хорошего созвона:</strong>
+        после разговора обеим сторонам понятно, что делаем, за сколько, в каком порядке и какой следующий шаг. Сделка прямо во время звонка желательна, но не является единственным признаком хорошей работы.
+      </div>
+    </section>
+
+    <section class="section" id="before">
+      <span class="section-number">02 · За 15 минут до начала</span>
+      <h2>Подготовить себя и экран</h2>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Техника</h3>
+          <ul class="checks">
+            <li>Проверить камеру, микрофон и интернет.</li>
+            <li>Открыть демку в отдельной вкладке и проверить прокрутку.</li>
+            <li>Проверить демонстрацию именно нужного окна.</li>
+            <li>Закрыть уведомления, переписки и лишние вкладки.</li>
+            <li>Поставить телефон на беззвучный режим.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Перед глазами</h3>
+          <ul class="checks">
+            <li>Эта памятка открыта рядом, но не поверх демки.</li>
+            <li>Лист бумаги и ручка лежат под рукой.</li>
+            <li>На листе крупно: «слушать — не спешить — 56 000».</li>
+            <li>Стакан воды рядом.</li>
+            <li>Ссылка на созвон отправлена и открыта.</li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Физически сбросить напряжение — 3 минуты</h3>
+      <ol>
+        <li>Пять раз: вдох носом на 4 счёта, спокойный выдох на 6.</li>
+        <li>Встать, расправить плечи, несколько раз встряхнуть кисти.</li>
+        <li>Вслух медленно произнести первую фразу и сумму: «Стоимость проекта — пятьдесят шесть тысяч рублей».</li>
+      </ol>
+
+      <div class="callout red">
+        <strong>Не сообщай, что это твой первый созвон.</strong>
+        Это не помогает Евгению принять решение и только заставляет его оценивать твоё волнение. Если оговорился — спокойно продолжай. Никто не ожидает дикторской идеальности.
+      </div>
+    </section>
+
+    <section class="section" id="map">
+      <span class="section-number">03 · Основные якоря</span>
+      <h2>Карта всего созвона</h2>
+      <p>Если потерял нить, не пытайся вспомнить весь текст. Просто найди следующий этап. Нормальная продолжительность — около 35–45 минут, но важнее не таймер, а ясный итог.</p>
+
+      <div class="anchors">
+        <div class="anchor"><span class="num">01</span><span class="name">Человеческий контакт и отдых</span><span class="time">3–4 минуты</span></div>
+        <div class="anchor"><span class="num">02</span><span class="name">Обозначить план разговора</span><span class="time">1 минута</span></div>
+        <div class="anchor"><span class="num">03</span><span class="name">Пять вопросов и фиксация ответов</span><span class="time">8–12 минут</span></div>
+        <div class="anchor"><span class="num">04</span><span class="name">Коротко резюмировать услышанное</span><span class="time">1–2 минуты</span></div>
+        <div class="anchor"><span class="num">05</span><span class="name">Показать демку и логику блоков</span><span class="time">10–15 минут</span></div>
+        <div class="anchor"><span class="num">06</span><span class="name">Объяснить ведение проекта</span><span class="time">4–6 минут</span></div>
+        <div class="anchor"><span class="num">07</span><span class="name">Назвать стоимость и порядок оплаты</span><span class="time">2–4 минуты</span></div>
+        <div class="anchor"><span class="num">08</span><span class="name">Ответить на сомнения и зафиксировать шаг</span><span class="time">5–10 минут</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="opening">
+      <span class="section-number">04 · Первые минуты</span>
+      <h2>Начать без официоза и без суеты</h2>
+
+      <h3>1. Проверить контакт</h3>
+      <div class="quote">Евгений, здравствуйте! Хорошо меня слышно и видно?</div>
+
+      <h3>2. Нормально поговорить как люди</h3>
+      <div class="quote">Вы писали, что были в отъезде. Как в целом прошёл отдых, получилось переключиться от мастерской?</div>
+      <p class="micro">Не переходи к сайту через три секунды. Отреагируй на ответ, при необходимости задай один естественный уточняющий вопрос. Это не техника продаж, а нормальное начало разговора.</p>
+
+      <h3>3. Дать понятный маршрут</h3>
+      <div class="quote">Тогда предлагаю так: сначала я задам несколько коротких вопросов, чтобы не додумывать за вас. Потом покажу обновлённую версию сайта и объясню логику. После этого разберём, как будет идти работа, сроки и стоимость. Думаю, минут в сорок спокойно уложимся. Хорошо?</div>
+
+      <div class="callout green">
+        <strong>После его «да» ты уже ведёшь разговор.</strong>
+        Не нужно долго представляться: Евгений знает, кто ты и зачем вы созвонились. Лучше быстрее перейти к его задаче.
+      </div>
+    </section>
+
+    <section class="section" id="questions">
+      <span class="section-number">05 · Только нужное</span>
+      <h2>Пять вопросов именно по сайту</h2>
+      <p>Вопрос про отдых уже прозвучал в начале и в эти пять не входит. Здесь каждый ответ нужен, чтобы показать конкретный раздел демки с правильным акцентом и понять, что потребуется изменить в рабочей версии.</p>
+
+      <article class="question">
+        <span class="question-label">Вопрос 1 · Первое впечатление</span>
+        <p class="question-text">«Когда человек впервые открывает сайт, какое главное впечатление о вас и мастерской он должен получить в первые десять секунд?»</p>
+        <p class="listen-for"><strong>Ответ поможет показать:</strong> первый экран. Если скажет «солидность», «ручная работа», «история», «уровень мастера» — сразу связывай это с крупной типографикой, спокойной подачей и предметным визуалом без агрессивной продажи.</p>
+      </article>
+
+      <article class="question">
+        <span class="question-label">Вопрос 2 · Направления мастерской</span>
+        <p class="question-text">«Я выделил четыре постоянных направления: реставрация и обслуживание, марьяж, авторские часы и циферблаты, ремни и напульсники. Всё ли здесь верно и какое направление для вас сейчас важнее показать первым?»</p>
+        <p class="listen-for"><strong>Ответ поможет показать:</strong> второй блок. Запиши точные названия услуг его словами и приоритет. Не спорь, если он объединит, уберёт или добавит направление.</p>
+      </article>
+
+      <article class="question">
+        <span class="question-label">Вопрос 3 · Представление мастера</span>
+        <p class="question-text">«В разделе о вас я сделал акцент на мастере, который и бережно восстанавливает старые вещи, и создаёт новые проекты. Какие факты о вас, опыте или мастерской обязательно должны там прозвучать?»</p>
+        <p class="listen-for"><strong>Ответ поможет показать:</strong> блок «Евгений Деккер». Нужны факты, а не общие эпитеты: стаж, путь в ремесло, специализация, коллекционирование, редкие работы, принципы обращения с историческими механизмами.</p>
+      </article>
+
+      <article class="question">
+        <span class="question-label">Вопрос 4 · Проекты и доказательства</span>
+        <p class="question-text">«Какие пять-шесть работ лучше всего показывают разные стороны мастерской и какие реальные отзывы или подтверждения доверия мы сможем добавить к запуску?»</p>
+        <p class="listen-for"><strong>Ответ поможет показать:</strong> «Избранные проекты» и «Почему мастеру доверяют». Зафиксируй названия работ, их истории, доступность фотографий, отзывы, публикации и подтверждаемые цифры площадок.</p>
+      </article>
+
+      <article class="question">
+        <span class="question-label">Вопрос 5 · Путь клиента и связь</span>
+        <p class="question-text">«Я разделил обращения на два сценария: у человека уже есть часы или механизм — либо пока есть только идея авторского проекта. Такой порядок работы соответствует реальности и куда вам удобнее в первую очередь получать обращения?»</p>
+        <p class="listen-for"><strong>Ответ поможет показать:</strong> седьмой и восьмой блоки. Уточни реальные этапы, отправку из других городов, основной канал связи и что человек должен прислать в первом сообщении.</p>
+      </article>
+
+      <h3>После вопросов — резюме</h3>
+      <div class="quote">Правильно вас понял: сайт нужен прежде всего как официальная и солидная витрина мастерской, а не для создания ещё большей очереди. На первом плане должны быть [назвать его приоритеты], а человеку из другого города важно сразу увидеть [назвать его опасения и доказательства]. Верно?</div>
+      <p class="micro">Используй его формулировки, а не свои заготовки. Дождись подтверждения или поправки — только потом показывай демку.</p>
+    </section>
+
+    <section class="section" id="demo">
+      <span class="section-number">06 · Демонстрация экрана</span>
+      <h2>Презентация и защита блоков сайта</h2>
+
+      <div class="callout gold">
+        <strong>Как показывать:</strong>
+        медленно прокручивай сайт сверху вниз. На каждом блоке назови только два смысла ниже, затем сделай короткую паузу. Не перечисляй элементы интерфейса и не читай текст с экрана целиком.
+      </div>
+
+      <div class="site-blocks">
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">01</span><h3>Первый экран — «История времени в руках мастера»</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Сразу задаёт уровень мастерской: не обычный ремонт часов, а работа с историей, механизмами и авторскими предметами.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> За несколько секунд объясняет, кто такой Евгений и чем он занимается, не превращая сайт в кричащую рекламу.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Здесь человек ещё до деталей должен почувствовать характер и уровень мастерской. Поэтому первый экран спокойный, предметный и больше похож на титульную страницу мастерской, чем на рекламный баннер».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">02</span><h3>Направления мастерской</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Собирает в одном месте то, что сейчас разбросано по сотням публикаций и нескольким социальным сетям.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Показывает широту мастерской: реставрация — только одно из направлений наряду с марьяжами, авторскими часами и кожей.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Этот блок быстро ориентирует человека и сразу разрушает впечатление, что вы занимаетесь только обычным ремонтом».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">03</span><h3>Евгений Деккер — мастер и основатель</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Дорогую или памятную вещь доверяют конкретному человеку, поэтому лицо, подход и личная ответственность мастера важнее безличного описания компании.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Отделяет мастерскую от обычного сервиса: здесь виден автор со своим взглядом, опытом и уважением к истории предмета.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Здесь нам понадобятся ваша сильная фотография и несколько точных фактов. Этот раздел должен отвечать на вопрос: кому именно человек доверяет часы?»</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">04</span><h3>Избранные проекты</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Доказывает уровень не обещаниями, а конкретными историями: реставрация, IWC, Высоцкий, тематические часы, марьяж и семейная реликвия.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Даёт вечное портфолио из нескольких сильных работ. Проект Высоцкого остаётся важным кейсом, но сайт не зависит от одной временной коллекции.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Я специально не делал бесконечную фотоленту. Лучше шесть разных историй, каждая из которых показывает отдельную грань вашей работы».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">05</span><h3>Внутри мастерской</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Показывает, что за результатом стоят реальная мастерская, инструменты, руки и сложный процесс, а не только красивые готовые фотографии.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Усиливает ощущение ремесла и подлинности — это особенно важно для человека, который нашёл Евгения по рекомендации и ещё не видел его работу изнутри.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «У вас уже большой архив мастерской. Здесь мы не рассказываем процесс словами, а выбираем несколько сильных кадров, чтобы человек буквально заглянул внутрь».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">06</span><h3>Почему мастеру доверяют</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Собирает доказательства репутации: многолетний публичный архив, аудитория, сотни видео, подтверждённые площадки и реальные отзывы.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Снижает тревогу перед отправкой дорогих или памятных часов из другого города — человек видит не случайного исполнителя, а открытую историю работы.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Цифры здесь не ради хвастовства. Они показывают, что за мастерской можно наблюдать годами. Перед запуском всё перепроверим и поставим только реальные отзывы».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">07</span><h3>От задачи или идеи к готовой работе</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Не теряет ни один тип обращения: сюда подходит и владелец готовых часов, и человек, у которого пока существует только идея авторского проекта.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Объясняет пять этапов работы заранее, снимает повторяющиеся вопросы и показывает управляемый процесс без обещаний поставить точную цену по одной фотографии.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Это технически самый полезный блок. Он показывает два входа в мастерскую, а потом единый понятный путь — от первого сообщения до передачи результата».</p>
+        </article>
+
+        <article class="site-block">
+          <div class="site-block-head"><span class="site-block-num">08</span><h3>Контакты — «Начать разговор»</h3></div>
+          <div class="arguments">
+            <div class="argument"><strong>Аргумент 1.</strong> Даёт простой следующий шаг без анкет и менеджеров: написать напрямую в Telegram или WhatsApp.</div>
+            <div class="argument"><strong>Аргумент 2.</strong> Сразу подсказывает, что прислать в первом сообщении, поэтому обращения становятся содержательнее и Евгению приходится задавать меньше одинаковых вопросов.</div>
+          </div>
+          <p class="present-line"><strong>Сказать:</strong> «Человека не заставляем заполнять форму. Он сразу понимает, куда писать и какие фотографии или описание подготовить».</p>
+        </article>
+      </div>
+
+      <h3>Правила показа</h3>
+      <ul>
+        <li>Идти сверху вниз и останавливаться на каждом блоке. Не делать сначала беззвучный быстрый пролёт всей страницы.</li>
+        <li>Не извиняться за плейсхолдеры: спокойно сказать, что реальные материалы подбираются вместе после старта.</li>
+        <li>Не называть демку полностью готовым сайтом. Это проработанная концепция и основа будущей версии.</li>
+        <li>Не спорить с первой реакцией. Записать замечание и уточнить: «Что именно здесь хочется изменить?»</li>
+      </ul>
+    </section>
+
+    <section class="section" id="process">
+      <span class="section-number">07 · После договорённости</span>
+      <h2>Как будет идти работа</h2>
+      <p>Этот блок нужен, чтобы Евгений увидел не только красивую демку, но и управляемый процесс. Объясняй простыми словами, без названий программ и технического жаргона.</p>
+
+      <div class="process-step">
+        <span class="step-num">1</span>
+        <h3>Фиксируем итог созвона</h3>
+        <p>После разговора ты отправляешь короткое письменное резюме: что входит в сайт, итоговая стоимость, схема оплаты, ориентировочный срок и что понадобится от Евгения. Он спокойно проверяет, одинаково ли вы всё поняли.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">2</span>
+        <h3>Создаём отдельный рабочий чат</h3>
+        <p>После подтверждения договорённости создаётся чат только по проекту. Туда складываются резюме, договор, материалы, промежуточные версии и решения по правкам. Ничего не теряется среди обычной переписки.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">3</span>
+        <h3>Подписываем договор</h3>
+        <p>Ты запрашиваешь данные, готовишь договор и отправляешь его в рабочий чат. В договоре зафиксированы объём сайта, этапы, стоимость, платежи, сроки, порядок согласования и передачи результата. Работа не начинается на устных обещаниях.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">4</span>
+        <h3>Первый платёж — 20 000 ₽</h3>
+        <p>После подписания договора Евгений вносит первую часть. Она подтверждает старт проекта и входит в общую стоимость 56 000 ₽. После оплаты ты закрепляешь проект в графике и переходишь к сбору материалов.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">5</span>
+        <h3>Собираем материалы без хаоса</h3>
+        <p>Ты даёшь понятный список: логотип, контакты, нужные факты о мастерской, фотографии мастера, процесса и избранных работ. Евгению не нужно самому писать сайт или сортировать весь архив из тысячи публикаций — ты помогаешь выбрать то, что действительно работает на образ мастерской.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">6</span>
+        <h3>Согласовываем содержание и визуальное направление</h3>
+        <p>Ты дорабатываешь структуру и тексты на основе созвона и материалов. Затем показываешь ключевую версию дизайна. Евгений даёт комментарии одним собранным списком, ты вносишь согласованные правки. После утверждения основного решения — второй платёж 18 000 ₽.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">7</span>
+        <h3>Собираем полный сайт и проверяем</h3>
+        <p>Верстается вся страница, настраиваются ссылки и формы, делается версия для телефона, проверяется отображение на разных экранах. После этого Евгений смотрит готовый сайт целиком и передаёт финальный список правок в рамках договора.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-num">8</span>
+        <h3>Финальная оплата и запуск</h3>
+        <p>После приёмки вносится последняя часть — 18 000 ₽. Ты подключаешь домен и хостинг, публикуешь сайт, передаёшь доступы и базовые инструкции. Домен и хостинг оформляются на Евгения, он остаётся владельцем сайта и аккаунтов.</p>
+      </div>
+
+      <div class="quote">Если коротко: после созвона я фиксирую всё письменно, создаём отдельный рабочий чат, подписываем договор и после первого платежа начинаем. Дальше я веду вас по этапам: материалы, согласование содержания и дизайна, сборка, проверка и запуск. Вам не придётся разбираться в технической части.</div>
+
+      <div class="callout red">
+        <strong>Не обещай дату запуска до подтверждения материалов.</strong>
+        Безопасная формулировка: «Точный календарный срок зафиксируем в договоре после того, как определим состав и поймём готовность материалов». Если называешь ориентир, обязательно уточни, от какого события он считается.
+      </div>
+    </section>
+
+    <section class="section price-section" id="price">
+      <span class="section-number">08 · Самый важный момент</span>
+      <h2>Как назвать стоимость спокойно</h2>
+
+      <div class="price-main">
+        <span class="formula">8 смысловых блоков × 7 000 ₽</span>
+        <span class="total">56 000 ₽</span>
+        <span class="note">Не вилка. Не «примерно». Одна цена за согласованный объём.</span>
+      </div>
+
+      <div class="callout gold">
+        <strong>Твоя внутренняя позиция перед ценой</strong>
+        56 000 ₽ — это не плата за несколько экранов и не случайная цифра. В неё входят осмысление мастерской, структура, тексты, индивидуальный дизайн, код, мобильная версия, формы и ссылки, проверки, помощь с доменом и хостингом, запуск и передача доступов. Ты называешь стоимость полного результата, а не оправдываешься за неё.
+      </div>
+
+      <h3>Сценарий цены через повторный пролист сайта — 2–3 минуты</h3>
+      <p>Перед ценой снова включи демонстрацию сайта и вернись к первому экрану. Теперь не защищай разделы заново, а коротко считай их вслух. Так 56 000 ₽ воспринимаются как стоимость конкретного объёма, а не как цифра из воздуха.</p>
+
+      <div class="price-block-list">
+        <div class="price-block-item"><b>01</b> Первый экран</div>
+        <div class="price-block-item"><b>02</b> Направления мастерской</div>
+        <div class="price-block-item"><b>03</b> Евгений Деккер — мастер</div>
+        <div class="price-block-item"><b>04</b> Избранные проекты</div>
+        <div class="price-block-item"><b>05</b> Внутри мастерской</div>
+        <div class="price-block-item"><b>06</b> Доверие и репутация</div>
+        <div class="price-block-item"><b>07</b> Путь от задачи к результату</div>
+        <div class="price-block-item"><b>08</b> Контакты</div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-row">
+          <div class="timeline-time">0–12 секунд</div>
+          <div>
+            <p><strong>Объяснить, почему снова листаешь сайт.</strong></p>
+            <div class="say">«Чтобы стоимость не звучала просто отдельной цифрой, я ещё раз быстро пройду по составу и покажу, из чего она складывается.»</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">12–70 секунд</div>
+          <div>
+            <p><strong>Медленно прокрутить все восемь блоков и считать вслух.</strong></p>
+            <div class="say">«Первый блок — главный экран. Второй — направления мастерской. Третий — раздел о вас как о мастере. Четвёртый — избранные проекты. Пятый — мастерская и процесс изнутри. Шестой — доверие, архив и отзывы. Седьмой — путь клиента от задачи или идеи до результата. Восьмой — контакты и понятный первый шаг.»</div>
+            <span class="pause">На каждом блоке задержаться 3–5 секунд</span>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">70–95 секунд</div>
+          <div>
+            <p><strong>Обозначить, что считается не пустой экран.</strong></p>
+            <div class="say">«Каждый блок — это не просто один экран при прокрутке. В него входит смысл, тексты, индивидуальный дизайн, сборка в коде и адаптация под телефон. Плюс я подключаю рабочие ссылки, домен и хостинг, всё проверяю и запускаю сайт.»</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">95–112 секунд</div>
+          <div>
+            <p><strong>Назвать формулу и итог. Спокойно, без ускорения.</strong></p>
+            <div class="say">«Получается восемь полноценных блоков по семь тысяч рублей. Восемь умножаем на семь — полная стоимость проекта составляет <strong>56 тысяч рублей</strong>.»</div>
+            <span class="pause">Пауза 3 секунды</span>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">112–138 секунд</div>
+          <div>
+            <p><strong>Дать разбивку, которую уже обещал.</strong></p>
+            <div class="say">«Всю сумму сразу вносить не нужно. Разбиваем её на три части: 20 тысяч после договора на старте, 18 тысяч после согласования структуры и основной концепции дизайна и 18 тысяч перед публикацией готового сайта.»</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">138–150 секунд</div>
+          <div>
+            <p><strong>Задать прямой вопрос и остановиться.</strong></p>
+            <div class="say">«По такому составу и порядку оплаты вам комфортно заходить в работу?»</div>
+            <span class="pause">Замолчать и слушать</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning">
+        <h3>После вопроса ничего не добавляй</h3>
+        <p>Не говори: «но можем дешевле», «это ещё обсуждается», «надеюсь, нормально», «я просто посчитал», «если дорого…». Пять, десять и даже пятнадцать секунд тишины — это не провал. Человек считает деньги и принимает решение.</p>
+      </div>
+
+      <h3 style="margin-top: 42px;">Если спросит, почему семь тысяч за блок</h3>
+      <div class="say">«Это не цена просто за один экран при прокрутке. Каждый раздел я отдельно продумываю по смыслу, пишу и согласовываю содержание, проектирую визуально, собираю в коде и адаптирую под телефон. Такая разбивка нужна, чтобы расчёт был прозрачным, но результат делается как один цельный сайт.»</div>
+
+      <h3 style="margin-top: 42px;">Чего не делать с расчётом</h3>
+      <ul>
+        <li>Не говорить «40–60 тысяч» — этап вилки уже пройден.</li>
+        <li>Не произносить «всего 56» или «целых 56» — просто назвать сумму.</li>
+        <li>Не предлагать скидку до того, как он вообще возразил.</li>
+        <li>Не превращать восемь блоков в меню, из которого можно бездумно вычёркивать смысловые части. Если нужно уменьшить бюджет — отдельно пересобрать объём.</li>
+        <li>Не начинать работу без подписанного договора и первого платежа.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="objections">
+      <span class="section-number">09 · Не спорить</span>
+      <h2>Как держаться и отвечать на возражения</h2>
+
+      <div class="big-rule">Возражение не означает отказ. Обычно это просьба дать больше ясности, снизить риск или подобрать удобный порядок действий.</div>
+
+      <h3>Твоя позиция</h3>
+      <ul>
+        <li><strong>Не защищаться.</strong> Ты не совершил ничего плохого, назвав стоимость своей работы.</li>
+        <li><strong>Не спорить с ощущением клиента.</strong> Если ему дорого — для него сейчас действительно дорого. Можно уточнить причину, но нельзя доказать человеку, что ему «не дорого».</li>
+        <li><strong>Не отвечать раньше, чем понял вопрос.</strong> Одна и та же фраза «дорого» может означать нехватку денег сейчас, сомнение в результате или непонимание объёма.</li>
+        <li><strong>Не давать скидку из страха.</strong> Если уменьшается цена, должен уменьшиться и объём. Скидка без причины показывает, что первая сумма была взята с потолка.</li>
+        <li><strong>Помнить о равных ролях.</strong> Ты не дожимаешь Евгения; вы вместе проверяете, подходит ли ему проект в таком составе.</li>
+      </ul>
+
+      <div class="objection-framework">
+        <div>1. Выслушать</div>
+        <div>2. Сделать паузу</div>
+        <div>3. Уточнить причину</div>
+        <div>4. Ответить по сути</div>
+        <div>5. Вернуть к решению</div>
+      </div>
+
+      <article class="objection-card">
+        <h3>«56 тысяч — дорого»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> отделить проблему общей цены от проблемы текущего платежа и от сомнения в ценности.</p>
+        <div class="quote small">Понимаю. Подскажите, что именно сейчас вызывает сомнение: полная стоимость проекта, размер первого платежа или пока не до конца понятно, за что складывается эта сумма?</div>
+        <p><strong>Если первый платёж:</strong> обсудить календарь уже предусмотренных трёх частей. Не обещать уменьшение общей цены.</p>
+        <p><strong>Если вся сумма:</strong> ещё раз коротко связать цену с восемью блоками и полным запуском. Затем спросить, какой состав он считает действительно необходимым.</p>
+        <p><strong>Если не видит ценности:</strong> вернуться к его словам о солидности, официальном представлении мастерской и клиентах из других городов. Не перечислять абстрактные «конверсию» и «воронку».</p>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Можно сделать дешевле?»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> не торговаться одной и той же работой, а честно пересобрать объём.</p>
+        <div class="quote small">Можно уменьшить не качество той же работы, а сам первый этап. Например, оставить основную статусную витрину и перенести часть портфолио или расширенный раздел мастерской на второй этап. Но сначала нужно определить, чем действительно можно пожертвовать без потери основной задачи.</div>
+        <p>Не называй новую сумму на ходу. Скажи, что после созвона пересчитаешь сокращённый состав письменно. Иначе легко пообещать объём, который потом придётся делать бесплатно.</p>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Почему один блок стоит семь тысяч?»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> объяснить, что блок — единица работы и результата, а не прямоугольник на экране.</p>
+        <div class="quote small">В каждом блоке я отдельно продумываю задачу и содержание, пишу и согласовываю текст, создаю индивидуальную композицию, собираю её в коде и адаптирую под телефон. Семь тысяч — это прозрачный способ посчитать объём. При этом все блоки проектируются как один цельный сайт, а не как восемь отдельных шаблонов.</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Мне надо подумать»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> не давить, но превратить неопределённость в конкретный вопрос и срок.</p>
+        <div class="quote small">Конечно. Чтобы я не додумывал и мог дать нужную информацию: что именно хочется обдумать — состав сайта, стоимость, сроки или есть сомнение, что результат будет вам подходить?</div>
+        <p>Ответь только на названное сомнение. Если решение всё равно нужно отложить:</p>
+        <div class="quote small">Хорошо, я сегодня пришлю короткое резюме. Давайте сразу договоримся, когда вернёмся к решению. В какой день будет удобно списаться?</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Сайт мне нужен только для солидности»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> согласиться и показать, что это не слабая, а основная задача проекта.</p>
+        <div class="quote small">Да, и в вашем случае это нормальная самостоятельная цель. У вас уже есть очередь, поэтому мы не строим агрессивный лендинг ради ещё большего количества заявок. Мы создаём официальный цифровой портрет мастерской, который можно дать коллекционеру, партнёру, журналисту или человеку, отправляющему памятные часы из другого города.</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«У меня и так очередь на 8–10 месяцев. Зачем вообще сайт?»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> не обещать больше клиентов, а вернуться к статусу, систематизации и качеству обращений.</p>
+        <div class="quote small">Именно поэтому ценность сайта здесь не в увеличении очереди. Он собирает направления и лучшие работы в одном месте, заранее отвечает на часть вопросов и позволяет человеку понять уровень мастерской до обращения. Социальные сети продолжают жить своей жизнью, а сайт становится постоянной официальной витриной.</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Я хочу сам потом добавлять проекты»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> выяснить частоту обновлений и не обещать систему управления внутри текущей цены автоматически.</p>
+        <div class="quote small">Это можно организовать, но сначала важно понять частоту. Если новые работы нужно публиковать каждую неделю, понадобится отдельная система управления. Если обновление будет несколько раз в год, проще оставить сайт постоянной витриной, а избранные кейсы обновлять отдельно по запросу. Я после созвона предложу подходящий вариант и отдельно зафиксирую его в объёме.</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«У меня нет времени собирать материалы»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> снять страх огромной домашней работы, но не обещать найти все реальные факты без участия мастера.</p>
+        <div class="quote small">Вам не нужно самостоятельно сортировать весь архив и писать тексты. Я дам короткий список и помогу выбрать нужное. На первом этапе достаточно логотипа, нескольких фактов о вас и папок с фотографиями по направлениям. Я соберу черновой вариант, а вы подтвердите, что всё показано верно.</div>
+      </article>
+
+      <article class="objection-card">
+        <h3>«Давайте всё-таки бартер»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> спокойно сохранить уже обозначенную границу.</p>
+        <div class="quote small">Спасибо, предложение действительно ценное. Но проект занимает несколько недель плотной работы, поэтому сайт я беру за денежную оплату. Чтобы не вносить всю сумму сразу, оставляем разбивку 20–18–18.</div>
+        <p>Не придумывай новые оправдания и не спорь о ценности часов. Ты уже обозначил формат работы — достаточно повторить его один раз.</p>
+      </article>
+
+      <article class="objection-card">
+        <h3>«А сайт гарантированно приведёт клиентов?»</h3>
+        <p class="objection-goal"><strong>Твоя задача:</strong> не давать ложную гарантию и точно объяснить роль сайта.</p>
+        <div class="quote small">Гарантировать определённое число клиентов только самим сайтом было бы нечестно: для этого нужен ещё поток людей из поиска, рекламы или социальных сетей. Сайт будет принимать людей из ваших площадок и сарафана, показывать уровень мастерской и помогать им быстрее понять, подходят ли им ваши услуги. В вашем случае важнее качество и подготовленность обращений, а не их максимальное количество.</div>
+      </article>
+
+      <div class="callout green">
+        <strong>После любого ответа верни разговор к решению:</strong>
+        «Ответил на ваш вопрос?» → дождись ответа → «Тогда по такому формату можем двигаться дальше?» Не продолжай убеждать, если сомнение уже снято.
+      </div>
+    </section>
+
+    <section class="section" id="closing">
+      <span class="section-number">10 · Финал разговора</span>
+      <h2>Зафиксировать один конкретный шаг</h2>
+
+      <h3>Если согласен начинать</h3>
+      <div class="quote">Тогда фиксирую: сайт из восьми блоков, полная стоимость 56 тысяч, оплата 20–18–18. Сегодня я отправлю вам краткое резюме, создам рабочий чат и запрошу данные для договора. После подписания и первого платежа закрепляем старт и собираем материалы. Всё верно?</div>
+
+      <p>После подтверждения не продолжай продавать. Уточни только данные и организационные детали, которые нужны для следующего шага.</p>
+
+      <h3>Если берёт время подумать</h3>
+      <div class="quote">Хорошо. Я сегодня отправлю короткое резюме, чтобы у вас перед глазами были состав, стоимость и этапы. Давайте сразу определим, когда вернёмся к решению, чтобы вопрос не завис. Когда вам удобно списаться?</div>
+
+      <h3>Если пока не готов по деньгам</h3>
+      <div class="quote">Понял. Тогда давайте честно зафиксируем паузу и срок, когда к вопросу есть смысл вернуться. Я сохраню согласованную концепцию, и нам не придётся начинать обсуждение заново.</div>
+
+      <div class="callout red">
+        <strong>Не оставлять финал «ну, тогда пишите как-нибудь».</strong>
+        Даже если сделки сегодня нет, у разговора должна быть дата следующего контакта либо ясное решение поставить проект на паузу.
+      </div>
+    </section>
+
+    <section class="section" id="after">
+      <span class="section-number">11 · Сразу после</span>
+      <h2>Что сделать после созвона</h2>
+      <ul class="checks">
+        <li>За 10 минут записать своими словами все пожелания и спорные места, пока память свежая.</li>
+        <li>Отправить Евгению короткое резюме: задача сайта, состав, цена, платежи, ориентир по сроку, следующий шаг.</li>
+        <li>Если он согласился — создать рабочий чат и запросить данные для договора.</li>
+        <li>Проверить договор: объём, число правок, схема 20 000 / 18 000 / 18 000, сроки и момент начала работ должны совпадать с разговором.</li>
+        <li>Не начинать до подписи и первого платежа, даже если хочется быстрее показать результат.</li>
+        <li>Коротко разобрать себя: где говорил спокойно, где ускорился, на какой теме клиент оживился, где возникло сомнение.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="emergency">
+      <span class="section-number">12 · Аварийные фразы</span>
+      <h2>Если растерялся</h2>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Потерял мысль</h3>
+          <p>«Секунду, хочу правильно зафиксировать вашу мысль».</p>
+        </article>
+        <article class="card">
+          <h3>Не знаешь ответа</h3>
+          <p>«Хороший вопрос. Не хочу сейчас отвечать приблизительно — уточню техническую часть и после созвона напишу точно».</p>
+        </article>
+        <article class="card">
+          <h3>Клиент ушёл далеко в сторону</h3>
+          <p>«Понял. Я это записал. Предлагаю вернуться к этому после демонстрации, а сейчас закончим с основной задачей сайта».</p>
+        </article>
+        <article class="card">
+          <h3>Замечание к демке</h3>
+          <p>«Понял, записываю. Подскажите, здесь вопрос именно к содержанию или к тому, как блок визуально выглядит?»</p>
+        </article>
+      </div>
+
+      <div class="big-rule">Неидеальная фраза, сказанная спокойно, сильнее идеального скрипта, произнесённого в панике.</div>
+
+      <h3>Последнее напоминание перед входом</h3>
+      <ul>
+        <li>Сначала человек и его задача — потом демка.</li>
+        <li>Слушать ответы, а не ждать своей очереди говорить.</li>
+        <li>Не обещать непроверенное.</li>
+        <li>Повторно пролистать восемь блоков, назвать формулу 8 × 7 000 = 56 000 ₽ и замолчать после вопроса.</li>
+        <li>Закончить конкретным следующим шагом.</li>
+      </ul>
+    </section>
+
+    <p class="footer-note">Финальная рабочая версия к созвону по демке V2.</p>
+  </main>
+</body>
+</html>
