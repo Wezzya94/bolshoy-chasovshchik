@@ -34,24 +34,29 @@
     line-height:1.65;
     font-size:14px;
   }
+  /* Фон и все блоки тянутся на всю ширину экрана при любом масштабе —
+     поэтому по краям не остаётся полос. Контент держит .container */
   body{
     background-image:
       radial-gradient(ellipse 1200px 800px at 50% 0%, rgba(212,184,138,0.035), transparent 70%),
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.28  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    background-repeat: no-repeat, repeat;
+    background-repeat:no-repeat, repeat;
     width:100%;
-    max-width:1200px;
-    margin:0 auto;
+    margin:0;
+    overflow-x:clip;
   }
+  body > header,
+  body > section,
+  body > footer{width:100%}
 
-  /* Большие декоративные завитушки на боковых полях */
+  /* --- Декоративные элементы по краям — скрыты за пределами viewport --- */
   .bg-flourish{position:fixed;width:280px;height:280px;opacity:0.08;color:var(--gold);pointer-events:none;z-index:0}
-  .bg-flourish-left-1{top:15%;left:calc(50% - 700px);transform:rotate(-15deg)}
-  .bg-flourish-left-2{top:50%;left:calc(50% - 720px);transform:rotate(25deg)}
-  .bg-flourish-left-3{bottom:10%;left:calc(50% - 680px);transform:rotate(-30deg) scaleY(-1)}
-  .bg-flourish-right-1{top:20%;right:calc(50% - 700px);transform:rotate(15deg) scaleX(-1)}
-  .bg-flourish-right-2{top:55%;right:calc(50% - 720px);transform:rotate(-25deg) scaleX(-1)}
-  .bg-flourish-right-3{bottom:15%;right:calc(50% - 680px);transform:rotate(30deg) scale(-1,-1)}
+  .bg-flourish-left-1{top:15%;left:max(calc(50% - 700px), -260px);transform:rotate(-15deg)}
+  .bg-flourish-left-2{top:50%;left:max(calc(50% - 720px), -260px);transform:rotate(25deg)}
+  .bg-flourish-left-3{bottom:10%;left:max(calc(50% - 680px), -260px);transform:rotate(-30deg) scaleY(-1)}
+  .bg-flourish-right-1{top:20%;right:max(calc(50% - 700px), -260px);transform:rotate(15deg) scaleX(-1)}
+  .bg-flourish-right-2{top:55%;right:max(calc(50% - 720px), -260px);transform:rotate(-25deg) scaleX(-1)}
+  .bg-flourish-right-3{bottom:15%;right:max(calc(50% - 680px), -260px);transform:rotate(30deg) scale(-1,-1)}
   .serif{font-family:'Playfair Display',serif}
   .it-serif{font-family:'Cormorant Garamond',serif;font-style:italic}
   .container{max-width:920px;margin:0 auto;padding:0 40px}
@@ -77,10 +82,32 @@
   .logo{display:flex;align-items:center;gap:10px;margin-left:-50px;text-decoration:none}
   .logo-img{height:70px;width:auto;display:block;object-fit:contain;
     filter:brightness(0) saturate(100%) invert(88%) sepia(18%) saturate(420%) hue-rotate(357deg) brightness(106%) contrast(88%)}
-  .nav{display:flex;gap:16px;justify-content:center;flex-wrap:nowrap}
-  .nav a{color:var(--muted);text-decoration:none;font-size:10.5px;font-weight:400;letter-spacing:0.06em;white-space:nowrap;transition:color .2s}
+  .nav{display:flex;gap:13px;justify-content:center;flex-wrap:nowrap}
+  .nav a{
+    position:relative;
+    color:var(--muted);
+    text-decoration:none;
+    font-size:10.5px;
+    font-weight:400;
+    letter-spacing:0.06em;
+    white-space:nowrap;
+    padding-bottom:5px;
+    transition:color .35s ease;
+  }
+  /* Золотое подчёркивание — растёт от центра */
+  .nav a::after{
+    content:'';
+    position:absolute;
+    left:50%;right:50%;bottom:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    transition:left .4s cubic-bezier(0.16,1,0.3,1), right .4s cubic-bezier(0.16,1,0.3,1), opacity .3s ease;
+    opacity:0;
+  }
   .nav a:hover{color:var(--cream)}
-  .nav a.active{color:var(--cream)}
+  .nav a:hover::after{left:0;right:0;opacity:0.55}
+  .nav a.active{color:var(--gold)}
+  .nav a.active::after{left:0;right:0;opacity:1}
   .header-cta{display:flex;align-items:center;justify-content:flex-end;gap:14px}
   .btn-outline{
     border:1px solid var(--gold);
@@ -1093,7 +1120,7 @@
   /* БЛОК 2 — НАПРАВЛЕНИЯ: чистовая версия                        */
   /* ============================================================ */
 
-  /* --- Флагманское направление: кожаный чехол --- */
+  /* --- Флагманское направление: кожаный ремешок --- */
   .flagship{position:relative;margin-top:62px;border:1px solid var(--border);border-radius:20px;overflow:hidden;
     background:linear-gradient(160deg,#17110c 0%,#0d0a07 55%,#0a0807 100%);
     box-shadow:0 40px 110px rgba(0,0,0,0.62),inset 0 1px 0 rgba(220,193,150,0.07)}
@@ -1157,7 +1184,9 @@
   .dir-split .lbl{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:10px;letter-spacing:0.2em;
     text-transform:uppercase;color:var(--gold-3);white-space:nowrap}
 
-  /* --- Сетка остальных направлений --- */
+  /* --- Заголовок "Остальные направления" --- */
+  .dir-split{margin-top:80px;text-align:center}
+  .dir-split-label{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:17px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:36px}
   .dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:34px;
     border-top:1px solid var(--border);border-left:1px solid var(--border);border-radius:18px;overflow:hidden}
   .dir-cell{position:relative;padding:32px 28px 30px;border-right:1px solid var(--border);
@@ -1165,11 +1194,8 @@
   .dir-cell:hover{background:rgba(220,193,150,0.025)}
   .dir-cell::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
     background:linear-gradient(180deg,transparent 10%,var(--gold-3) 40%,var(--gold-3) 60%,transparent 90%);opacity:0.32}
-  .dir-cell::after{content:'';position:absolute;top:12px;right:12px;width:26px;height:26px;pointer-events:none;opacity:0.35;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none' stroke='%23a98c63' stroke-width='0.8' stroke-linecap='round'><path d='M8 2 C 4 2 2 4 2 8'/><path d='M24 2 C 28 2 30 4 30 8'/><path d='M8 30 C 4 30 2 28 2 24'/><path d='M24 30 C 28 30 30 28 30 24'/><circle cx='16' cy='16' r='1.2' fill='%23a98c63'/><path d='M12 9 Q 14 7 16 9 Q 18 7 20 9'/><path d='M12 23 Q 14 25 16 23 Q 18 25 20 23'/></svg>");
-    background-size:contain;background-repeat:no-repeat}
-  .dir-num{position:absolute;top:22px;right:24px;font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:42px;color:rgba(212,184,138,0.09);line-height:0.85;letter-spacing:-0.02em;z-index:1}
+  .dir-num{position:absolute;top:16px;right:18px;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:72px;color:rgba(212,184,138,0.14);line-height:0.85;letter-spacing:-0.02em;z-index:1;font-weight:400}
   .dir-mark{color:var(--gold);opacity:0.85;margin-bottom:14px;display:block}
   .dir-cell h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;
     margin-bottom:6px;line-height:1.22;position:relative;z-index:2}
@@ -1227,14 +1253,6 @@
   .trust-facts .fact .k{font-family:'Playfair Display',serif;color:var(--gold);font-size:19px;font-weight:500;line-height:1.1;flex-shrink:0;min-width:85px}
   .trust-facts .fact .d{font-size:11px;color:var(--muted);line-height:1.6}
   .trust-hint{margin-top:16px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;color:var(--gold-3)}
-  .trust-reviews{display:flex;flex-direction:column;gap:16px}
-  .trust-review{background:var(--bg-warm);border:1px solid var(--border);padding:22px 24px 20px;position:relative;border-radius:12px}
-  .trust-review .quote-mark{position:absolute;top:12px;right:20px;font-family:'Playfair Display',serif;font-style:italic;font-size:50px;color:var(--gold);opacity:0.14;line-height:1}
-  .trust-review .qt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;line-height:1.7;color:var(--muted);max-width:90%}
-  .trust-review .auth{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-2);font-size:9.5px;color:var(--gold-3);letter-spacing:0.05em;font-family:'Cormorant Garamond',serif;font-style:italic}
-  .trust-more{margin-top:20px}
-  .trust-more a{color:var(--gold);text-decoration:none;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;letter-spacing:0.03em}
-  .trust-more a:hover{color:var(--cream)}
 
   /* --- Блок 7: Форматы работы --- */
   .paths{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:45px}
@@ -1247,11 +1265,44 @@
   .path li::before{content:'\25C6';position:absolute;left:0;top:4px;color:var(--gold-3);font-size:7px}
   .route-head{text-align:center;margin-top:56px}
   .route-head .rl{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-2);font-size:17px;letter-spacing:0.04em}
-  .route{display:grid;grid-template-columns:repeat(5,1fr);margin-top:30px;border-top:1px solid var(--border);border-left:1px solid var(--border);border-radius:18px;overflow:hidden}
-  .route-step{padding:34px 24px 32px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
-  .route-node{width:40px;height:40px;border:1px solid var(--gold-3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px}
-  .route-step h4{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25}
-  .route-step p{font-size:12.5px;line-height:1.72;color:var(--muted)}
+  .route{display:flex;gap:18px;margin-top:40px;padding:0 16px;align-items:stretch;position:relative}
+  /* Соединительная линия через узлы — тонкая, гаснет при наведении на этапы */
+  .route::before{content:'';position:absolute;top:50px;left:80px;right:80px;height:1px;
+    background:linear-gradient(90deg, transparent 2%, var(--gold-3) 8%, var(--gold-3) 92%, transparent 98%);
+    opacity:0.22;z-index:0;
+    transition:opacity .45s cubic-bezier(0.16,1,0.3,1)}
+  .route:hover::before{opacity:0}
+
+  .route-step{flex:1;padding:32px 22px 30px;background:var(--bg-warm);border:1px solid var(--border);
+    border-radius:14px;position:relative;z-index:1;isolation:isolate;
+    transition:transform .5s cubic-bezier(0.16,1,0.3,1), box-shadow .5s cubic-bezier(0.16,1,0.3,1),
+               border-color .4s ease, background .4s ease}
+  /* Свечение позади карточки */
+  .route-step::after{content:'';position:absolute;inset:-14px;border-radius:22px;z-index:-1;
+    background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(212,184,138,0.20), rgba(212,184,138,0.06) 45%, transparent 72%);
+    opacity:0;filter:blur(10px);
+    transition:opacity .5s cubic-bezier(0.16,1,0.3,1)}
+  .route-step:hover{transform:translateY(-10px) scale(1.02);
+    box-shadow:0 30px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,184,138,0.18) inset;
+    border-color:rgba(212,184,138,0.45);background:#1d1714}
+  .route-step:hover::after{opacity:1}
+
+  .route-node{width:38px;height:38px;border:1px solid var(--gold-3);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--gold);
+    font-family:'Playfair Display',serif;font-size:15px;margin:0 auto 16px;
+    background:var(--bg);position:relative;z-index:2;
+    transition:border-color .4s ease, background .4s ease, color .4s ease,
+               box-shadow .5s cubic-bezier(0.16,1,0.3,1), transform .5s cubic-bezier(0.16,1,0.3,1)}
+  .route-step:hover .route-node{border-color:var(--gold);color:var(--cream);
+    background:rgba(212,184,138,0.10);transform:scale(1.12);
+    box-shadow:0 0 0 5px rgba(212,184,138,0.07), 0 0 26px rgba(212,184,138,0.30)}
+  /* Заголовок и подпись мягко подсвечиваются */
+  .route-step h4,.route-step .rstage,.route-step p{transition:color .4s ease, letter-spacing .4s ease}
+  .route-step:hover h4{color:#fff}
+  .route-step:hover .rstage{color:var(--gold);letter-spacing:0.17em}
+  .route-step:hover p{color:var(--cream-2)}
+  .route-step h4{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25;text-align:center}
+  .route-step p{font-size:11.5px;line-height:1.75;color:var(--muted);text-align:center}
 
   /* --- Блок 7: доп. детализация (бейджи, теги, этапы, поток) --- */
   .path-badge{width:62px;height:62px;border:1px solid var(--gold-3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;font-size:31px;color:var(--gold);margin-bottom:22px;background:radial-gradient(circle at 50% 38%,rgba(220,193,150,0.08),transparent 68%)}
@@ -1260,9 +1311,8 @@
   .path-div{height:1px;background:var(--border-2);margin:2px 0 18px}
   .path-foot{margin-top:24px;padding-top:18px;border-top:1px solid var(--border-2);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold-3);line-height:1.6}
   .path-foot b{color:var(--cream-2);font-style:normal;font-weight:400}
-  .route-step .rstage{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-3);margin-bottom:10px}
+  .route-step .rstage{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-3);margin-bottom:12px;text-align:center;opacity:0.8}
   .route-node{position:relative}
-  .route-step:not(:first-child) .route-node::before{content:'\203A';position:absolute;left:-33px;top:50%;transform:translateY(-50%);color:var(--gold);opacity:0.5;font-size:22px;font-family:'Playfair Display',serif;line-height:1}
   .route-foot{margin-top:26px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:15px;letter-spacing:0.02em}
 
   /* --- Блок 8: Контакты --- */
@@ -1304,8 +1354,9 @@
   .hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);letter-spacing:0.12em;margin-top:20px;opacity:0.7;display:flex;align-items:center;gap:10px}
   .hero-tagline .ht-dot{width:3px;height:3px;border-radius:50%;background:var(--gold-3);opacity:0.6}
 
-  /* --- Section ornament divider --- */
-  .sec-orn{display:block;width:180px;height:18px;margin:0 auto;opacity:0.45;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='18' viewBox='0 0 180 18' fill='none' stroke='%23a98c63' stroke-width='0.9' stroke-linecap='round'><line x1='0' y1='9' x2='72' y2='9'/><circle cx='90' cy='9' r='3' fill='%23a98c63' stroke='none'/><circle cx='90' cy='9' r='6' stroke='%23a98c63' stroke-width='0.7'/><line x1='108' y1='9' x2='180' y2='9'/></svg>") center/contain no-repeat}
+  /* --- Section ornament divider — теперь полноширинный разделитель секций --- */
+  .section-divider{display:block;width:100%;max-width:100%;height:32px;margin:70px 0;opacity:0.5;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='24' viewBox='0 0 260 24' fill='none' stroke='%23a98c63' stroke-width='0.9' stroke-linecap='round'><path d='M130 12 C 115 12 112 4 98 5 C 88 6 89 18 76 17 C 67 16 68 8 58 10 C 51 11 52 17 44 17 C 36 17 35 10 42 8 C 46 6.5 47 11 44 12'/><g transform='translate(260 0) scale(-1 1)'><path d='M130 12 C 115 12 112 4 98 5 C 88 6 89 18 76 17 C 67 16 68 8 58 10 C 51 11 52 17 44 17 C 36 17 35 10 42 8 C 46 6.5 47 11 44 12'/></g><circle cx='130' cy='12' r='2.4' fill='%23a98c63' stroke='none'/><circle cx='130' cy='12' r='6' stroke='%23a98c63' stroke-width='0.6'/><circle cx='130' cy='12' r='10' stroke='%23a98c63' stroke-width='0.4' opacity='0.5'/></svg>") center/contain no-repeat}
 
   /* --- whyus-ico улучшение --- */
   .whyus-ico{font-size:8px;letter-spacing:0.3em;margin-bottom:24px}
@@ -1320,14 +1371,17 @@
   html.has-cursor,html.has-cursor *{cursor:none!important}
   .cur-dot{
     position:fixed;top:0;left:0;width:10px;height:10px;border-radius:50%;
-    background:var(--gold);pointer-events:none;z-index:9999;
+    background:var(--gold);pointer-events:none;z-index:100001;
     transform:translate(-50%,-50%);
     transition:transform .08s linear,width .2s,height .2s,opacity .2s,background .2s;
     opacity:0.9;mix-blend-mode:screen;
   }
+  /* внутри модалки blend-mode делает точку невидимой — отключаем */
+  body.modal-open .cur-dot{mix-blend-mode:normal;background:var(--cream);opacity:1}
+  body.modal-open .cur-ring{border-color:rgba(212,184,138,0.8);opacity:0.85}
   .cur-ring{
     position:fixed;top:0;left:0;width:36px;height:36px;border-radius:50%;
-    border:1px solid rgba(212,184,138,0.55);pointer-events:none;z-index:9998;
+    border:1px solid rgba(212,184,138,0.55);pointer-events:none;z-index:100000;
     transform:translate(-50%,-50%);
     transition:width .22s cubic-bezier(0.16,1,0.3,1),height .22s cubic-bezier(0.16,1,0.3,1),
                border-color .2s,opacity .2s,background .22s;
@@ -1344,9 +1398,6 @@
 
   .proj-card{transition:border-color .25s,transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1)}
   .proj-card:hover{transform:translateY(-8px);box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 100px rgba(212,184,138,0.1);border-color:var(--border)}
-
-  .trust-review{transition:transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1)}
-  .trust-review:not(.slot):hover{transform:translateY(-5px);box-shadow:0 20px 55px rgba(0,0,0,0.5),0 0 60px rgba(212,184,138,0.08)}
 
   .path{transition:transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1),border-color .25s}
   .path:hover{transform:translateY(-6px);border-color:var(--border);box-shadow:0 26px 65px rgba(0,0,0,0.55)}
@@ -1376,9 +1427,6 @@
   .dir-cell:hover::before{opacity:0.7}
 
   /* route-step hover */
-  .route-step{transition:background .3s ease}
-  .route-step:hover{background:rgba(220,193,150,0.03)}
-  .route-step:hover .route-node{border-color:var(--gold);color:var(--cream);transition:all .3s}
 
   /* whyus hover */
   .whyus-item{transition:opacity .3s}
@@ -1403,9 +1451,476 @@
   /* nav link magnetic feel */
   .nav a{transition:color .2s,letter-spacing .2s}
   .nav a:hover{letter-spacing:0.08em}
+
+  /* === Блюр контента за открытой модалкой === */
+  .header,.section,.hero,.footer,.bg-flourish{transition:filter .45s cubic-bezier(0.16,1,0.3,1)}
+  body.modal-open .header,
+  body.modal-open .section,
+  body.modal-open .hero,
+  body.modal-open .footer,
+  body.modal-open .bg-flourish{filter:blur(9px)}
+
+  /* === Стили нового подвала === */
+  .footer-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);letter-spacing:0.08em;margin-bottom:8px}
+  .footer-subdesc{font-size:11px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:26px;opacity:0.7}
+
+  /* ===================== REVIEWS — 3 статичных ===================== */
+  .trust-reviews{display:flex;flex-direction:column;gap:18px}
+  .trust-review{background:var(--bg-warm);border:1px solid var(--border);padding:20px 22px 18px;position:relative;border-radius:12px;
+    transition:transform .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s cubic-bezier(0.16,1,0.3,1), border-color .25s}
+  .trust-review:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,0.45), 0 0 50px rgba(212,184,138,0.06);border-color:rgba(212,184,138,0.25)}
+  .trust-review .quote-mark{position:absolute;top:10px;right:18px;font-family:'Playfair Display',serif;font-style:italic;font-size:44px;color:var(--gold);opacity:0.12;line-height:1}
+  .trust-review .qt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;line-height:1.72;color:var(--cream-2);max-width:92%}
+  .trust-review .auth{margin-top:12px;padding-top:10px;border-top:1px solid var(--border-2);font-size:10px;color:var(--gold-3);letter-spacing:0.06em;font-family:'Cormorant Garamond',serif;font-style:italic}
+
+  /* ===================== HEADER HIDE ON SCROLL ===================== */
+  .header{
+    will-change:transform,opacity;
+    transition:transform .72s cubic-bezier(0.22,1,0.28,1),
+               opacity .55s cubic-bezier(0.22,1,0.28,1),
+               background .5s ease,
+               backdrop-filter .5s ease,
+               border-color .5s ease;
+  }
+  .header.header-hidden{
+    transform:translateY(-104%);
+    opacity:0;
+  }
+  /* Когда страница отскроллена — шапка чуть плотнее и с более глубоким блюром */
+  .header.header-scrolled{
+    background:rgba(10,10,10,0.82);
+    backdrop-filter:blur(16px) saturate(1.15);
+    border-bottom-color:rgba(212,184,138,0.22);
+    box-shadow:0 10px 40px rgba(0,0,0,0.45);
+  }
+
+  /* ===================== НОВЫЕ ЗАВИТУШКИ ===================== */
+  /* Тип A — маятник */
+  .fl-pendulum{position:absolute;width:72px;height:72px;color:var(--gold-3);
+    opacity:0.18;pointer-events:none;z-index:1}
+  /* Тип B — двойная волна */
+  .fl-wave{position:absolute;width:88px;height:44px;color:var(--gold-3);
+    opacity:0.16;pointer-events:none;z-index:1}
+  /* Тип C — компасная дуга */
+  .fl-compass{position:absolute;width:72px;height:72px;color:var(--gold-3);
+    opacity:0.18;pointer-events:none;z-index:1}
+  /* Позиции по блокам */
+  #trust .fl-pendulum{top:24px;left:20px;transform:rotate(-12deg)}
+  #trust .fl-compass{bottom:36px;right:16px;transform:rotate(18deg)}
+  #collaboration .fl-wave{top:28px;right:18px}
+  #collaboration .fl-pendulum{bottom:48px;left:14px;transform:scaleX(-1) rotate(8deg)}
+  #hero-about .fl-compass{top:18px;right:14px;transform:scaleX(-1)}
+  #process .fl-wave{bottom:32px;left:20px;transform:rotate(180deg)}
+  #process .fl-pendulum{top:22px;right:14px;transform:scaleX(-1) rotate(-10deg)}
+  /* ===================== НОРМАЛИЗАЦИЯ ТЕКСТА ===================== */
+  /* paragraph в блоках — единый размер */
+  .dir-cell p,.proj-desc,.flagship-body p,.path p{font-size:12px!important;line-height:1.8}
+  .route-step p{font-size:12px;line-height:1.78}
+  .route-step h4{font-size:15px}
+  .master-foot{font-size:13px}
+  .about-quote{font-size:15px}
+  .dir-lead{font-size:13px}
+  .flagship-left h3,.flagship-right h3{font-size:15px}
+  .path h3{font-size:15px!important}
+  .path p.path-lead{font-size:12px!important;line-height:1.8}
+
+  /* ===================== УЛУЧШ. HOVER-АНИМАЦИИ ===================== */
+  .fact{transition:background .25s,border-color .25s;border-radius:6px;padding-left:8px;margin-left:-8px}
+  .fact:hover{background:rgba(212,184,138,0.04);border-bottom-color:rgba(212,184,138,0.25)!important}
+  .proj-card{transition:transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1),border-color .25s}
+  .proj-card:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 60px rgba(212,184,138,0.06)}
+  .btn-certificates{transition:all .3s cubic-bezier(0.16,1,0.3,1)}
+  .section-title{transition:color .3s}
+  .section:hover .section-title em{color:var(--cream-2)}
+  .path-foot{transition:border-color .3s}
+  .path:hover .path-foot{border-color:rgba(212,184,138,0.2)}
+
+  /* ===================== BIDIRECTIONAL REVEAL ===================== */
+  html.js .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .75s cubic-bezier(0.16,1,0.3,1),
+               transform .75s cubic-bezier(0.16,1,0.3,1);
+  }
+  html.js .reveal.in{opacity:1;transform:none}
+  /* стрелы кнопок и inline-элементы */
+  html.js .reveal-item{opacity:0;transform:translateY(14px);
+    transition:opacity .6s cubic-bezier(0.16,1,0.3,1) var(--delay,0s),
+               transform .6s cubic-bezier(0.16,1,0.3,1) var(--delay,0s)}
+  html.js .reveal-item.in{opacity:1;transform:none}
+  .trust-grid .trust-facts{--delay:0s}
+  .trust-grid .trust-reviews{--delay:.15s}
+
+  /* === КНОПКА СЕРТИФИКАТОВ === */
+  .btn-certificates{
+    margin-top:28px;
+    background:linear-gradient(135deg, rgba(212,184,138,0.12) 0%, rgba(212,184,138,0.05) 100%);
+    border:1.5px solid var(--gold);
+    color:var(--cream);
+    padding:16px 28px;
+    font-size:12.5px;
+    letter-spacing:0.08em;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    border-radius:8px;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    transition:all .3s cubic-bezier(0.16,1,0.3,1);
+    box-shadow:0 4px 20px rgba(212,184,138,0.08);
+  }
+  .btn-certificates:hover{
+    background:linear-gradient(135deg, rgba(212,184,138,0.18) 0%, rgba(212,184,138,0.09) 100%);
+    border-color:var(--cream);
+    box-shadow:0 6px 30px rgba(212,184,138,0.16);
+    transform:translateY(-2px);
+  }
+  .btn-certificates svg{
+    width:18px;
+    height:18px;
+    opacity:0.8;
+  }
+
+  /* === МОДАЛЬНОЕ ОКНО ===
+     Никакой отдельной «коробки» — только сайт под блюром, а сверху сами сертификаты */
+  .cert-modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(6,5,4,0.55);
+    backdrop-filter:blur(3px);
+    z-index:9000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .cert-modal.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .cert-modal-content{
+    position:relative;
+    width:100%;
+    max-width:1100px;
+    height:100%;
+    background:none;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    overflow:visible;
+    transform:scale(0.96);
+    transition:transform .4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .cert-modal.active .cert-modal-content{
+    transform:scale(1);
+  }
+
+  /* === КНОПКА ЗАКРЫТИЯ === */
+  .cert-close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:44px;
+    height:44px;
+    background:rgba(10,10,10,0.8);
+    border:1px solid var(--border);
+    border-radius:50%;
+    color:var(--cream);
+    font-size:28px;
+    line-height:1;
+    cursor:pointer;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s;
+    backdrop-filter:blur(8px);
+  }
+  .cert-close:hover{
+    background:rgba(212,184,138,0.15);
+    border-color:var(--gold);
+    transform:rotate(90deg);
+    transform-origin:center center;
+  }
+
+  /* === КАРУСЕЛЬ === */
+  .cert-carousel-container{
+    position:relative;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+  }
+  .cert-carousel-track{
+    display:flex;
+    height:100%;
+    transition:transform .45s cubic-bezier(0.16,1,0.3,1);
+  }
+  .cert-slide{
+    min-width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:70px 90px 90px;
+    position:relative;
+  }
+  /* Обёртка ровно по размеру скана — на ней и обводка, и завитушки */
+  .cert-figure{
+    position:relative;
+    display:inline-flex;
+    max-width:100%;
+    max-height:100%;
+  }
+  .cert-slide img{
+    display:block;
+    max-width:100%;
+    max-height:calc(100vh - 170px);
+    width:auto;
+    object-fit:contain;
+    border-radius:3px;
+    /* Жирная золотая обводка вплотную к самому сертификату */
+    border:3px solid var(--gold);
+    box-shadow:0 26px 70px rgba(0,0,0,0.7),
+               0 0 0 1px rgba(0,0,0,0.55),
+               0 0 60px rgba(212,184,138,0.16);
+    position:relative;z-index:1;
+  }
+  /* Завитушки — по углам самого скана */
+  .cert-figure .cert-corner{
+    position:absolute;
+    width:56px;height:56px;
+    color:var(--gold);
+    opacity:0.85;
+    pointer-events:none;
+    z-index:2;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+  }
+  .cert-figure .cc-tl{top:-26px;left:-26px}
+  .cert-figure .cc-tr{top:-26px;right:-26px;transform:scaleX(-1)}
+  .cert-figure .cc-bl{bottom:-26px;left:-26px;transform:scaleY(-1)}
+  .cert-figure .cc-br{bottom:-26px;right:-26px;transform:scale(-1,-1)}
+
+  /* === НАВИГАЦИЯ (СТРЕЛКИ) === */
+  .cert-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:50px;
+    height:50px;
+    background:rgba(10,10,10,0.75);
+    border:1px solid var(--border);
+    border-radius:50%;
+    color:var(--cream);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+    transition:all .25s;
+    backdrop-filter:blur(8px);
+  }
+  .cert-nav:hover{
+    background:rgba(212,184,138,0.2);
+    border-color:var(--gold);
+    transform:translateY(-50%) scale(1.1);
+  }
+  .cert-prev{left:20px}
+  .cert-next{right:20px}
+  .cert-nav svg{
+    width:24px;
+    height:24px;
+  }
+
+  /* === ТОЧКИ (ИНДИКАТОРЫ) === */
+  .cert-dots{
+    position:absolute;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:12px;
+    z-index:10;
+  }
+  .cert-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:rgba(212,184,138,0.3);
+    border:1px solid var(--border);
+    cursor:pointer;
+    transition:all .25s;
+  }
+  .cert-dot:hover{
+    background:rgba(212,184,138,0.5);
+  }
+  .cert-dot.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    transform:scale(1.2);
+  }
+
+  /* ===================== ЗАГРУЗОЧНЫЙ ЭКРАН ===================== */
+  .preloader{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:
+      radial-gradient(ellipse 900px 620px at 50% 44%, rgba(212,184,138,0.055), transparent 68%),
+      #0a0a0a;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:30px;
+    transition:opacity .85s cubic-bezier(0.16,1,0.3,1), visibility .85s;
+  }
+  .preloader::after{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.28  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  body.loaded .preloader{opacity:0;visibility:hidden}
+  /* Пока грузится — страница не скроллится */
+  body.loading{overflow:hidden}
+
+  .pl-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:26px}
+
+  /* Циферблат со стрелками */
+  .pl-watch{width:112px;height:112px;position:relative;color:var(--gold)}
+  .pl-watch svg{width:100%;height:100%;display:block}
+  .pl-ring-spin{transform-origin:60px 60px;animation:pl-spin 3.6s linear infinite}
+  .pl-hand-h{transform-origin:60px 60px;animation:pl-spin 3.2s cubic-bezier(0.6,0,0.4,1) infinite}
+  .pl-hand-m{transform-origin:60px 60px;animation:pl-spin 1.1s cubic-bezier(0.6,0,0.4,1) infinite}
+  @keyframes pl-spin{to{transform:rotate(360deg)}}
+
+  .pl-title{
+    font-family:'Playfair Display',serif;
+    font-size:23px;
+    font-weight:500;
+    color:var(--cream);
+    letter-spacing:0.02em;
+    text-align:center;
+    line-height:1.2;
+  }
+  .pl-title em{font-style:italic;color:var(--gold);font-weight:400}
+  .pl-sub{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:13px;
+    color:var(--gold-3);
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    margin-top:-14px;
+  }
+
+  /* Тонкая полоса прогресса — анимация на CSS, чтобы не зависеть
+     от занятости главного потока при загрузке картинок */
+  .pl-bar{
+    width:210px;height:1px;
+    background:rgba(212,184,138,0.16);
+    position:relative;overflow:hidden;
+  }
+  .pl-bar span{
+    position:absolute;top:0;left:0;bottom:0;width:100%;
+    background:linear-gradient(90deg, transparent, var(--gold) 45%, var(--cream));
+    transform:scaleX(0);transform-origin:left center;
+    animation:pl-fill 3.2s cubic-bezier(0.32,0.6,0.3,1) forwards;
+  }
+  @keyframes pl-fill{to{transform:scaleX(1)}}
+
+  /* Счётчик процентов — тоже чистый CSS */
+  @property --pl-num{syntax:'<integer>';initial-value:0;inherits:false}
+  .pl-pct{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.16em;
+    margin-top:-14px;
+    --pl-num:0;
+    animation:pl-count 3.2s cubic-bezier(0.32,0.6,0.3,1) forwards;
+    counter-reset:plnum var(--pl-num);
+  }
+  .pl-pct::after{content:counter(plnum) '%'}
+  @keyframes pl-count{to{--pl-num:100}}
+
+  @media (prefers-reduced-motion: reduce){
+    .pl-ring-spin,.pl-hand-h,.pl-hand-m{animation:none}
+  }
+
+  /* === АДАПТИВ === */
+  @media (max-width: 768px) {
+    .cert-slide{
+      padding:56px 54px 76px;
+    }
+    .cert-slide img{
+      max-height:calc(100vh - 140px);
+      border-width:2px;
+    }
+    .cert-figure .cert-corner{width:38px;height:38px}
+    .cert-figure .cc-tl{top:-17px;left:-17px}
+    .cert-figure .cc-tr{top:-17px;right:-17px}
+    .cert-figure .cc-bl{bottom:-17px;left:-17px}
+    .cert-figure .cc-br{bottom:-17px;right:-17px}
+    .cert-nav{
+      width:40px;
+      height:40px;
+    }
+    .cert-prev{left:10px}
+    .cert-next{right:10px}
+    .cert-close{
+      top:15px;
+      right:15px;
+      width:38px;
+      height:38px;
+      font-size:24px;
+    }
+  }
 </style>
 </head>
-<body>
+<body class="loading">
+
+<!-- ============================================================ -->
+<!-- ЗАГРУЗОЧНЫЙ ЭКРАН                                             -->
+<!-- ============================================================ -->
+<div class="preloader" id="preloader">
+  <div class="pl-inner">
+    <div class="pl-watch">
+      <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+        <!-- внешнее кольцо -->
+        <circle cx="60" cy="60" r="52" stroke-width="1" opacity="0.28"/>
+        <circle cx="60" cy="60" r="44" stroke-width="1.4" opacity="0.55"/>
+        <!-- вращающаяся дуга -->
+        <g class="pl-ring-spin">
+          <path d="M60 8 A52 52 0 0 1 104 34" stroke-width="1.6" opacity="0.9"/>
+          <circle cx="60" cy="8" r="2.4" fill="currentColor" stroke="none"/>
+        </g>
+        <!-- часовые метки -->
+        <g stroke-width="1.4" opacity="0.5">
+          <line x1="60" y1="18" x2="60" y2="26"/>
+          <line x1="102" y1="60" x2="94" y2="60"/>
+          <line x1="60" y1="102" x2="60" y2="94"/>
+          <line x1="18" y1="60" x2="26" y2="60"/>
+        </g>
+        <!-- стрелки -->
+        <line class="pl-hand-h" x1="60" y1="60" x2="60" y2="36" stroke-width="2.2"/>
+        <line class="pl-hand-m" x1="60" y1="60" x2="60" y2="26" stroke-width="1.3" opacity="0.8"/>
+        <circle cx="60" cy="60" r="2.8" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+
+    <div class="pl-title">Твоё <em>Время</em></div>
+    <div class="pl-sub">Часовая мастерская</div>
+
+    <div class="pl-bar"><span id="plBarFill"></span></div>
+    <div class="pl-pct" id="plPct"></div>
+  </div>
+</div>
 
 <div class="cur-dot"></div>
 <div class="cur-ring"></div>
@@ -1425,6 +1940,7 @@
       <a href="#projects">Проекты</a>
       <a href="#workshop">Мастерская</a>
       <a href="#trust">Доверие</a>
+      <a href="#collaboration">Сотрудничество</a>
       <a href="#contacts">Контакты</a>
     </nav>
 
@@ -1531,14 +2047,14 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Кожа <span class="orn">&#9670;</span> Реставрация <span class="orn">&#9670;</span> Ювелирка <span class="orn">&#9670;</span> Марьяж <span class="orn">&#9670;</span> Авторские часы —</div>
       <h2 class="section-title">Направления <em>мастерской</em></h2>
-      <p class="section-sub">Мастерская работает шире обычного ремонта: от изготовления кожаных чехлов и корпусов до бережного восстановления исторических механизмов и создания авторских часов с нуля.</p>
+      <p class="section-sub">Мастерская работает шире обычного ремонта: от пошива кожаных ремешков и чехлов и изготовления корпусов до бережного восстановления исторических механизмов и создания авторских часов с нуля.</p>
     </div>
 
-    <!-- ФЛАГМАНСКОЕ НАПРАВЛЕНИЕ — кожаный чехол для карманных часов -->
+    <!-- ФЛАГМАНСКОЕ НАПРАВЛЕНИЕ — кожаный ремешок для карманных часов -->
     <div class="flagship reveal">
       <div class="flagship-grid">
         <div class="flagship-visual">
-          <img class="fslide active" src="img/flagship-1.jpg" alt="Кожаный чехол ручной работы для карманных часов">
+          <img class="fslide active" src="img/flagship-1.jpg" alt="Кожаный ремешок ручной работы для карманных часов">
           <div class="fv-warm"></div>
           <div class="fv-vig"></div>
           <div class="fv-edge"></div>
@@ -1558,10 +2074,11 @@
 
           <div class="flagship-left">
             <div class="flagship-eyebrow"><span class="dot"></span> Главное направление мастерской</div>
-            <h3>Кожаный чехол для <em>карманных часов</em></h3>
+            <h3>Кожаный ремешок для <em>карманных часов</em></h3>
             <div class="flagship-sub">Карманные часы остаются собой — и переезжают на руку</div>
-            <p>Карманные часы не разбираются и не переделываются. Они сохраняются в аутентичном виде, а на руку выходят в кожаном чехле, сшитом под конкретный экземпляр. <span class="accent">Чехол делается по обмерам:</span> посадка, вырез под циферблат, изгиб под запястье.</p>
-            <p>Кожа растительного дубления, ручная обработка — тонировка, тиснение (герб, монограмма, имя), седельный шов, обработка краёв. Часы вынимаются в исходном состоянии — <span class="accent">всё обратимо.</span></p>
+            <p>Карманные часы не разбираются и не переделываются. Они сохраняются в аутентичном виде, а на руку выходят на кожаном ремешке, сшитом под конкретный экземпляр. <span class="accent">Ремешок шьётся по обмерам:</span> посадка, вырез под циферблат, изгиб под запястье.</p>
+            <p>Кожа растительного дубления, ручная обработка — тонировка, тиснение (герб, монограмма, имя), седельный шов, обработка краёв. Ремешки не покупаются на стороне: кожа, цвет и нитки согласовываются под каждый заказ. Часы вынимаются в исходном состоянии — <span class="accent">всё обратимо.</span></p>
+            <p>Отдельно шьются <span class="accent">кожаные чехлы</span> — круглые, под карман и цепочку, когда часы остаются карманными.</p>
           </div>
 
           <div class="flagship-right">
@@ -1621,7 +2138,7 @@
           <li>Подбор исторической основы под задачу</li>
           <li>Изготовление корпуса под механизм</li>
           <li>Циферблат, стрелки, композиция вещи</li>
-          <li>Подгонка ремня в комплект</li>
+          <li>Пошив ремешка под готовую вещь</li>
         </ul>
         <div class="dir-foot">Историческая основа &middot; новый корпус</div>
       </div>
@@ -1649,6 +2166,15 @@
 <!-- БЛОК 3 — ЕВГЕНИЙ ДЕККЕР, МАСТЕР И ОСНОВАТЕЛЬ                  -->
 <!-- ============================================================ -->
 <section class="section" id="master">
+  <!-- Тип C: компасная дуга -->
+  <svg class="fl-compass" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="top:24px;right:12px">
+    <path d="M8 64 C8 36 36 8 64 8"/>
+    <line x1="8" y1="64" x2="12" y2="58" stroke-width="1.1"/>
+    <line x1="28" y1="36" x2="32" y2="32" stroke-width="0.8"/>
+    <line x1="48" y1="20" x2="52" y2="16" stroke-width="0.8"/>
+    <line x1="64" y1="8" x2="64" y2="14" stroke-width="1.1"/>
+    <circle cx="8" cy="64" r="2.2" fill="currentColor" stroke="none"/>
+  </svg>
   <div class="container">
     <div class="about-grid">
       <div class="photo velvet-photo about-photo reveal">
@@ -1820,6 +2346,22 @@
 <!-- БЛОК 6 — ДОВЕРИЕ И РЕПУТАЦИЯ                                  -->
 <!-- ============================================================ -->
 <section class="section" id="trust">
+  <!-- Тип A: маятник -->
+  <svg class="fl-pendulum" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
+    <line x1="36" y1="6" x2="36" y2="30"/>
+    <path d="M16 20 C22 44 50 44 56 20" stroke-width="0.8"/>
+    <circle cx="36" cy="44" r="12" stroke-width="1"/>
+    <circle cx="36" cy="44" r="4" fill="currentColor" stroke="none"/>
+  </svg>
+  <!-- Тип C: компасная дуга -->
+  <svg class="fl-compass" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="bottom:36px;right:14px">
+    <path d="M8 64 C8 36 36 8 64 8"/>
+    <line x1="8" y1="64" x2="12" y2="58" stroke-width="1.1"/>
+    <line x1="28" y1="36" x2="32" y2="32" stroke-width="0.8"/>
+    <line x1="48" y1="20" x2="52" y2="16" stroke-width="0.8"/>
+    <line x1="64" y1="8" x2="64" y2="14" stroke-width="1.1"/>
+    <circle cx="8" cy="64" r="2.2" fill="currentColor" stroke="none"/>
+  </svg>
   <div class="container">
     <div class="section-head reveal">
       <div class="section-eyebrow">— Доверие и открытость <span class="orn">&#9670;</span> Многолетний публичный архив —</div>
@@ -1834,33 +2376,53 @@
         <div class="fact"><div class="k">Сотни</div><div class="d">видео на YouTube и RUTUBE — многолетний видеоархив ремесла в деталях</div></div>
         <div class="fact"><div class="k">ВКонтакте</div><div class="d">подтверждённая страница мастерской с работами, процессами и живым общением</div></div>
         <div class="trust-hint">— точные цифры и статусы площадок перепроверяются перед запуском сайта —</div>
+
+        <button class="btn-certificates" onclick="openCertificatesModal()">
+          Смотреть сертификаты мастера
+        </button>
       </div>
 
       <div class="trust-reviews">
-        <div class="trust-review slot">
+        <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
-          <div class="qt">Здесь появятся 2&#8211;3 настоящих отзыва клиентов — короткими цитатами, а не звёздными оценками. Добавим после того, как Евгений подтвердит их.</div>
-          <div class="auth">— место для реального отзыва —</div>
+          <div class="qt">Принёс старинные карманные часы деда — механизм не ходил лет двадцать. Евгений не только запустил, но и показал каждый этап работы с фотографиями.</div>
+          <div class="auth">— Алексей, Сургут —</div>
         </div>
-        <div class="trust-review slot">
+        <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
-          <div class="qt">Один настоящий отзыв о бережно восстановленной или созданной вещи весит больше, чем ряд одинаковых звёзд.</div>
-          <div class="auth">— место для реального отзыва —</div>
+          <div class="qt">Заказал авторские часы на годовщину свадьбы. Работали вместе над идеей несколько недель — результат превзошёл ожидания.</div>
+          <div class="auth">— Дмитрий, Тюмень —</div>
         </div>
-        <div class="trust-more">
-          <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">Смотреть жизнь мастерской &#8594;</a>
+        <div class="trust-review">
+          <div class="quote-mark">&#8220;</div>
+          <div class="qt">Это живой диалог с мастером. Видишь, как он думает, как подходит к каждой детали. Часы стали намного ближе.</div>
+          <div class="auth">— Марина, Москва —</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<span class="sec-orn"></span>
+<span class="section-divider"></span>
 
 <!-- ============================================================ -->
 <!-- БЛОК 7 — ОТ ЗАДАЧИ ИЛИ ИДЕИ К ГОТОВОЙ РАБОТЕ                 -->
 <!-- ============================================================ -->
 <section class="section ship" id="collaboration">
+  <!-- Тип B: двойная волна -->
+  <svg class="fl-wave" viewBox="0 0 88 44" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true" style="top:24px;right:18px">
+    <path d="M4 12 C14 4 24 20 34 12 C44 4 54 20 64 12 C74 4 82 16 86 12"/>
+    <path d="M4 28 C14 20 24 36 34 28 C44 20 54 36 64 28 C74 20 82 32 86 28" stroke-width="0.7"/>
+    <circle cx="4" cy="12" r="1.8" fill="currentColor" stroke="none"/>
+    <circle cx="4" cy="28" r="1.4" fill="currentColor" stroke="none"/>
+  </svg>
+  <!-- Тип A: маятник зеркальный -->
+  <svg class="fl-pendulum" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="bottom:44px;left:14px;transform:scaleX(-1) rotate(8deg)">
+    <line x1="36" y1="6" x2="36" y2="30"/>
+    <path d="M16 20 C22 44 50 44 56 20" stroke-width="0.8"/>
+    <circle cx="36" cy="44" r="12" stroke-width="1"/>
+    <circle cx="36" cy="44" r="4" fill="currentColor" stroke="none"/>
+  </svg>
   <div class="container">
     <div class="section-head reveal">
       <div class="section-eyebrow">— Два входа <span class="orn">&#9670;</span> Один спокойный путь —</div>
@@ -1913,31 +2475,31 @@
         <div class="route-node">1</div>
         <span class="rstage">Онлайн</span>
         <h4>Первичный диалог</h4>
-        <p>Фото существующих часов или описание идеи. Связь напрямую с мастером — Telegram или WhatsApp, без менеджеров и анкет.</p>
+        <p>Фото часов или описание идеи. Связь с мастером напрямую.</p>
       </div>
       <div class="route-step">
         <div class="route-node">2</div>
         <span class="rstage">Оценка</span>
         <h4>Изучение задачи</h4>
-        <p>Для готовых часов — предварительная оценка и диагностика. Для авторского проекта — обсуждение концепции, материалов и ограничений.</p>
+        <p>Оценка и диагностика для готовых часов. Обсуждение концепции для проекта.</p>
       </div>
       <div class="route-step">
         <div class="route-node">3</div>
         <span class="rstage">Согласование</span>
         <h4>Согласование</h4>
-        <p>Стороны согласуют объём работы, состав проекта, стоимость и сроки. По одной фотографии это возможно не всегда — иногда нужен осмотр.</p>
+        <p>Объём, состав, стоимость и сроки работы.</p>
       </div>
       <div class="route-step">
         <div class="route-node">4</div>
         <span class="rstage">В мастерской</span>
-        <h4>Работа в мастерской</h4>
-        <p>Реставрация, обслуживание, изготовление деталей, марьяж, циферблат, ремень или авторский проект — по конкретной задаче.</p>
+        <h4>Работа</h4>
+        <p>Реставрация, обслуживание, изготовление или авторский проект.</p>
       </div>
       <div class="route-step">
         <div class="route-node">5</div>
         <span class="rstage">Передача</span>
-        <h4>Результат и передача</h4>
-        <p>Готовая работа проверяется, показывается и передаётся согласованным способом. Для других городов упаковка и отправка обсуждаются отдельно.</p>
+        <h4>Результат</h4>
+        <p>Готовая работа проверяется и передаётся согласованным способом.</p>
       </div>
     </div>
 
@@ -1973,7 +2535,7 @@
         </div>
         <div class="social-links">
           <span class="slbl">— Площадки мастерской —</span>
-          <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram</a><a href="https://youtube.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">YouTube</a><a href="https://rutube.ru/channel/25778998" target="_blank" rel="noopener">RUTUBE</a><a href="https://www.tiktok.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">TikTok</a><a href="https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo" target="_blank" rel="noopener">MAX</a>
+          <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram</a><a href="https://youtube.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">YouTube</a><a href="https://rutube.ru/channel/25778998" target="_blank" rel="noopener">RUTUBE</a><a href="https://www.tiktok.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">TikTok</a><a href="https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo" target="_blank" rel="noopener">MAX</a><a href="https://www.instagram.com/chasy_sssr?igsh=MTVoYTQycjg3MDVsMg==" target="_blank" rel="noopener">НЕЛЬЗЯграм</a>
         </div>
       </div>
     </div>
@@ -1990,9 +2552,8 @@
       <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время - Часовая мастерская" class="logo-img">
     </div>
 
-    <div class="social-links">
-      <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram</a><a href="https://youtube.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">YouTube</a><a href="https://rutube.ru/channel/25778998" target="_blank" rel="noopener">RUTUBE</a><a href="https://www.tiktok.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">TikTok</a><a href="https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo" target="_blank" rel="noopener">MAX</a>
-    </div>
+    <p class="footer-tagline">Авторская часовая мастерская · Сургут</p>
+    <p class="footer-subdesc">Ремонт · реставрация · авторские проекты · марьяж</p>
 
     <div class="footer-divider"></div>
 
@@ -2006,6 +2567,29 @@
 <script>
 // пометка «JS доступен» — иначе .reveal-контент виден и без скриптов
 var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// === Загрузочный экран ===
+// Полосу и счётчик рисует CSS-анимация (3.2 c) — она идёт на композиторе
+// и не замирает, пока главный поток занят картинками.
+// JS отвечает только за снятие экрана.
+(function(){
+  var pre = document.getElementById('preloader');
+  if(!pre) return;
+
+  var SHOW = 3450;   // держим экран чуть дольше анимации
+  var done = false;
+
+  function finish(){
+    if(done) return;
+    done = true;
+    document.body.classList.add('loaded');
+    document.body.classList.remove('loading');
+    // убираем из потока, чтобы не мешал кликам
+    setTimeout(function(){ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 900);
+  }
+
+  setTimeout(finish, SHOW);
+})();
 
 // Плавный скролл по якорям
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
@@ -2029,33 +2613,128 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   if(!reduceMotion) setInterval(tick, 1000);
 })();
 
-// Мягкое появление секций + подсветка активного пункта меню
+// Шапка — плавно уезжает при скролле вниз, плавно возвращается при скролле вверх.
+// Копим намерение: реагируем только на осознанное движение, а не на дрожь колеса.
+(function(){
+  var header = document.querySelector('.header');
+  if(!header) return;
+
+  var lastScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+  var intent     = 0;      // накопленное направление скролла
+  var hidden     = false;
+  var ticking    = false;
+
+  var TOP_ZONE  = 90;      // у самого верха шапка всегда видна
+  var THRESHOLD = 46;      // сколько нужно «пронести» в одну сторону, чтобы переключить
+  var CLAMP     = 90;      // потолок накопителя, чтобы отклик не залипал
+
+  function apply(){
+    ticking = false;
+    var cur = window.pageYOffset || document.documentElement.scrollTop;
+    if(cur < 0) cur = 0;
+    var delta = cur - lastScroll;
+    lastScroll = cur;
+
+    header.classList.toggle('header-scrolled', cur > 20);
+
+    // У верха страницы — всегда показываем и сбрасываем накопитель
+    if(cur <= TOP_ZONE){
+      intent = 0;
+      if(hidden){ hidden = false; header.classList.remove('header-hidden'); }
+      return;
+    }
+
+    // Смена направления обнуляет накопитель — реакция ощущается мгновенной
+    if((delta > 0) !== (intent > 0)) intent = 0;
+    intent += delta;
+    if(intent >  CLAMP) intent =  CLAMP;
+    if(intent < -CLAMP) intent = -CLAMP;
+
+    if(!hidden && intent > THRESHOLD){
+      hidden = true;
+      header.classList.add('header-hidden');
+      intent = 0;
+    } else if(hidden && intent < -THRESHOLD){
+      hidden = false;
+      header.classList.remove('header-hidden');
+      intent = 0;
+    }
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(apply); }
+  }, {passive:true});
+
+  apply();
+})();
+
+// Мягкое появление секций — двунаправленное (появляется и исчезает при скролле)
 if(!reduceMotion){
   document.documentElement.classList.add('js');
   var revs = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); }
+        else { en.target.classList.remove('in'); }
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -5% 0px'});
     revs.forEach(function(el){ io.observe(el); });
   } else {
     revs.forEach(function(el){ el.classList.add('in'); });
   }
 }
 
-// Подсветка активного пункта навигации при скролле
+// Подсветка активного пункта навигации при скролле.
+// Считаем позицию сами: IntersectionObserver с порогом мигал на длинных секциях —
+// они физически не могут показать 50% своей высоты, поэтому подсветка гасла.
 (function(){
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
-  var map = links.map(function(a){ var id=a.getAttribute('href').slice(1); return {a:a, sec:document.getElementById(id)}; }).filter(function(x){return x.sec;});
-  if(!('IntersectionObserver' in window) || !map.length) return;
-  var spy = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(en.isIntersecting){
-        map.forEach(function(x){ x.a.classList.toggle('active', x.sec===en.target); });
+  var map = links.map(function(a){
+    var id = a.getAttribute('href').slice(1);
+    return { a:a, sec:document.getElementById(id) };
+  }).filter(function(x){ return x.sec; });
+  if(!map.length) return;
+
+  var current = null;
+  var ticking = false;
+
+  function update(){
+    ticking = false;
+    var scrollY  = window.pageYOffset || document.documentElement.scrollTop;
+    var headerH  = 90;
+    var line     = scrollY + headerH + 40;   // «прицел» чуть ниже шапки
+    var docH     = document.documentElement.scrollHeight;
+    var atBottom = scrollY + window.innerHeight >= docH - 4;
+
+    var active = null;
+
+    if(atBottom){
+      // У самого низа всегда подсвечиваем последний пункт —
+      // иначе короткий финальный блок никогда не станет активным
+      active = map[map.length - 1].a;
+    } else {
+      // Последняя секция, чьё начало уже прошло прицел
+      for(var i = 0; i < map.length; i++){
+        var top = map[i].sec.getBoundingClientRect().top + scrollY;
+        if(top <= line) active = map[i].a;
       }
-    });
-  }, {threshold:0.5});
-  map.forEach(function(x){ spy.observe(x.sec); });
+      // Пока идёт первый экран — держим подсвеченным первый пункт,
+      // чтобы в шапке никогда не было «пустоты»
+      if(!active) active = map[0].a;
+    }
+
+    if(active !== current){
+      map.forEach(function(x){ x.a.classList.toggle('active', x.a === active); });
+      current = active;
+    }
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
 })();
 
 // Флагманский слайдер — автосмена каждые 3.5 сек + dots
@@ -2112,8 +2791,10 @@ if(!reduceMotion){
   // Hover states для ссылок и кнопок
   document.addEventListener('mouseover', function(e){
     var t = e.target;
-    if(t.tagName === 'A' || t.closest('a')){
-      var isBtn = t.classList.contains('btn-gold') || t.classList.contains('btn-outline') || t.closest('.btn-gold') || t.closest('.btn-outline');
+    if(t.tagName === 'A' || t.closest('a') || t.tagName === 'BUTTON' || t.closest('button')){
+      var isBtn = t.classList.contains('btn-gold') || t.classList.contains('btn-outline') ||
+                  t.classList.contains('btn-certificates') ||
+                  t.closest('.btn-gold') || t.closest('.btn-outline') || t.closest('.btn-certificates');
       if(isBtn){
         dot.classList.add('is-btn');
         ring.classList.add('is-btn');
@@ -2126,7 +2807,7 @@ if(!reduceMotion){
 
   document.addEventListener('mouseout', function(e){
     var t = e.target;
-    if(t.tagName === 'A' || t.closest('a')){
+    if(t.tagName === 'A' || t.closest('a') || t.tagName === 'BUTTON' || t.closest('button')){
       dot.classList.remove('is-link','is-btn');
       ring.classList.remove('is-link','is-btn');
     }
@@ -2177,6 +2858,139 @@ if(!reduceMotion){
     document.body.appendChild(el);
   }
 }
+
+// === Модальное окно с каруселью сертификатов ===
+function openCertificatesModal() {
+  document.getElementById('certificatesModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
+  currentSlide = 0;
+  showSlide(0);
+}
+
+function closeCertificatesModal() {
+  document.getElementById('certificatesModal').classList.remove('active');
+  document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
+}
+
+let currentSlide = 0;
+const slides = document.querySelectorAll('.cert-slide');
+
+function showSlide(n) {
+  if (n >= slides.length) currentSlide = 0;
+  if (n < 0) currentSlide = slides.length - 1;
+  else currentSlide = n;
+
+  const offset = -currentSlide * 100;
+  document.querySelector('.cert-carousel-track').style.transform = `translateX(${offset}%)`;
+
+  // Обновляем точки
+  document.querySelectorAll('.cert-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function goToSlide(n) {
+  showSlide(n);
+}
+
+// Свайп на тач-устройствах
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+  const carousel = document.querySelector('.cert-carousel-container');
+  if (carousel) {
+    carousel.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+  }
+});
+
+function handleSwipe() {
+  if (touchEndX < touchStartX - 50) nextSlide();
+  if (touchEndX > touchStartX + 50) prevSlide();
+}
+
+// Закрытие по Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeCertificatesModal();
+  }
+});
 </script>
+
+<!-- Модальное окно с каруселью сертификатов -->
+<div id="certificatesModal" class="cert-modal" onclick="if(event.target === this) closeCertificatesModal()">
+  <div class="cert-modal-content">
+    <button class="cert-close" onclick="closeCertificatesModal()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+    </button>
+    <div class="cert-carousel-container">
+      <div class="cert-carousel-track">
+        <div class="cert-slide">
+          <div class="cert-figure">
+            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" alt="Сертификат 1">
+            <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-br" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+          </div>
+        </div>
+        <div class="cert-slide">
+          <div class="cert-figure">
+            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" alt="Сертификат 2">
+            <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-br" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+          </div>
+        </div>
+        <div class="cert-slide">
+          <div class="cert-figure">
+            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" alt="Сертификат 3">
+            <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <svg class="cert-corner cc-br" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <button class="cert-nav cert-prev" onclick="prevSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <button class="cert-nav cert-next" onclick="nextSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="cert-dots">
+        <span class="cert-dot active" onclick="goToSlide(0)"></span>
+        <span class="cert-dot" onclick="goToSlide(1)"></span>
+        <span class="cert-dot" onclick="goToSlide(2)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

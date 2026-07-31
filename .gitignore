@@ -4,3 +4,7 @@ node_modules/
 *.backup
 *-backup-*.html
 screenshots/
+
+# служебные скрипты проверки — на сайте не нужны
+check-*.js
+screenshot*.js
