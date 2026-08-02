@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1280">
-<title>Твоё Время — часовая мастерская Евгения Деккера · Сургут</title>
+<title>Твоё Время — мастерская антикварных часов Евгения Деккера · Сургут</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1097,19 +1097,116 @@
   .dir-cell p{font-size:14px;line-height:1.8;color:var(--muted);max-width:450px}
 
   /* --- Блок 4: Избранные проекты --- */
-  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:64px}
+  /* Сетка 2 колонки: карточка = кадр 3:2 + компактная подпись.
+     Развёрнутый текст живёт в модалке, иначе 21 проект не читается */
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:56px}
   .proj-card{background:var(--bg-2);border:1px solid var(--border-2);display:flex;flex-direction:column;transition:border-color .25s;border-radius:16px;overflow:hidden}
   .proj-card:hover{border-color:var(--border)}
-  .proj-card .photo{height:300px;border:none;border-bottom:1px solid var(--border-2);border-radius:0}
-  .proj-card.wide{grid-column:1 / 3;flex-direction:row}
-  .proj-card.wide .photo{height:auto;width:54%;min-height:380px;border-bottom:none;border-right:1px solid var(--border-2)}
-  .proj-body{padding:32px 34px 34px;display:flex;flex-direction:column;flex:1}
-  .proj-type{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-3);margin-bottom:14px}
-  .proj-name{font-family:'Playfair Display',serif;font-size:25px;color:var(--cream);font-weight:500;line-height:1.22;margin-bottom:14px}
-  .proj-card.wide .proj-name{font-size:33px}
+  .proj-card .photo{aspect-ratio:3 / 2;height:auto;border:none;border-bottom:1px solid var(--border-2);border-radius:0}
+  .proj-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .proj-type{font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-3);margin-bottom:9px}
+  .proj-name{font-family:'Playfair Display',serif;font-size:19px;color:var(--cream);font-weight:500;line-height:1.25;margin-bottom:8px}
   .proj-name em{font-style:italic;color:var(--gold);font-weight:400}
   .proj-desc{font-size:14.5px;line-height:1.75;color:var(--text);margin-bottom:14px}
   .proj-note{margin-top:auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12.5px;color:var(--gold-3);letter-spacing:0.04em;padding-top:18px;border-top:1px solid var(--border-2)}
+
+  /* --- Карточка проекта с реальным фото: вся карточка кликабельна --- */
+  .proj-card{cursor:pointer}
+  .proj-photo{background:#0b0908}
+  .proj-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0}
+  /* затемнения мягче, чем у заглушек: под ними живое фото, а не градиент */
+  .proj-photo .vignette{background:radial-gradient(ellipse 92% 92% at 50% 50%,transparent 54%,rgba(0,0,0,0.4) 100%);z-index:2}
+  .proj-photo .grain{z-index:3;opacity:0.4}
+  .proj-photo .corner{z-index:4}
+  .proj-count{position:absolute;left:13px;bottom:12px;z-index:5;
+    font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:8px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--gold);background:rgba(8,7,6,0.72);border:1px solid var(--border);border-radius:999px;padding:5px 10px}
+  .proj-lead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);
+    line-height:1.5;margin-bottom:14px}
+  .proj-open{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:9px;
+    background:transparent;border:1px solid var(--gold-3);color:var(--gold);border-radius:999px;
+    font-family:'Inter',sans-serif;font-size:9.5px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;
+    padding:9px 18px;cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+  /* Карточка-заглушка: проект есть, описание ещё не собрано */
+  .proj-card.soon{cursor:default}
+  .proj-card.soon:hover{transform:none;box-shadow:none;border-color:var(--border-2)}
+  .proj-soon{margin-top:auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12.5px;
+    color:var(--gold-3);opacity:0.75;letter-spacing:0.04em}
+  .proj-card:hover .proj-open{background:rgba(212,184,138,0.1);border-color:var(--gold);color:var(--cream)}
+  .proj-open .arrow{transition:transform .35s cubic-bezier(0.16,1,0.3,1)}
+  .proj-card:hover .proj-open .arrow{transform:translateX(4px)}
+
+  /* ===================== МОДАЛЬНОЕ ОКНО ПРОЕКТА ===================== */
+  .pm{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;padding:40px 24px;
+    background:rgba(6,5,4,0.72);backdrop-filter:blur(5px);
+    opacity:0;pointer-events:none;transition:opacity .4s cubic-bezier(0.16,1,0.3,1)}
+  .pm.active{opacity:1;pointer-events:auto}
+  .pm-inner{position:relative;width:100%;max-width:1180px;height:100%;max-height:780px;
+    display:grid;grid-template-columns:1.5fr 1fr;
+    background:linear-gradient(160deg,#17110c 0%,#0d0a07 55%,#0a0807 100%);
+    border:1px solid var(--border);border-radius:18px;overflow:hidden;
+    box-shadow:0 60px 150px rgba(0,0,0,0.75);
+    transform:scale(0.97) translateY(12px);transition:transform .45s cubic-bezier(0.16,1,0.3,1)}
+  .pm.active .pm-inner{transform:none}
+  .pm-inner::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:8;
+    background:linear-gradient(90deg,transparent,var(--gold-3) 22%,var(--gold) 50%,var(--gold-3) 78%,transparent);opacity:0.6}
+
+  /* Левая колонка: кадр + лента миниатюр под ним */
+  .pm-left{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+  /* Сцена: фото целиком, без обрезки */
+  .pm-stage{position:relative;flex:1;min-height:0;background:#080706;display:flex;align-items:center;justify-content:center;
+    overflow:hidden;padding:26px 26px 22px}
+  .pm-stage img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block;
+    border-radius:12px;opacity:0;transition:opacity .4s ease}
+  .pm-stage img.on{opacity:1}
+  .pm-counter{position:absolute;left:14px;bottom:10px;z-index:4;
+    font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:9px;letter-spacing:0.18em;
+    color:var(--gold-3);background:rgba(8,7,6,0.7);border:1px solid var(--border-2);border-radius:999px;padding:6px 12px}
+  .pm-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;z-index:5;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(10,9,8,0.68);border:1px solid var(--border);border-radius:50%;color:var(--gold);
+    cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+  .pm-nav:hover{background:rgba(212,184,138,0.14);border-color:var(--gold);color:var(--cream)}
+  .pm-prev{left:12px}
+  .pm-next{right:12px}
+
+  /* Правая колонка: текст проекта */
+  .pm-side{padding:30px 28px 26px;border-left:1px solid var(--border-2);display:flex;flex-direction:column;
+    overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(212,184,138,0.28) transparent}
+  .pm-side::-webkit-scrollbar{width:6px}
+  .pm-side::-webkit-scrollbar-thumb{background:rgba(212,184,138,0.28);border-radius:3px}
+  .pm-type{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:8.5px;letter-spacing:0.2em;
+    text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:999px;
+    padding:6px 12px;align-self:flex-start;background:rgba(220,193,150,0.045);margin-bottom:16px}
+  .pm-name{font-family:'Playfair Display',serif;font-size:23px;line-height:1.2;color:var(--cream);
+    font-weight:500;margin-bottom:9px}
+  .pm-name em{font-style:italic;color:var(--gold);font-weight:400}
+  .pm-lead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;color:var(--gold);
+    line-height:1.5;margin-bottom:15px}
+  .pm-body p{font-size:11.5px;line-height:1.75;color:var(--text);margin-bottom:10px}
+  /* flex-shrink:0 — иначе в скроллящейся колонке блоки сжимаются и режут строки */
+  .pm-body,.pm-specs,.pm-thumbs{flex-shrink:0}
+  .pm-specs{display:grid;gap:1px;margin-top:16px;background:var(--border-2);
+    border:1px solid var(--border-2);border-radius:10px;overflow:hidden}
+  .pm-spec{padding:8px 12px;background:rgba(10,9,8,0.55)}
+  .pm-spec .k{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:8px;letter-spacing:0.17em;
+    text-transform:uppercase;color:var(--gold-3);display:block;margin-bottom:5px}
+  .pm-spec .v{font-size:10.5px;color:var(--cream-2);line-height:1.5}
+  .pm-thumbs{display:flex;gap:7px;padding:11px 12px;border-top:1px solid var(--border-2);
+    background:rgba(8,7,6,0.72);overflow-x:auto;scrollbar-width:thin;
+    scrollbar-color:rgba(212,184,138,0.28) transparent}
+  .pm-thumbs::-webkit-scrollbar{height:5px}
+  .pm-thumbs::-webkit-scrollbar-thumb{background:rgba(212,184,138,0.28);border-radius:3px}
+  .pm-thumb{position:relative;flex:0 0 66px;aspect-ratio:3 / 2;border:1px solid var(--border-2);border-radius:6px;
+    overflow:hidden;cursor:pointer;opacity:0.45;transition:opacity .3s,border-color .3s;padding:0;background:none}
+  .pm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .pm-thumb:hover{opacity:0.8}
+  .pm-thumb.on{opacity:1;border-color:var(--gold)}
+  .pm-close{position:absolute;top:16px;right:16px;width:40px;height:40px;z-index:9;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(10,9,8,0.8);border:1px solid var(--border);border-radius:50%;color:var(--cream);
+    cursor:pointer;transition:background .25s,border-color .25s,transform .25s}
+  .pm-close:hover{background:rgba(212,184,138,0.15);border-color:var(--gold);transform:rotate(90deg)}
 
   /* --- Блок 3: мастер — строка направлений вместо цифр-статистики --- */
   .master-foot{margin-top:40px;padding-top:30px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream-2)}
@@ -1128,27 +1225,34 @@
     background:linear-gradient(90deg,transparent,var(--gold-3) 22%,var(--gold) 50%,var(--gold-3) 78%,transparent);opacity:0.65}
   .flagship-grid{display:flex;flex-direction:column}
 
-  .flagship-visual{position:relative;height:420px;overflow:hidden;border-bottom:1px solid var(--border-2)}
-  .flagship-visual .fslide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;
+  /* Фото показывается целиком (без обрезки) и занимает меньше высоты:
+     размер задаётся шириной, высота считается от пропорций кадра 2440x1338 */
+  .flagship-visual{position:relative;width:calc(100% - 64px);max-width:600px;margin:30px auto 4px;
+    aspect-ratio:2440 / 1338;overflow:hidden;border:1px solid var(--border-2);border-radius:14px}
+  .flagship-visual .fslide{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;
     opacity:0;transition:opacity 1.2s cubic-bezier(0.16,1,0.3,1)}
   .flagship-visual .fslide.active{opacity:1}
   /* Декоративные угловые завитушки флагмана */
-  .fv-flourish{position:absolute;width:90px;height:90px;color:var(--gold-3);opacity:0.5;pointer-events:none;z-index:6}
-  .fv-fl-tl{top:10px;left:10px}
-  .fv-fl-tr{top:10px;right:10px;transform:scaleX(-1)}
-  .fv-fl-bl{bottom:10px;left:10px;transform:scaleY(-1)}
-  .fv-fl-br{bottom:10px;right:10px;transform:scale(-1,-1)}
+  .fv-flourish{position:absolute;width:58px;height:58px;color:var(--gold-3);opacity:0.45;pointer-events:none;z-index:6}
+  .fv-fl-tl{top:8px;left:8px}
+  .fv-fl-tr{top:8px;right:8px;transform:scaleX(-1)}
+  .fv-fl-bl{bottom:8px;left:8px;transform:scaleY(-1)}
+  .fv-fl-br{bottom:8px;right:8px;transform:scale(-1,-1)}
   .flagship-visual .fv-warm{position:absolute;inset:0;pointer-events:none;z-index:2;
     background:radial-gradient(ellipse 55% 60% at 50% 45%,rgba(236,186,124,0.12),transparent 65%)}
+  /* Затемнения ослаблены: кадр теперь небольшой и в рамке,
+     прежние значения были рассчитаны на фото во всю ширину блока */
   .flagship-visual .fv-vig{position:absolute;inset:0;pointer-events:none;z-index:3;
-    background:radial-gradient(ellipse 96% 88% at 50% 50%,transparent 32%,rgba(0,0,0,0.6) 100%)}
+    background:radial-gradient(ellipse 96% 88% at 50% 50%,transparent 55%,rgba(0,0,0,0.28) 100%)}
   .flagship-visual .fv-edge{position:absolute;inset:0;pointer-events:none;z-index:4;
-    background:linear-gradient(180deg,transparent 58%,rgba(10,9,8,0.78) 100%)}
+    background:linear-gradient(180deg,transparent 78%,rgba(10,9,8,0.34) 100%)}
   .flagship-visual .fv-grain{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0.5;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.72  0 0 0 0 0.5  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n2)'/></svg>")}
-  .flagship-visual .corner{position:absolute;width:26px;height:26px;border:1px solid var(--gold-3);opacity:0.55;z-index:6}
-  .flagship-visual .corner.tl{top:18px;left:18px;border-right:none;border-bottom:none}
-  .flagship-visual .corner.tr{top:18px;right:18px;border-left:none;border-bottom:none}
+  .flagship-visual .corner{position:absolute;width:18px;height:18px;border:1px solid var(--gold-3);opacity:0.5;z-index:6}
+  .flagship-visual .corner.tl{top:12px;left:12px;border-right:none;border-bottom:none}
+  .flagship-visual .corner.tr{top:12px;right:12px;border-left:none;border-bottom:none}
+  .flagship-visual .corner.bl{bottom:12px;left:12px;border-right:none;border-top:none}
+  .flagship-visual .corner.br{bottom:12px;right:12px;border-left:none;border-top:none}
   .fv-caption{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;
     font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:10.5px;letter-spacing:0.16em;
     text-transform:uppercase;color:var(--gold-3);opacity:0.9;line-height:1.9;text-align:center}
@@ -1221,13 +1325,14 @@
   .dir-flourish-br{bottom:40px;right:30px;transform:scale(-1,-1)}
 
   @media (max-width:1080px){
-    .flagship-visual{height:520px}
+    .flagship-visual{max-width:520px;margin-top:26px}
     .flagship-body{padding:40px 36px 38px;grid-template-columns:1fr;gap:32px}
     .flagship-body h3{font-size:30px}
     .flagship-mark{font-size:72px;top:28px;right:30px}
   }
   @media (max-width:680px){
-    .flagship-visual{height:380px}
+    .flagship-visual{width:calc(100% - 36px);max-width:none;margin-top:20px}
+    .fv-flourish{width:42px;height:42px}
     .flagship-body{padding:32px 24px 30px;gap:24px}
     .flagship-body h3{font-size:26px}
     .flagship-sub{font-size:16px}
@@ -1265,15 +1370,15 @@
   .path li::before{content:'\25C6';position:absolute;left:0;top:4px;color:var(--gold-3);font-size:7px}
   .route-head{text-align:center;margin-top:56px}
   .route-head .rl{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-2);font-size:17px;letter-spacing:0.04em}
-  .route{display:flex;gap:18px;margin-top:40px;padding:0 16px;align-items:stretch;position:relative}
+  .route{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px;align-items:stretch;position:relative}
   /* Соединительная линия через узлы — тонкая, гаснет при наведении на этапы */
-  .route::before{content:'';position:absolute;top:50px;left:80px;right:80px;height:1px;
+  .route::before{content:'';position:absolute;top:47px;left:80px;right:80px;height:1px;
     background:linear-gradient(90deg, transparent 2%, var(--gold-3) 8%, var(--gold-3) 92%, transparent 98%);
     opacity:0.22;z-index:0;
     transition:opacity .45s cubic-bezier(0.16,1,0.3,1)}
   .route:hover::before{opacity:0}
 
-  .route-step{flex:1;padding:32px 22px 30px;background:var(--bg-warm);border:1px solid var(--border);
+  .route-step{padding:28px 14px 24px;background:var(--bg-warm);border:1px solid var(--border);
     border-radius:14px;position:relative;z-index:1;isolation:isolate;
     transition:transform .5s cubic-bezier(0.16,1,0.3,1), box-shadow .5s cubic-bezier(0.16,1,0.3,1),
                border-color .4s ease, background .4s ease}
@@ -1301,8 +1406,11 @@
   .route-step:hover h4{color:#fff}
   .route-step:hover .rstage{color:var(--gold);letter-spacing:0.17em}
   .route-step:hover p{color:var(--cream-2)}
-  .route-step h4{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25;text-align:center}
-  .route-step p{font-size:11.5px;line-height:1.75;color:var(--muted);text-align:center}
+  /* min-height под две строки: заголовки в одну и в две строки
+     дают одинаковую высоту, поэтому описания стартуют на одном уровне */
+  .route-step h4{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25;text-align:center;
+    min-height:2.5em;display:flex;align-items:center;justify-content:center}
+  .route-step p{font-size:11.5px;line-height:1.6;color:var(--muted);text-align:center;text-wrap:balance}
 
   /* --- Блок 7: доп. детализация (бейджи, теги, этапы, поток) --- */
   .path-badge{width:62px;height:62px;border:1px solid var(--gold-3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;font-size:31px;color:var(--gold);margin-bottom:22px;background:radial-gradient(circle at 50% 38%,rgba(220,193,150,0.08),transparent 68%)}
@@ -1409,8 +1517,8 @@
   .photo img{transition:transform 1.4s cubic-bezier(0.16,1,0.3,1)}
   .photo:hover img{transform:scale(1.06)}
   .proj-card .photo img{transition:transform 1.2s cubic-bezier(0.16,1,0.3,1)}
-  .flagship-visual .fslide{transition:opacity 1.2s cubic-bezier(0.16,1,0.3,1),transform 1.8s cubic-bezier(0.16,1,0.3,1)}
-  .flagship:hover .flagship-visual .fslide.active{transform:scale(1.03)}
+  /* без hover-зума: кадр должен оставаться целым, без подрезки краёв */
+  .flagship-visual .fslide{transition:opacity 1.2s cubic-bezier(0.16,1,0.3,1)}
 
   /* ===================== HERO TILT ===================== */
   .hero-photo{transition:transform .7s cubic-bezier(0.16,1,0.3,1),box-shadow .7s}
@@ -1515,7 +1623,7 @@
   /* ===================== НОРМАЛИЗАЦИЯ ТЕКСТА ===================== */
   /* paragraph в блоках — единый размер */
   .dir-cell p,.proj-desc,.flagship-body p,.path p{font-size:12px!important;line-height:1.8}
-  .route-step p{font-size:12px;line-height:1.78}
+  .route-step p{font-size:12px;line-height:1.62}
   .route-step h4{font-size:15px}
   .master-foot{font-size:13px}
   .about-quote{font-size:15px}
@@ -1813,8 +1921,11 @@
     font-style:italic;
     font-size:13px;
     color:var(--gold-3);
-    letter-spacing:0.22em;
+    /* трекинг уменьшен: название длинное, при 0.22em строка
+       вылезала заметно шире полосы прогресса */
+    letter-spacing:0.14em;
     text-transform:uppercase;
+    text-align:center;
     margin-top:-14px;
   }
 
@@ -1915,7 +2026,7 @@
     </div>
 
     <div class="pl-title">Твоё <em>Время</em></div>
-    <div class="pl-sub">Часовая мастерская</div>
+    <div class="pl-sub">Мастерская антикварных часов</div>
 
     <div class="pl-bar"><span id="plBarFill"></span></div>
     <div class="pl-pct" id="plPct"></div>
@@ -1931,7 +2042,7 @@
 <header class="header">
   <div class="container header-grid">
     <a href="#hero" class="logo">
-      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время - Часовая мастерская" class="logo-img">
+      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
     </a>
 
     <nav class="nav">
@@ -1976,7 +2087,7 @@
 
   <div class="container hero-grid">
     <div class="hero-content reveal">
-      <div class="hero-eyebrow">Часовая мастерская «Твоё Время» · Сургут</div>
+      <div class="hero-eyebrow">Мастерская антикварных часов «Твоё Время» · Сургут</div>
       <h1 class="hero-title">История времени <span>в руках мастера</span></h1>
       <p class="hero-sub">Евгений Деккер восстанавливает исторические механизмы, создаёт марьяжи и авторские часы — сохраняя характер времени и историю каждой отдельной вещи.</p>
       <a class="btn-gold" href="#projects">Смотреть избранные проекты <span class="arrow">&#8594;</span></a>
@@ -2237,83 +2348,155 @@
     </div>
 
     <div class="proj-grid reveal">
-      <!-- 1 — крупная карточка -->
-      <article class="proj-card wide">
+      <!-- 1 — Циферблат из серебряного рубля 1833 года -->
+      <article class="proj-card" onclick="openProject('coin1833')">
+        <div class="photo proj-photo">
+          <img src="img/projects/coin1833-01.jpg" alt="Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">9 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · циферблат из монеты</div>
+          <h3 class="proj-name">Циферблат из серебряного рубля <em>1833 года</em></h3>
+          <div class="proj-lead">Подлинная монета времён Николая I — в роли циферблата</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 2–10 — заглушки: проекты есть, описания собираются -->
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Исторические часы «Павелъ Буре» · механизм и корпус крупным планом</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">9 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · историческая механика</div>
-          <h3 class="proj-name">Часы <em>«Павелъ Буре»</em></h3>
-          <p class="proj-desc">Один из самых узнаваемых русских часовых домов дореволюционной эпохи. Такие механизмы приходят в мастерскую с остановившимся ходом, утраченными деталями и следами времени на корпусе.</p>
-          <p class="proj-desc">Работа с ними — это бережная реставрация: диагностика, восстановление хода, аккуратная работа с корпусом и циферблатом при сохранении исторического характера вещи.</p>
-          <div class="proj-note">— точные детали конкретного экземпляра уточняются у мастера —</div>
+          <h3 class="proj-name">Monnard, <em>1883 год</em></h3>
+          <div class="proj-lead">Завод и перевод стрелок ключиком</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
 
-      <!-- 2 -->
-      <article class="proj-card">
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Наручные часы на основе исторического механизма IWC</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Марьяж · исторический механизм</div>
-          <h3 class="proj-name">Механизм IWC, начало XX века</h3>
-          <p class="proj-desc">Швейцарский карманный механизм начала прошлого века получает новую жизнь в формате наручных часов. Историческая основа сохраняется, а корпус и композиция создаются под проект.</p>
-          <div class="proj-note">— год и модель механизма подтверждаются у мастера —</div>
+          <div class="proj-type">Реставрация · историческая механика</div>
+          <h3 class="proj-name">Георгъ Фавръ Жако, <em>1887 год</em></h3>
+          <div class="proj-lead">Тоже завод ключиком</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
 
-      <!-- 3 -->
-      <article class="proj-card">
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Авторские часы «Высоцкий» · циферблат и образ</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Авторский проект</div>
-          <h3 class="proj-name">Часы, посвящённые Владимиру Высоцкому</h3>
-          <p class="proj-desc">Авторский проект, в котором часы становятся посвящением культурной фигуре. Тема раскрывается через оформление циферблата и цельный образ вещи.</p>
-          <div class="proj-note">— проект в портфолио мастерской, детали согласуются —</div>
+          <div class="proj-type">Реставрация · русская школа</div>
+          <h3 class="proj-name">Павелъ Буре, <em>1905 год</em></h3>
+          <div class="proj-lead">Один из самых узнаваемых русских часовых домов</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
 
-      <!-- 4 -->
-      <article class="proj-card">
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Тематический авторский циферблат</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">7 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Авторский циферблат · тематический проект</div>
-          <h3 class="proj-name">Тематические авторские часы</h3>
-          <p class="proj-desc">Культурные сюжеты — от Виктора Цоя до Metallica. Каждый такой проект строится вокруг темы и характера, а не типового оформления.</p>
-          <div class="proj-note">— состав и детали проектов уточняются —</div>
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">Longines, <em>1911 год</em></h3>
+          <div class="proj-lead">Механизм начала прошлого века</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
 
-      <!-- 5 -->
-      <article class="proj-card">
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Сложный марьяж · историческая основа и новый корпус</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Марьяж · авторская работа</div>
-          <h3 class="proj-name">Марьяж на историческом механизме</h3>
-          <p class="proj-desc">Старый карманный механизм превращается в наручные часы с подобранным корпусом, циферблатом и деталями — сочетание исторической основы и ручной авторской работы.</p>
-          <div class="proj-note">— конкретный экземпляр и состав работ согласуются —</div>
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">Longines, <em>1917 год</em></h3>
+          <div class="proj-lead">Ещё один экземпляр той же марки, шестью годами позже</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
 
-      <!-- 6 — крупная карточка -->
-      <article class="proj-card wide">
+      <article class="proj-card soon">
         <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Реставрация редкого или семейного экземпляра · до и после</div>
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Реставрация · семейная реликвия</div>
-          <h3 class="proj-name">Возвращение <em>семейных часов</em></h3>
-          <p class="proj-desc">Отдельная категория работ — часы, которые важны не маркой, а памятью. Их приносят, чтобы вернуть к жизни и передать дальше.</p>
-          <p class="proj-desc">Здесь особенно важны аккуратность и сохранность оригинального характера: задача не «сделать как новые», а вернуть ход и достоинство, не стирая следы истории.</p>
-          <div class="proj-note">— пример направления работы; конкретный кейс добавим по согласованию —</div>
+          <div class="proj-type">Редкая механика</div>
+          <h3 class="proj-name">Часы с <em>8-дневным заводом</em></h3>
+          <div class="proj-lead">Неделя хода от одного завода</div>
+          <div class="proj-soon">— описание готовится —</div>
+        </div>
+      </article>
+
+      <article class="proj-card soon">
+        <div class="photo velvet-photo">
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · историческая механика</div>
+          <h3 class="proj-name">Orion, <em>1919 год</em></h3>
+          <div class="proj-lead">Механизм межвоенного времени</div>
+          <div class="proj-soon">— описание готовится —</div>
+        </div>
+      </article>
+
+      <article class="proj-card soon">
+        <div class="photo velvet-photo">
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">6 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">Doxa, <em>1928 год</em></h3>
+          <div class="proj-lead">Классика конца двадцатых</div>
+          <div class="proj-soon">— описание готовится —</div>
+        </div>
+      </article>
+
+      <article class="proj-card soon">
+        <div class="photo velvet-photo">
+          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
+          <div class="proj-count">9 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Редкая механика · усложнение</div>
+          <h3 class="proj-name">Карманные часы с <em>двойным временем</em></h3>
+          <div class="proj-lead">Два часовых пояса на одном циферблате, 1910 год</div>
+          <div class="proj-soon">— описание готовится —</div>
         </div>
       </article>
     </div>
@@ -2481,13 +2664,13 @@
         <div class="route-node">2</div>
         <span class="rstage">Оценка</span>
         <h4>Изучение задачи</h4>
-        <p>Оценка и диагностика для готовых часов. Обсуждение концепции для проекта.</p>
+        <p>Диагностика готовых часов или обсуждение концепции проекта.</p>
       </div>
       <div class="route-step">
         <div class="route-node">3</div>
-        <span class="rstage">Согласование</span>
+        <span class="rstage">Условия</span>
         <h4>Согласование</h4>
-        <p>Объём, состав, стоимость и сроки работы.</p>
+        <p>Фиксируются объём, состав, стоимость и сроки работы.</p>
       </div>
       <div class="route-step">
         <div class="route-node">4</div>
@@ -2549,17 +2732,17 @@
   <span class="footer-top-orn"></span>
   <div class="container">
     <div class="logo">
-      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время - Часовая мастерская" class="logo-img">
+      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
     </div>
 
-    <p class="footer-tagline">Авторская часовая мастерская · Сургут</p>
+    <p class="footer-tagline">Мастерская антикварных часов «Твоё Время» · Сургут</p>
     <p class="footer-subdesc">Ремонт · реставрация · авторские проекты · марьяж</p>
 
     <div class="footer-divider"></div>
 
     <div class="footer-copy">
-      <span class="city">Сургут · авторская часовая мастерская</span><br>
-      &#169; 2026 Мастерская часов «Твоё Время». Евгений Деккер.
+      <span class="city">Сургут · мастерская антикварных часов</span><br>
+      &#169; 2026 Мастерская антикварных часов «Твоё Время». Евгений Деккер.
     </div>
   </div>
 </footer>
@@ -2932,6 +3115,114 @@ document.addEventListener('keydown', function(e) {
     closeCertificatesModal();
   }
 });
+
+/* ============================================================
+   ИЗБРАННЫЕ ПРОЕКТЫ
+   Данные всех работ лежат здесь. В карточке на странице —
+   одно показательное фото, остальные открываются в модалке.
+   ============================================================ */
+var PROJECTS = {
+  coin1833: {
+    type: 'Авторская работа · циферблат из монеты',
+    name: 'Циферблат из серебряного рубля <em>1833 года</em>',
+    lead: 'Подлинная монета времён Николая I — в роли циферблата наручных часов',
+    body: [
+      'В основе — настоящий серебряный рубль 1833 года. Монета не копируется и не имитируется: в работу идёт оригинал, с сохранением чеканки, рельефа и патины, которые за без малого два столетия стали частью характера вещи.',
+      'Монета готовится под посадку в корпус и работает как циферблат. Стрелки и разметка подчиняются рисунку чеканки, а не наоборот: надпись, год и обрамление остаются читаемыми — часы показывают время, не теряя монету.',
+      'Вещь собирается на широком кожаном напульснике ручного пошива. Раскрой, седельный шов и обработка краёв — вручную, под конкретный корпус и запястье, чтобы посадка была своей, а не универсальной.'
+    ],
+    specs: [
+      ['Циферблат', 'Серебряный рубль 1833 года, оригинал'],
+      ['Формат', 'Наручные часы'],
+      ['Ремень', 'Кожаный напульсник ручного пошива'],
+      ['Работа', 'Посадка монеты, сборка и отделка — вручную']
+    ],
+    photos: [
+      'img/projects/coin1833-01.jpg','img/projects/coin1833-02.jpg','img/projects/coin1833-03.jpg',
+      'img/projects/coin1833-04.jpg','img/projects/coin1833-05.jpg','img/projects/coin1833-06.jpg',
+      'img/projects/coin1833-07.jpg','img/projects/coin1833-08.jpg','img/projects/coin1833-09.jpg'
+    ]
+  }
+};
+
+var pmKey = null, pmIndex = 0;
+
+function openProject(key){
+  var p = PROJECTS[key];
+  if(!p) return;
+  pmKey = key;
+
+  document.getElementById('pmType').textContent = p.type;
+  document.getElementById('pmName').innerHTML   = p.name;
+  document.getElementById('pmLead').textContent = p.lead;
+  document.getElementById('pmBody').innerHTML   = p.body.map(function(t){ return '<p>'+t+'</p>'; }).join('');
+  document.getElementById('pmSpecs').innerHTML  = p.specs.map(function(s){
+    return '<div class="pm-spec"><span class="k">'+s[0]+'</span><span class="v">'+s[1]+'</span></div>';
+  }).join('');
+  document.getElementById('pmThumbs').innerHTML = p.photos.map(function(src,i){
+    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+src+'" alt=""></button>';
+  }).join('');
+
+  document.getElementById('projModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
+  pmShow(0);
+}
+
+function closeProject(){
+  document.getElementById('projModal').classList.remove('active');
+  document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
+}
+
+function pmShow(i){
+  var p = PROJECTS[pmKey];
+  if(!p) return;
+  var n = p.photos.length;
+  pmIndex = (i + n) % n;
+
+  var img = document.getElementById('pmImg');
+  var src = p.photos[pmIndex];
+  // подгружаем кадр заранее — тогда смена идёт плавно, без вспышки пустоты
+  var pre = new Image();
+  pre.onload = function(){
+    setTimeout(function(){ img.src = src; img.classList.add('on'); }, 120);
+  };
+  img.classList.remove('on');
+  pre.src = src;
+
+  document.getElementById('pmCounter').textContent = (pmIndex + 1) + ' / ' + n;
+  document.querySelectorAll('.pm-thumb').forEach(function(t, idx){
+    t.classList.toggle('on', idx === pmIndex);
+  });
+}
+
+function pmNext(){ pmShow(pmIndex + 1); }
+function pmPrev(){ pmShow(pmIndex - 1); }
+
+// Клавиатура: Esc закрывает, стрелки листают
+document.addEventListener('keydown', function(e){
+  var m = document.getElementById('projModal');
+  if(!m || !m.classList.contains('active')) return;
+  if(e.key === 'Escape')     closeProject();
+  if(e.key === 'ArrowRight') pmNext();
+  if(e.key === 'ArrowLeft')  pmPrev();
+});
+
+// Свайп по кадру на тач-устройствах
+(function(){
+  var startX = 0;
+  document.addEventListener('DOMContentLoaded', function(){
+    var stage = document.querySelector('.pm-stage');
+    if(!stage) return;
+    stage.addEventListener('touchstart', function(e){ startX = e.changedTouches[0].screenX; }, {passive:true});
+    stage.addEventListener('touchend', function(e){
+      var dx = e.changedTouches[0].screenX - startX;
+      if(dx < -50) pmNext();
+      if(dx >  50) pmPrev();
+    }, {passive:true});
+  });
+})();
 </script>
 
 <!-- Модальное окно с каруселью сертификатов -->
@@ -2989,6 +3280,37 @@ document.addEventListener('keydown', function(e) {
         <span class="cert-dot" onclick="goToSlide(2)"></span>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Модальное окно проекта — содержимое подставляется из PROJECTS -->
+<div id="projModal" class="pm" onclick="if(event.target === this) closeProject()">
+  <div class="pm-inner">
+    <button class="pm-close" type="button" onclick="closeProject()" aria-label="Закрыть">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+    </button>
+
+    <div class="pm-left">
+      <div class="pm-stage">
+        <img id="pmImg" src="" alt="">
+        <button class="pm-nav pm-prev" type="button" onclick="pmPrev()" aria-label="Предыдущий кадр">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="pm-nav pm-next" type="button" onclick="pmNext()" aria-label="Следующий кадр">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <div class="pm-counter" id="pmCounter"></div>
+      </div>
+      <div class="pm-thumbs" id="pmThumbs"></div>
+    </div>
+
+    <aside class="pm-side">
+      <div class="pm-type" id="pmType"></div>
+      <h3 class="pm-name" id="pmName"></h3>
+      <div class="pm-lead" id="pmLead"></div>
+      <div class="pm-body" id="pmBody"></div>
+      <div class="pm-specs" id="pmSpecs"></div>
+    </aside>
   </div>
 </div>
 
