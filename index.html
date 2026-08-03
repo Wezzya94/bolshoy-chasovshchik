@@ -45,6 +45,27 @@
     margin:0;
     overflow-x:clip;
   }
+
+  /* Фоновая атмосфера: тёплые световые пятна в глубине + сетка-гильоше.
+     Слой неподвижен и не перехватывает клики — только даёт объём */
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(ellipse 900px 620px at 12% 22%, rgba(212,184,138,0.045), transparent 62%),
+      radial-gradient(ellipse 780px 560px at 88% 58%, rgba(198,150,92,0.038), transparent 62%),
+      radial-gradient(ellipse 1000px 700px at 45% 92%, rgba(212,184,138,0.03), transparent 65%);
+  }
+  /* Тончайшая косая сетка — читается как фактура бумаги, а не как рисунок */
+  body::after{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5;
+    background-image:
+      repeating-linear-gradient(45deg,transparent 0 46px,rgba(212,184,138,0.016) 46px 47px),
+      repeating-linear-gradient(-45deg,transparent 0 46px,rgba(212,184,138,0.012) 46px 47px);
+    -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 92%);
+    mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 92%);
+  }
+  /* Контент должен лежать над фоновыми слоями */
+  body > *{position:relative;z-index:1}
   body > header,
   body > section,
   body > footer{width:100%}
@@ -293,6 +314,27 @@
     line-height:1.7;
   }
 
+  /* Детали секции: угловые засечки по краям контентной колонки —
+     как метки реза на печатном листе. Ставятся на всех секциях сразу */
+  .section > .container{position:relative}
+  .section > .container::before,
+  .section > .container::after{
+    content:'';position:absolute;top:-14px;width:20px;height:20px;
+    border:1px solid var(--gold-3);opacity:0.28;pointer-events:none;
+  }
+  .section > .container::before{left:8px;border-right:none;border-bottom:none}
+  .section > .container::after{right:8px;border-left:none;border-bottom:none}
+
+  /* Тонкая световая нить над заголовком секции */
+  .section-head::before{
+    content:'';position:absolute;left:50%;top:-24px;transform:translateX(-50%);
+    width:150px;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--gold-3),transparent);opacity:0.45;
+  }
+  /* ::after у .section-head занят орнаментом-разделителем (см. ниже) —
+     дополнительный маркер вешаем на подпись, чтобы не выбить его из потока */
+  .section-eyebrow{position:relative}
+
   .about-grid{display:grid;grid-template-columns:45% 55%;gap:50px;align-items:center}
   .about-photo{height:350px}
   .about-text-eyebrow{
@@ -313,7 +355,7 @@
   }
   .about-text h2 em{font-style:italic;color:var(--gold);font-weight:400}
   .about-text p{
-    font-size:11px;
+    font-size:13px;
     color:var(--text);
     line-height:1.8;
     margin-bottom:14px;
@@ -953,7 +995,7 @@
   .whyus-item:last-child{border-right:none}
   .whyus-ico{display:block;color:var(--gold);font-size:12px;margin-bottom:20px;letter-spacing:0.4em}
   .whyus-item h4{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;margin-bottom:12px;letter-spacing:0.02em}
-  .whyus-item p{font-size:13.5px;line-height:1.75;color:var(--muted)}
+  .whyus-item p{font-size:13px;line-height:1.75;color:var(--text)}
 
   /* ===================== PRICE HINTS ===================== */
   .price-hints{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:64px;border:1px solid var(--border)}
@@ -961,7 +1003,7 @@
   .ph-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
   .ph-val{font-family:'Playfair Display',serif;font-size:30px;color:var(--cream);font-weight:500;line-height:1}
   .ph-from{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);margin-left:4px}
-  .ph-note{font-size:13px;color:var(--muted);line-height:1.55;margin-top:4px}
+  .ph-note{font-size:13px;color:var(--text);line-height:1.55;margin-top:4px}
 
   /* ===================== FAQ ===================== */
   .faq-list{margin-top:60px;display:flex;flex-direction:column;gap:0}
@@ -998,7 +1040,7 @@
   }
   .faq-item.open .faq-q{color:var(--gold)}
   .faq-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(0.16,1,0.3,1)}
-  .faq-a{font-size:14px;line-height:1.82;color:var(--muted);padding:0 0 32px;max-width:720px}
+  .faq-a{font-size:14px;line-height:1.82;color:var(--text);padding:0 0 32px;max-width:720px}
 
   /* ===================== FIREFLIES ===================== */
   .firefly{
@@ -1086,15 +1128,7 @@
   /* Якорь не заезжает под липкий хедер */
   section[id]{scroll-margin-top:92px}
 
-  /* --- Блок 2: Направления --- */
-  .dir-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);border-left:1px solid var(--border);margin-top:64px;border-radius:18px;overflow:hidden}
-  .dir-cell{position:relative;padding:48px 50px 46px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
-  .dir-cell::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent 10%,var(--gold-3) 40%,var(--gold-3) 60%,transparent 90%);opacity:0.35}
-  .dir-num{position:absolute;top:34px;right:44px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:74px;color:rgba(212,184,138,0.10);line-height:0.85;letter-spacing:-0.02em}
-  .dir-mark{color:var(--gold);opacity:0.85;margin-bottom:22px;display:block}
-  .dir-cell h3{font-family:'Playfair Display',serif;font-size:27px;color:var(--cream);font-weight:500;margin-bottom:8px;line-height:1.2}
-  .dir-lead{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:16px;margin-bottom:16px;letter-spacing:0.02em}
-  .dir-cell p{font-size:14px;line-height:1.8;color:var(--muted);max-width:450px}
+  /* --- Блок 2: Направления — стили ниже, в разделе «БЛОК 2 — чистовая версия» --- */
 
   /* --- Блок 4: Избранные проекты --- */
   /* Сетка 2 колонки: карточка = кадр 3:2 + компактная подпись.
@@ -1107,7 +1141,7 @@
   .proj-type{font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-3);margin-bottom:9px}
   .proj-name{font-family:'Playfair Display',serif;font-size:19px;color:var(--cream);font-weight:500;line-height:1.25;margin-bottom:8px}
   .proj-name em{font-style:italic;color:var(--gold);font-weight:400}
-  .proj-desc{font-size:14.5px;line-height:1.75;color:var(--text);margin-bottom:14px}
+  .proj-desc{font-size:12px;line-height:1.8;color:var(--text);margin-bottom:14px}
   .proj-note{margin-top:auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12.5px;color:var(--gold-3);letter-spacing:0.04em;padding-top:18px;border-top:1px solid var(--border-2)}
 
   /* --- Карточка проекта с реальным фото: вся карточка кликабельна --- */
@@ -1156,7 +1190,9 @@
   /* Сцена: фото целиком, без обрезки */
   .pm-stage{position:relative;flex:1;min-height:0;background:#080706;display:flex;align-items:center;justify-content:center;
     overflow:hidden;padding:26px 26px 22px}
-  .pm-stage img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block;
+  /* width/height:auto — бокс картинки сжимается точно под видимые пиксели кадра,
+     иначе object-fit:contain оставляет прозрачные поля и скругление обрезает пустоту, а не фото */
+  .pm-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;
     border-radius:12px;opacity:0;transition:opacity .4s ease}
   .pm-stage img.on{opacity:1}
   .pm-counter{position:absolute;left:14px;bottom:10px;z-index:4;
@@ -1209,9 +1245,9 @@
   .pm-close:hover{background:rgba(212,184,138,0.15);border-color:var(--gold);transform:rotate(90deg)}
 
   /* --- Блок 3: мастер — строка направлений вместо цифр-статистики --- */
-  .master-foot{margin-top:40px;padding-top:30px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream-2)}
+  .master-foot{margin-top:40px;padding-top:30px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--cream-2)}
   .master-foot .sepd{color:var(--gold);opacity:0.6;font-size:10px}
-  .about-quote{margin-top:6px;padding:2px 0 2px 22px;border-left:2px solid var(--gold-3);font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:19px;line-height:1.55}
+  .about-quote{margin-top:6px;padding:2px 0 2px 22px;border-left:2px solid var(--gold-3);font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:15px;line-height:1.55}
 
   /* ============================================================ */
   /* БЛОК 2 — НАПРАВЛЕНИЯ: чистовая версия                        */
@@ -1225,19 +1261,39 @@
     background:linear-gradient(90deg,transparent,var(--gold-3) 22%,var(--gold) 50%,var(--gold-3) 78%,transparent);opacity:0.65}
   .flagship-grid{display:flex;flex-direction:column}
 
+  /* Декор в полях по бокам от фото — линейная гравюра вместо завитков:
+     вертикальный штрих с ромбом, как марка на старой гравировке */
+  /* Декор живёт только в полосе рядом с фото — ниже начинается текст,
+     туда заходить нельзя, иначе линии режут абзацы и таблицу характеристик */
+  .flagship-rule{position:absolute;top:52px;height:280px;width:1px;pointer-events:none;z-index:1;
+    background:linear-gradient(180deg,transparent,var(--gold-3) 22%,var(--gold-3) 78%,transparent);opacity:0.28}
+  .flagship-rule-l{left:96px}
+  .flagship-rule-r{right:96px}
+  .flagship-rule::before,.flagship-rule::after{content:'';position:absolute;left:50%;width:5px;height:5px;
+    border:1px solid var(--gold-3);transform:translateX(-50%) rotate(45deg);background:var(--bg-warm)}
+  .flagship-rule::before{top:calc(50% - 26px)}
+  .flagship-rule::after{top:calc(50% + 21px)}
+  /* Тонкая диагональная штриховка — только в верхних углах, у кадра */
+  .flagship-hatch{position:absolute;top:0;width:118px;height:118px;pointer-events:none;z-index:1;opacity:0.14;
+    background:repeating-linear-gradient(45deg,transparent 0 7px,var(--gold-3) 7px 7.6px)}
+  .flagship-hatch-tl{left:0;-webkit-mask-image:radial-gradient(circle at 0 0,#000,transparent 72%);
+    mask-image:radial-gradient(circle at 0 0,#000,transparent 72%)}
+  .flagship-hatch-tr{right:0;-webkit-mask-image:radial-gradient(circle at 100% 0,#000,transparent 72%);
+    mask-image:radial-gradient(circle at 100% 0,#000,transparent 72%)}
+  @media (max-width:1080px){
+    .flagship-rule,.flagship-hatch{display:none}
+  }
+
   /* Фото показывается целиком (без обрезки) и занимает меньше высоты:
-     размер задаётся шириной, высота считается от пропорций кадра 2440x1338 */
-  .flagship-visual{position:relative;width:calc(100% - 64px);max-width:600px;margin:30px auto 4px;
-    aspect-ratio:2440 / 1338;overflow:hidden;border:1px solid var(--border-2);border-radius:14px}
+     размер задаётся шириной, высота считается от пропорций кадра 930x620 */
+  /* Мягкое тёплое свечение за кадром: граница фото не читается как жёсткая рамка */
+  .flagship-visual{position:relative;width:calc(100% - 64px);max-width:480px;margin:30px auto 4px;
+    aspect-ratio:930 / 620;overflow:hidden;border:1px solid rgba(212,184,138,0.1);border-radius:14px;
+    box-shadow:0 0 46px 10px rgba(232,186,124,0.11),0 0 110px 30px rgba(232,186,124,0.05),
+               0 24px 60px rgba(0,0,0,0.5)}
   .flagship-visual .fslide{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;
     opacity:0;transition:opacity 1.2s cubic-bezier(0.16,1,0.3,1)}
   .flagship-visual .fslide.active{opacity:1}
-  /* Декоративные угловые завитушки флагмана */
-  .fv-flourish{position:absolute;width:58px;height:58px;color:var(--gold-3);opacity:0.45;pointer-events:none;z-index:6}
-  .fv-fl-tl{top:8px;left:8px}
-  .fv-fl-tr{top:8px;right:8px;transform:scaleX(-1)}
-  .fv-fl-bl{bottom:8px;left:8px;transform:scaleY(-1)}
-  .fv-fl-br{bottom:8px;right:8px;transform:scale(-1,-1)}
   .flagship-visual .fv-warm{position:absolute;inset:0;pointer-events:none;z-index:2;
     background:radial-gradient(ellipse 55% 60% at 50% 45%,rgba(236,186,124,0.12),transparent 65%)}
   /* Затемнения ослаблены: кадр теперь небольшой и в рамке,
@@ -1248,21 +1304,14 @@
     background:linear-gradient(180deg,transparent 78%,rgba(10,9,8,0.34) 100%)}
   .flagship-visual .fv-grain{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0.5;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.72  0 0 0 0 0.5  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n2)'/></svg>")}
-  .flagship-visual .corner{position:absolute;width:18px;height:18px;border:1px solid var(--gold-3);opacity:0.5;z-index:6}
+  .flagship-visual .corner{position:absolute;width:18px;height:18px;border:1px solid var(--gold-3);opacity:0.28;z-index:6}
   .flagship-visual .corner.tl{top:12px;left:12px;border-right:none;border-bottom:none}
   .flagship-visual .corner.tr{top:12px;right:12px;border-left:none;border-bottom:none}
   .flagship-visual .corner.bl{bottom:12px;left:12px;border-right:none;border-top:none}
   .flagship-visual .corner.br{bottom:12px;right:12px;border-left:none;border-top:none}
-  .fv-caption{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;
-    font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:10.5px;letter-spacing:0.16em;
-    text-transform:uppercase;color:var(--gold-3);opacity:0.9;line-height:1.9;text-align:center}
-  .fv-caption b{display:block;color:var(--cream-2);font-weight:400;letter-spacing:0.13em;margin-bottom:2px}
-
   .flagship-body{padding:32px 40px 30px;display:grid;grid-template-columns:1fr 1fr;gap:36px;position:relative}
   .flagship-left{display:flex;flex-direction:column}
   .flagship-right{display:flex;flex-direction:column}
-  .flagship-mark{position:absolute;top:24px;right:36px;font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:56px;line-height:0.8;color:rgba(212,184,138,0.08);letter-spacing:-0.03em;pointer-events:none;z-index:1}
   .flagship-eyebrow{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
     font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;
     color:var(--gold);border:1px solid var(--border);border-radius:999px;padding:6px 12px;margin-bottom:16px;
@@ -1273,7 +1322,7 @@
   .flagship-body h3 em{font-style:italic;color:var(--gold);font-weight:400}
   .flagship-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);
     line-height:1.5;margin-bottom:16px;position:relative;z-index:2}
-  .flagship-body p{font-size:11px;line-height:1.75;color:var(--text);margin-bottom:12px;position:relative;z-index:2}
+  .flagship-body p{font-size:12px;line-height:1.8;color:var(--text);margin-bottom:12px;position:relative;z-index:2}
   .flagship-body p .accent{color:var(--cream-2)}
   .flagship-specs{display:grid;grid-template-columns:1fr;gap:1px;margin-top:auto;
     background:var(--border-2);border:1px solid var(--border-2);border-radius:10px;overflow:hidden}
@@ -1283,15 +1332,12 @@
   .fspec .v{font-size:10px;color:var(--cream-2);line-height:1.5}
 
   /* --- Разделитель перед сеткой --- */
-  .dir-split{display:flex;align-items:center;gap:20px;margin:66px 0 0}
+  /* Разделитель: крупная подпись, отступы поджаты — блок был слишком разрежен */
+  .dir-split{display:flex;align-items:center;gap:26px;margin:44px 0 0;text-align:center}
   .dir-split .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
-  .dir-split .lbl{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;font-size:10px;letter-spacing:0.2em;
-    text-transform:uppercase;color:var(--gold-3);white-space:nowrap}
-
-  /* --- Заголовок "Остальные направления" --- */
-  .dir-split{margin-top:80px;text-align:center}
-  .dir-split-label{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:17px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:36px}
-  .dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:34px;
+  .dir-split .lbl{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:0.15em;
+    text-transform:uppercase;color:var(--gold);white-space:nowrap;font-weight:500}
+  .dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:22px;
     border-top:1px solid var(--border);border-left:1px solid var(--border);border-radius:18px;overflow:hidden}
   .dir-cell{position:relative;padding:32px 28px 30px;border-right:1px solid var(--border);
     border-bottom:1px solid var(--border);overflow:hidden;transition:background .4s ease}
@@ -1303,9 +1349,9 @@
   .dir-mark{color:var(--gold);opacity:0.85;margin-bottom:14px;display:block}
   .dir-cell h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;
     margin-bottom:6px;line-height:1.22;position:relative;z-index:2}
-  .dir-lead{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:12px;
+  .dir-lead{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:13px;
     margin-bottom:12px;letter-spacing:0.02em;position:relative;z-index:2}
-  .dir-cell p{font-size:11px;line-height:1.75;color:var(--muted);margin-bottom:12px;position:relative;z-index:2}
+  .dir-cell p{font-size:12px;line-height:1.8;color:var(--text);margin-bottom:12px;position:relative;z-index:2}
   .dir-list{list-style:none;padding:0;margin:14px 0 0;border-top:1px solid var(--border-2);padding-top:12px;position:relative;z-index:2}
   .dir-list li{position:relative;padding-left:14px;font-size:10px;line-height:1.72;color:var(--cream-2);
     opacity:0.86;margin-bottom:6px}
@@ -1325,19 +1371,18 @@
   .dir-flourish-br{bottom:40px;right:30px;transform:scale(-1,-1)}
 
   @media (max-width:1080px){
-    .flagship-visual{max-width:520px;margin-top:26px}
+    .flagship-visual{max-width:420px;margin-top:26px}
     .flagship-body{padding:40px 36px 38px;grid-template-columns:1fr;gap:32px}
     .flagship-body h3{font-size:30px}
-    .flagship-mark{font-size:72px;top:28px;right:30px}
   }
   @media (max-width:680px){
     .flagship-visual{width:calc(100% - 36px);max-width:none;margin-top:20px}
-    .fv-flourish{width:42px;height:42px}
     .flagship-body{padding:32px 24px 30px;gap:24px}
     .flagship-body h3{font-size:26px}
     .flagship-sub{font-size:16px}
     .dir-cell{padding:36px 26px 32px}
-    .dir-split{margin-top:48px}
+    .dir-split{margin-top:34px;gap:16px}
+    .dir-split .lbl{font-size:15px}
   }
 
   /* --- Блок 5: Внутри мастерской --- */
@@ -1356,17 +1401,17 @@
   .trust-facts .fact{padding:16px 0;border-bottom:1px solid var(--border-2);display:flex;gap:16px;align-items:baseline}
   .trust-facts .fact:first-child{border-top:1px solid var(--border-2)}
   .trust-facts .fact .k{font-family:'Playfair Display',serif;color:var(--gold);font-size:19px;font-weight:500;line-height:1.1;flex-shrink:0;min-width:85px}
-  .trust-facts .fact .d{font-size:11px;color:var(--muted);line-height:1.6}
+  .trust-facts .fact .d{font-size:11px;color:var(--text);line-height:1.6}
   .trust-hint{margin-top:16px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;color:var(--gold-3)}
 
   /* --- Блок 7: Форматы работы --- */
   .paths{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:45px}
   .path{border:1px solid var(--border);padding:30px 32px 28px;background:var(--bg-2);position:relative;border-radius:14px}
   .path .letter{font-family:'Playfair Display',serif;font-style:italic;font-size:28px;color:var(--gold);opacity:0.55;line-height:1;margin-bottom:12px}
-  .path h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);font-weight:500;margin-bottom:6px;line-height:1.25}
+  .path h3{font-family:'Playfair Display',serif;font-size:15px;color:var(--cream);font-weight:500;margin-bottom:6px;line-height:1.25}
   .path .path-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:11px;margin-bottom:14px}
   .path ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-  .path li{font-size:11px;color:var(--muted);padding-left:16px;position:relative;line-height:1.65}
+  .path li{font-size:11px;color:var(--text);padding-left:16px;position:relative;line-height:1.65}
   .path li::before{content:'\25C6';position:absolute;left:0;top:4px;color:var(--gold-3);font-size:7px}
   .route-head{text-align:center;margin-top:56px}
   .route-head .rl{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-2);font-size:17px;letter-spacing:0.04em}
@@ -1408,14 +1453,14 @@
   .route-step:hover p{color:var(--cream-2)}
   /* min-height под две строки: заголовки в одну и в две строки
      дают одинаковую высоту, поэтому описания стартуют на одном уровне */
-  .route-step h4{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25;text-align:center;
+  .route-step h4{font-family:'Playfair Display',serif;font-size:15px;color:var(--cream);font-weight:500;margin-bottom:10px;line-height:1.25;text-align:center;
     min-height:2.5em;display:flex;align-items:center;justify-content:center}
-  .route-step p{font-size:11.5px;line-height:1.6;color:var(--muted);text-align:center;text-wrap:balance}
+  .route-step p{font-size:12px;line-height:1.62;color:var(--text);text-align:center;text-wrap:balance}
 
   /* --- Блок 7: доп. детализация (бейджи, теги, этапы, поток) --- */
   .path-badge{width:62px;height:62px;border:1px solid var(--gold-3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;font-size:31px;color:var(--gold);margin-bottom:22px;background:radial-gradient(circle at 50% 38%,rgba(220,193,150,0.08),transparent 68%)}
   .path-tag{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-3);margin-bottom:14px}
-  .path-lead{font-size:14px;line-height:1.75;color:var(--text);margin:0 0 18px}
+  .path-lead{font-size:12px;line-height:1.8;color:var(--text);margin:0 0 18px}
   .path-div{height:1px;background:var(--border-2);margin:2px 0 18px}
   .path-foot{margin-top:24px;padding-top:18px;border-top:1px solid var(--border-2);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold-3);line-height:1.6}
   .path-foot b{color:var(--cream-2);font-style:normal;font-weight:400}
@@ -1499,6 +1544,55 @@
   .cur-ring.is-link{width:52px;height:52px;border-color:var(--gold);opacity:0.85;background:rgba(212,184,138,0.06)}
   .cur-dot.is-btn{width:14px;height:14px;background:var(--gold-deep);opacity:0.6}
   .cur-ring.is-btn{width:64px;height:64px;border-color:var(--gold);opacity:0.7;background:rgba(212,184,138,0.04)}
+
+  /* ===================== ДЕТАЛИ ВНУТРИ БЛОКОВ =====================
+     Мелкая графика, которая оживляет пустые зоны карточек.
+     Специально не завиток: засечки, штриховка, точечная сетка */
+
+  /* Угловая засечка в дальнем нижнем углу карточки направления */
+  .dir-cell::after{
+    content:'';position:absolute;right:14px;bottom:14px;width:16px;height:16px;
+    border:1px solid var(--gold-3);border-left:none;border-top:none;
+    opacity:0.22;pointer-events:none;transition:opacity .35s ease;
+  }
+  .dir-cell:hover::after{opacity:0.55}
+
+  /* Точечная сетка в углу карточки проекта — фактура под подписью */
+  .proj-body{position:relative}
+  .proj-body::after{
+    content:'';position:absolute;right:14px;bottom:14px;width:38px;height:38px;
+    pointer-events:none;opacity:0.18;
+    background-image:radial-gradient(var(--gold-3) 0.8px,transparent 0.8px);
+    background-size:7px 7px;
+    -webkit-mask-image:radial-gradient(circle at 100% 100%,#000,transparent 78%);
+    mask-image:radial-gradient(circle at 100% 100%,#000,transparent 78%);
+  }
+
+  /* Шаг маршрута: тонкая рамка-уголок сверху, подчёркивает нумерацию.
+     ::after у .route-step занят подсветкой при наведении — берём ::before */
+  .route-step::before{
+    content:'';position:absolute;left:12px;top:12px;width:14px;height:14px;
+    border:1px solid var(--gold-3);border-right:none;border-bottom:none;
+    opacity:0.25;pointer-events:none;
+  }
+
+  /* Карточка этапа работы: штриховка в нижнем углу */
+  .path{position:relative;overflow:hidden}
+  .path::after{
+    content:'';position:absolute;right:0;bottom:0;width:96px;height:96px;
+    pointer-events:none;opacity:0.1;
+    background:repeating-linear-gradient(45deg,transparent 0 6px,var(--gold-3) 6px 6.6px);
+    -webkit-mask-image:radial-gradient(circle at 100% 100%,#000,transparent 74%);
+    mask-image:radial-gradient(circle at 100% 100%,#000,transparent 74%);
+  }
+
+  /* Полоса «почему нам доверяют»: разделительный ромб между колонками */
+  .whyus-item{position:relative}
+  .whyus-item + .whyus-item::before{
+    content:'';position:absolute;left:-4px;top:50%;width:5px;height:5px;margin-top:-3px;
+    border:1px solid var(--gold-3);transform:rotate(45deg);
+    background:var(--bg-2);opacity:0.7;pointer-events:none;
+  }
 
   /* ===================== HOVER LIFT — CARDS ===================== */
   .dir-cell{transition:background .4s ease,transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1)}
@@ -1620,17 +1714,9 @@
   #hero-about .fl-compass{top:18px;right:14px;transform:scaleX(-1)}
   #process .fl-wave{bottom:32px;left:20px;transform:rotate(180deg)}
   #process .fl-pendulum{top:22px;right:14px;transform:scaleX(-1) rotate(-10deg)}
-  /* ===================== НОРМАЛИЗАЦИЯ ТЕКСТА ===================== */
-  /* paragraph в блоках — единый размер */
-  .dir-cell p,.proj-desc,.flagship-body p,.path p{font-size:12px!important;line-height:1.8}
-  .route-step p{font-size:12px;line-height:1.62}
-  .route-step h4{font-size:15px}
-  .master-foot{font-size:13px}
-  .about-quote{font-size:15px}
-  .dir-lead{font-size:13px}
-  .flagship-left h3,.flagship-right h3{font-size:15px}
-  .path h3{font-size:15px!important}
-  .path p.path-lead{font-size:12px!important;line-height:1.8}
+  /* Размеры текста заданы в самих правилах блоков — секции-костыля
+     с !important больше нет. Здесь только то, что нигде не объявлено */
+  .path p{font-size:12px;line-height:1.8}
 
   /* ===================== УЛУЧШ. HOVER-АНИМАЦИИ ===================== */
   .fact{transition:background .25s,border-color .25s;border-radius:6px;padding-left:8px;margin-left:-8px}
@@ -1643,14 +1729,33 @@
   .path-foot{transition:border-color .3s}
   .path:hover .path-foot{border-color:rgba(212,184,138,0.2)}
 
-  /* ===================== BIDIRECTIONAL REVEAL ===================== */
+  /* ===================== BIDIRECTIONAL REVEAL =====================
+     Блок появляется с той стороны, откуда к нему подошёл скролл,
+     и уходит в ту же сторону — движение всегда согласовано с прокруткой */
   html.js .reveal{
     opacity:0;
-    transform:translateY(22px);
-    transition:opacity .75s cubic-bezier(0.16,1,0.3,1),
-               transform .75s cubic-bezier(0.16,1,0.3,1);
+    transform:translateY(30px) scale(0.994);
+    transition:opacity .8s cubic-bezier(0.16,1,0.3,1),
+               transform .8s cubic-bezier(0.16,1,0.3,1),
+               filter .8s cubic-bezier(0.16,1,0.3,1);
+    filter:blur(2px);
+    will-change:opacity,transform;
   }
-  html.js .reveal.in{opacity:1;transform:none}
+  html.js .reveal.in{opacity:1;transform:none;filter:none}
+  /* ушёл за верхний край — уезжает вверх, за нижний — вниз */
+  html.js .reveal.out-up{transform:translateY(-30px) scale(0.994)}
+  html.js .reveal.out-down{transform:translateY(30px) scale(0.994)}
+
+  /* Каскад: карточки внутри сетки проявляются одна за другой */
+  html.js .stagger > *{
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity .62s cubic-bezier(0.16,1,0.3,1) var(--d,0s),
+               transform .62s cubic-bezier(0.16,1,0.3,1) var(--d,0s);
+  }
+  html.js .stagger.in > *{opacity:1;transform:none}
+  html.js .stagger.out-up > *{transform:translateY(-20px)}
+
   /* стрелы кнопок и inline-элементы */
   html.js .reveal-item{opacity:0;transform:translateY(14px);
     transition:opacity .6s cubic-bezier(0.16,1,0.3,1) var(--delay,0s),
@@ -1658,6 +1763,14 @@
   html.js .reveal-item.in{opacity:1;transform:none}
   .trust-grid .trust-facts{--delay:0s}
   .trust-grid .trust-reviews{--delay:.15s}
+
+  /* Заголовок секции: подпись и линия въезжают отдельно от заголовка */
+  html.js .reveal .section-eyebrow{opacity:0;transform:translateY(10px);
+    transition:opacity .7s cubic-bezier(0.16,1,0.3,1) .05s,transform .7s cubic-bezier(0.16,1,0.3,1) .05s}
+  html.js .reveal .section-sub{opacity:0;transform:translateY(12px);
+    transition:opacity .7s cubic-bezier(0.16,1,0.3,1) .22s,transform .7s cubic-bezier(0.16,1,0.3,1) .22s}
+  html.js .reveal.in .section-eyebrow,
+  html.js .reveal.in .section-sub{opacity:1;transform:none}
 
   /* === КНОПКА СЕРТИФИКАТОВ === */
   .btn-certificates{
@@ -2156,16 +2269,21 @@
     </svg>
 
     <div class="section-head reveal">
-      <div class="section-eyebrow">— Кожа <span class="orn">&#9670;</span> Реставрация <span class="orn">&#9670;</span> Ювелирка <span class="orn">&#9670;</span> Марьяж <span class="orn">&#9670;</span> Авторские часы —</div>
+      <div class="section-eyebrow">— Реставрация <span class="orn">&#9670;</span> Ювелирка <span class="orn">&#9670;</span> Марьяж <span class="orn">&#9670;</span> Авторские часы <span class="orn">&#9670;</span> Кожа —</div>
       <h2 class="section-title">Направления <em>мастерской</em></h2>
-      <p class="section-sub">Мастерская работает шире обычного ремонта: от пошива кожаных ремешков и чехлов и изготовления корпусов до бережного восстановления исторических механизмов и создания авторских часов с нуля.</p>
+      <p class="section-sub">Мастерская работает шире обычного ремонта: от бережного восстановления и реставрации исторических механизмов, изготовления корпусов и авторских часов с нуля — до пошива кожаных ремешков и чехлов.</p>
     </div>
 
-    <!-- ФЛАГМАНСКОЕ НАПРАВЛЕНИЕ — кожаный ремешок для карманных часов -->
+    <!-- ФЛАГМАНСКОЕ НАПРАВЛЕНИЕ — реставрация и обслуживание механизмов -->
     <div class="flagship reveal">
+      <!-- Декор в полях по бокам от фото: линейная гравюра, без завитков -->
+      <span class="flagship-rule flagship-rule-l"></span>
+      <span class="flagship-rule flagship-rule-r"></span>
+      <span class="flagship-hatch flagship-hatch-tl"></span>
+      <span class="flagship-hatch flagship-hatch-tr"></span>
       <div class="flagship-grid">
         <div class="flagship-visual">
-          <img class="fslide active" src="img/flagship-1.jpg" alt="Кожаный ремешок ручной работы для карманных часов">
+          <img class="fslide active" src="img/flagship-restoration.jpg" width="930" height="620" loading="lazy" decoding="async" alt="Открытый часовой механизм крупным планом: шестерни, камни, анкерная вилка, тёплый свет">
           <div class="fv-warm"></div>
           <div class="fv-vig"></div>
           <div class="fv-edge"></div>
@@ -2174,30 +2292,24 @@
           <div class="corner tr"></div>
           <div class="corner bl"></div>
           <div class="corner br"></div>
-          <svg class="fv-flourish fv-fl-tl" viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M6 76 C 6 38 38 6 76 6"/><path d="M6 58 C 20 58 28 50 33 40 C 38 30 34 18 44 13 C 52 9 60 12 63 20"/><path d="M6 40 C 16 40 22 32 27 24"/><circle cx="6" cy="76" r="2.2" fill="currentColor" stroke="none"/><circle cx="6" cy="76" r="6" stroke="currentColor" stroke-width="0.6"/></svg>
-          <svg class="fv-flourish fv-fl-tr" viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M6 76 C 6 38 38 6 76 6"/><path d="M6 58 C 20 58 28 50 33 40 C 38 30 34 18 44 13 C 52 9 60 12 63 20"/><path d="M6 40 C 16 40 22 32 27 24"/><circle cx="6" cy="76" r="2.2" fill="currentColor" stroke="none"/><circle cx="6" cy="76" r="6" stroke="currentColor" stroke-width="0.6"/></svg>
-          <svg class="fv-flourish fv-fl-bl" viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M6 76 C 6 38 38 6 76 6"/><path d="M6 58 C 20 58 28 50 33 40 C 38 30 34 18 44 13 C 52 9 60 12 63 20"/><path d="M6 40 C 16 40 22 32 27 24"/><circle cx="6" cy="76" r="2.2" fill="currentColor" stroke="none"/><circle cx="6" cy="76" r="6" stroke="currentColor" stroke-width="0.6"/></svg>
-          <svg class="fv-flourish fv-fl-br" viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M6 76 C 6 38 38 6 76 6"/><path d="M6 58 C 20 58 28 50 33 40 C 38 30 34 18 44 13 C 52 9 60 12 63 20"/><path d="M6 40 C 16 40 22 32 27 24"/><circle cx="6" cy="76" r="2.2" fill="currentColor" stroke="none"/><circle cx="6" cy="76" r="6" stroke="currentColor" stroke-width="0.6"/></svg>
         </div>
 
         <div class="flagship-body">
-          <div class="flagship-mark">I</div>
-
           <div class="flagship-left">
             <div class="flagship-eyebrow"><span class="dot"></span> Главное направление мастерской</div>
-            <h3>Кожаный ремешок для <em>карманных часов</em></h3>
-            <div class="flagship-sub">Карманные часы остаются собой — и переезжают на руку</div>
-            <p>Карманные часы не разбираются и не переделываются. Они сохраняются в аутентичном виде, а на руку выходят на кожаном ремешке, сшитом под конкретный экземпляр. <span class="accent">Ремешок шьётся по обмерам:</span> посадка, вырез под циферблат, изгиб под запястье.</p>
-            <p>Кожа растительного дубления, ручная обработка — тонировка, тиснение (герб, монограмма, имя), седельный шов, обработка краёв. Ремешки не покупаются на стороне: кожа, цвет и нитки согласовываются под каждый заказ. Часы вынимаются в исходном состоянии — <span class="accent">всё обратимо.</span></p>
-            <p>Отдельно шьются <span class="accent">кожаные чехлы</span> — круглые, под карман и цепочку, когда часы остаются карманными.</p>
+            <h3>Реставрация и обслуживание <em>механизмов</em></h3>
+            <div class="flagship-sub">Возвращение хода и характера старым часам</div>
+            <p>Работа начинается с диагностики: разбор, чистка, оценка состояния деталей и причины, по которой механизм встал. <span class="accent">Смазка и регулировка хода</span> возвращают точность вещам, которые десятилетиями простояли без дела.</p>
+            <p>Если нужной детали не существует или её не найти — <span class="accent">она изготавливается в мастерской.</span> Восстанавливаются и внешние элементы: корпус, циферблат, стрелки — с тем же вниманием к оригиналу.</p>
+            <p>Отдельное место занимают <span class="accent">исторические и семейные часы:</span> в основе работы — уважение к возрасту и ценности вещи, а не желание сделать её «как новую» любой ценой.</p>
           </div>
 
           <div class="flagship-right">
             <div class="flagship-specs">
-              <div class="fspec"><span class="k">Основа</span><span class="v">Натуральная кожа растительного дубления</span></div>
-              <div class="fspec"><span class="k">Работа</span><span class="v">Раскрой, тиснение, шов — вручную</span></div>
-              <div class="fspec"><span class="k">Посадка</span><span class="v">По обмерам часов и запястья</span></div>
-              <div class="fspec"><span class="k">Механизм</span><span class="v">Не вскрывается — аутентичный вид</span></div>
+              <div class="fspec"><span class="k">Диагностика</span><span class="v">Разбор, чистка, оценка хода и состояния</span></div>
+              <div class="fspec"><span class="k">Детали</span><span class="v">Изготовление утраченных деталей вручную</span></div>
+              <div class="fspec"><span class="k">Восстановление</span><span class="v">Внешние элементы: корпус, циферблат, стрелки</span></div>
+              <div class="fspec"><span class="k">Подход</span><span class="v">Бережно к историческим и семейным часам</span></div>
             </div>
           </div>
         </div>
@@ -2206,27 +2318,13 @@
 
     <div class="dir-split reveal">
       <span class="ln"></span>
-      <span class="lbl">Остальные направления</span>
+      <span class="lbl">Помимо реставрации</span>
       <span class="ln"></span>
     </div>
 
     <div class="dir-grid reveal">
       <div class="dir-cell">
         <div class="dir-num">II</div>
-        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="23" cy="23" r="17"/><circle cx="23" cy="23" r="9"/><circle cx="23" cy="23" r="2" fill="currentColor" stroke="none"/><line x1="23" y1="4" x2="23" y2="10"/><line x1="23" y1="36" x2="23" y2="42"/><line x1="4" y1="23" x2="10" y2="23"/><line x1="36" y1="23" x2="42" y2="23"/></svg>
-        <h3>Реставрация и обслуживание</h3>
-        <div class="dir-lead">Возвращение хода и характера</div>
-        <p>Диагностика, восстановление и обслуживание механизма. Когда нужной детали не существует или её не найти — она изготавливается в мастерской. В основе — уважение к возрасту и исторической ценности вещи.</p>
-        <ul class="dir-list">
-          <li>Диагностика, чистка, смазка, регулировка хода</li>
-          <li>Изготовление утраченных деталей механизма</li>
-          <li>Восстановление внешних элементов</li>
-          <li>Работа с историческими и семейными часами</li>
-        </ul>
-        <div class="dir-foot">Механика &middot; изготовление деталей &middot; бережное восстановление</div>
-      </div>
-      <div class="dir-cell">
-        <div class="dir-num">III</div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="15" y="10" width="16" height="26" rx="2"/><circle cx="23" cy="23" r="5"/><path d="M18 15h10M18 31h10" stroke-width="1.5"/><circle cx="23" cy="23" r="1.2" fill="currentColor" stroke="none"/></svg>
         <h3>Изготовление корпусов</h3>
         <div class="dir-lead">Ювелирная работа · золото, серебро, платина</div>
@@ -2240,7 +2338,7 @@
         <div class="dir-foot">Ювелирная работа &middot; благородные металлы &middot; индивидуальный проект</div>
       </div>
       <div class="dir-cell">
-        <div class="dir-num">IV</div>
+        <div class="dir-num">III</div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="18" y="4" width="10" height="7"/><rect x="18" y="35" width="10" height="7"/><circle cx="23" cy="23" r="12.5"/><line x1="23" y1="23" x2="23" y2="14"/><line x1="23" y1="23" x2="29" y2="26"/><circle cx="23" cy="23" r="1.4" fill="currentColor" stroke="none"/></svg>
         <h3>Марьяж</h3>
         <div class="dir-lead">Наручные часы из исторического механизма</div>
@@ -2254,7 +2352,7 @@
         <div class="dir-foot">Историческая основа &middot; новый корпус</div>
       </div>
       <div class="dir-cell">
-        <div class="dir-num">V</div>
+        <div class="dir-num">IV</div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="23" cy="23" r="17"/><path d="M23 8v3M23 35v3M8 23h3M35 23h3M31 12l-2 2M15 32l-2 2M31 34l-2-2M15 14l-2-2"/><circle cx="23" cy="23" r="1.6" fill="currentColor" stroke="none"/><line x1="23" y1="23" x2="23" y2="13"/><line x1="23" y1="23" x2="30" y2="27"/></svg>
         <h3>Авторские часы и циферблаты</h3>
         <div class="dir-lead">Проект, который начинается с идеи</div>
@@ -2266,6 +2364,20 @@
           <li>Проработка образа вещи целиком</li>
         </ul>
         <div class="dir-foot">С нуля &middot; под идею и повод</div>
+      </div>
+      <div class="dir-cell">
+        <div class="dir-num">V</div>
+        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="14" y="6" width="18" height="34" rx="7"/><line x1="23" y1="10" x2="23" y2="36" stroke-dasharray="2 3"/><circle cx="23" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="23" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="32" r="1" fill="currentColor" stroke="none"/></svg>
+        <h3>Кожаный ремешок и чехлы</h3>
+        <div class="dir-lead">Карманные часы остаются собой — и переезжают на руку</div>
+        <p>Карманные часы не разбираются и не переделываются: сохраняются в аутентичном виде, а на руку выходят на ремешке, сшитом под конкретный экземпляр — по обмерам, с посадкой и вырезом под циферблат.</p>
+        <ul class="dir-list">
+          <li>Кожа растительного дубления, ручная обработка</li>
+          <li>Тонировка, тиснение — герб, монограмма, имя</li>
+          <li>Седельный шов, ручная обработка краёв</li>
+          <li>Кожаные чехлы — под карман и цепочку</li>
+        </ul>
+        <div class="dir-foot">Ручная работа &middot; сопутствует реставрации и марьяжу</div>
       </div>
     </div>
 
@@ -2351,7 +2463,7 @@
       <!-- 1 — Циферблат из серебряного рубля 1833 года -->
       <article class="proj-card" onclick="openProject('coin1833')">
         <div class="photo proj-photo">
-          <img src="img/projects/coin1833-01.jpg" alt="Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике">
+          <img src="img/projects/coin1833-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
           <div class="proj-count">9 кадров</div>
@@ -2364,64 +2476,67 @@
         </div>
       </article>
 
-      <!-- 2–10 — заглушки: проекты есть, описания собираются -->
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 2 — Monnard, 1883 -->
+      <article class="proj-card" onclick="openProject('monnard1883')">
+        <div class="photo proj-photo">
+          <img src="img/projects/monnard1883-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Открытый механизм карманных часов Monnard на кожаном напульснике, рядом заводной ключ и цепочка">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
-          <div class="proj-count">9 кадров</div>
+          <div class="proj-count">8 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · историческая механика</div>
           <h3 class="proj-name">Monnard, <em>1883 год</em></h3>
           <div class="proj-lead">Завод и перевод стрелок ключиком</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 3 — Георгъ Фавръ Жако, 1887 -->
+      <article class="proj-card" onclick="openProject('zhako1887')">
+        <div class="photo proj-photo">
+          <img src="img/projects/zhako1887-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы «Георгъ Фавръ Жако» 1887 года на чёрном кожаном напульснике с заводным ключом">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · историческая механика</div>
           <h3 class="proj-name">Георгъ Фавръ Жако, <em>1887 год</em></h3>
           <div class="proj-lead">Тоже завод ключиком</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 4 — Павелъ Буре, 1905 -->
+      <article class="proj-card" onclick="openProject('bure1905')">
+        <div class="photo proj-photo">
+          <img src="img/projects/bure1905-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Павелъ Буре на бархатной подушке рядом с историческим рекламным листом фабрики">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · русская школа</div>
           <h3 class="proj-name">Павелъ Буре, <em>1905 год</em></h3>
           <div class="proj-lead">Один из самых узнаваемых русских часовых домов</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 5 — Longines, 1911 -->
+      <article class="proj-card" onclick="openProject('longines1911')">
+        <div class="photo proj-photo">
+          <img src="img/projects/longines1911-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Longines 1911 года на кожаном напульснике в фирменной коробке">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">7 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · швейцарская механика</div>
           <h3 class="proj-name">Longines, <em>1911 год</em></h3>
           <div class="proj-lead">Механизм начала прошлого века</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
@@ -2851,17 +2966,49 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   apply();
 })();
 
-// Мягкое появление секций — двунаправленное (появляется и исчезает при скролле)
+// Мягкое появление секций — двунаправленное (появляется и исчезает при скролле).
+// Блок уезжает в ту сторону, за которую ушёл: вверх за шапку или вниз за экран.
 if(!reduceMotion){
   document.documentElement.classList.add('js');
+
+  // Сеткам раздаём каскад: дети проявляются по очереди, а не разом
+  var GRIDS = ['.dir-grid','.proj-grid','.route','.whyus-grid','.paths',
+               '.workshop-grid','.trust-reviews','.price-hints','.hero-badges'];
+  GRIDS.forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(grid){
+      grid.classList.add('stagger');
+      var kids = grid.children, step = kids.length > 8 ? 0.045 : 0.075;
+      for(var i = 0; i < kids.length; i++){
+        kids[i].style.setProperty('--d', (i * step).toFixed(3) + 's');
+      }
+      // сама сетка должна наблюдаться, даже если на ней не было .reveal
+      if(!grid.classList.contains('reveal')) grid.classList.add('reveal');
+    });
+  });
+
   var revs = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        if(en.isIntersecting){ en.target.classList.add('in'); }
-        else { en.target.classList.remove('in'); }
+        var el = en.target;
+        if(en.isIntersecting){
+          el.classList.add('in');
+          el.classList.remove('out-up','out-down');
+        } else {
+          el.classList.remove('in');
+          // берём актуальный rect, а не снимок из записи: при быстрой
+          // прокрутке снимок устаревает и блок уезжает не в ту сторону
+          var r = el.getBoundingClientRect();
+          if(r.bottom < window.innerHeight * 0.5){
+            el.classList.add('out-up');
+            el.classList.remove('out-down');
+          } else {
+            el.classList.add('out-down');
+            el.classList.remove('out-up');
+          }
+        }
       });
-    }, {threshold:0.1, rootMargin:'0px 0px -5% 0px'});
+    }, {threshold:0.08, rootMargin:'0px 0px -6% 0px'});
     revs.forEach(function(el){ io.observe(el); });
   } else {
     revs.forEach(function(el){ el.classList.add('in'); });
@@ -2951,22 +3098,20 @@ if(!reduceMotion){
   if(!dot || !ring) return;
 
   document.documentElement.classList.add('has-cursor');
-  var mx=0, my=0, cx=0, cy=0, rx=0, ry=0;
+  var mx=0, my=0;
 
   document.addEventListener('mousemove', function(e){
     mx = e.clientX;
     my = e.clientY;
   });
 
+  // Без сглаживания (lerp): скин и ховер-анимации остаются,
+  // но курсор идёт вплотную за мышью — как обычный системный
   function animate(){
-    cx += (mx - cx) * 0.35;
-    cy += (my - cy) * 0.35;
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    dot.style.left = cx + 'px';
-    dot.style.top = cy + 'px';
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+    ring.style.left = mx + 'px';
+    ring.style.top = my + 'px';
     requestAnimationFrame(animate);
   }
   animate();
@@ -3142,6 +3287,92 @@ var PROJECTS = {
       'img/projects/coin1833-04.jpg','img/projects/coin1833-05.jpg','img/projects/coin1833-06.jpg',
       'img/projects/coin1833-07.jpg','img/projects/coin1833-08.jpg','img/projects/coin1833-09.jpg'
     ]
+  },
+  monnard1883: {
+    type: 'Реставрация · историческая механика',
+    name: 'Monnard, <em>1883 год</em>',
+    lead: 'Карманные часы конца XIX века с ключевым заводом — на кожаном напульснике вместо цепочки',
+    body: [
+      'Швейцарский Monnard Genève, 1883 год. Завод пружины и перевод стрелок — ключиком, без единой заводной головки на корпусе: в те годы это был единственный способ обращения с часами, и здесь он сохранён таким, каким был задуман.',
+      'Механизм разобран, вычищен от старой загустевшей смазки, проверен по узлам и собран заново — с восстановлением точного хода. Родные заводной ключ и цепочка сохранены и идут вместе с часами как часть комплекта.',
+      'Корпус переведён с карманного ношения на запястье: часы закреплены на широком кожаном напульснике ручного пошива, раскроенном и прошитом под конкретный корпус.'
+    ],
+    specs: [
+      ['Механизм', 'Ключевой завод, оригинальный'],
+      ['Год', '1883'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/monnard1883-01.jpg','img/projects/monnard1883-02.jpg','img/projects/monnard1883-03.jpg',
+      'img/projects/monnard1883-04.jpg','img/projects/monnard1883-05.jpg','img/projects/monnard1883-06.jpg',
+      'img/projects/monnard1883-07.jpg','img/projects/monnard1883-08.jpg'
+    ]
+  },
+  zhako1887: {
+    type: 'Реставрация · историческая механика',
+    name: 'Георгъ Фавръ Жако, <em>1887 год</em>',
+    lead: 'Мастерская Ле-Локля, из которой позже вырастет Zenith — тоже на ключевом заводе',
+    body: [
+      'На циферблате — «Георгъ Фавръ Жако, Локль», 1887 год. Тем же именем — Georges Favre-Jacot — позже назовут одну из самых известных швейцарских мануфактур: на задней крышке корпуса рядом с фабричной гравировкой уже видно клеймо Zenith.',
+      'Завод и перевод стрелок — ключиком, как и полагалось часам той эпохи. Механизм полностью разобран, вычищен, смазан заново и отрегулирован по ходу; родной ключ и цепочка сохранены.',
+      'Часы собраны на чёрном кожаном напульснике ручной работы — плотная прошивка, состаренная фурнитура, посадка под конкретный корпус.'
+    ],
+    specs: [
+      ['Механизм', 'Ключевой завод, оригинальный'],
+      ['Год', '1887'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/zhako1887-01.jpg','img/projects/zhako1887-02.jpg','img/projects/zhako1887-03.jpg',
+      'img/projects/zhako1887-04.jpg','img/projects/zhako1887-05.jpg','img/projects/zhako1887-06.jpg',
+      'img/projects/zhako1887-07.jpg','img/projects/zhako1887-08.jpg','img/projects/zhako1887-09.jpg',
+      'img/projects/zhako1887-10.jpg'
+    ]
+  },
+  bure1905: {
+    type: 'Реставрация · русская школа',
+    name: 'Павелъ Буре, <em>1905 год</em>',
+    lead: 'Часовой дом, поставлявший часы Императорскому двору — в охотничьем серебряном корпусе',
+    body: [
+      'Павелъ Буре — один из самых узнаваемых часовых домов дореволюционной России, поставщик Высочайшего двора. Часы 1905 года — в серебряном охотничьем корпусе с откидной крышкой, закрывающей циферблат.',
+      'Механизм извлечён, вычищен и смазан заново, ход отрегулирован. Крышка и заводная головка — родные, без замен.',
+      'Часы собраны на кожаном напульснике ручной работы с тиснением по мотивам фирменной рекламы фабрики — двуглавый орёл и название дома читаются на коже так же чётко, как на бумаге.'
+    ],
+    specs: [
+      ['Механизм', 'Швейцарский, серебряный охотничий корпус'],
+      ['Год', '1905'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/bure1905-01.jpg','img/projects/bure1905-02.jpg','img/projects/bure1905-03.jpg',
+      'img/projects/bure1905-04.jpg','img/projects/bure1905-05.jpg','img/projects/bure1905-06.jpg',
+      'img/projects/bure1905-07.jpg','img/projects/bure1905-08.jpg','img/projects/bure1905-09.jpg',
+      'img/projects/bure1905-10.jpg'
+    ]
+  },
+  longines1911: {
+    type: 'Реставрация · швейцарская механика',
+    name: 'Longines, <em>1911 год</em>',
+    lead: 'Начало прошлого века, фирменная коробка и клеймёная кожа ремня',
+    body: [
+      'Швейцарский Longines 1911 года — серебряный корпус, эмалевый циферблат с фирменной надписью и отдельным счётчиком секунд.',
+      'Механизм вычищен, смазан заново, ход отрегулирован; заводная головка и стекло — родные.',
+      'Ремень — кожаный напульсник ручного пошива с тиснёным клеймом Longines на пряжке и шлевках, под стать оригинальной коробке часов.'
+    ],
+    specs: [
+      ['Механизм', 'Швейцарский, серебряный корпус'],
+      ['Год', '1911'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/longines1911-01.jpg','img/projects/longines1911-02.jpg','img/projects/longines1911-03.jpg',
+      'img/projects/longines1911-04.jpg','img/projects/longines1911-05.jpg','img/projects/longines1911-06.jpg',
+      'img/projects/longines1911-07.jpg'
+    ]
   }
 };
 
@@ -3160,7 +3391,7 @@ function openProject(key){
     return '<div class="pm-spec"><span class="k">'+s[0]+'</span><span class="v">'+s[1]+'</span></div>';
   }).join('');
   document.getElementById('pmThumbs').innerHTML = p.photos.map(function(src,i){
-    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+src+'" alt=""></button>';
+    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+src+'" loading="lazy" decoding="async" alt=""></button>';
   }).join('');
 
   document.getElementById('projModal').classList.add('active');
@@ -3235,7 +3466,7 @@ document.addEventListener('keydown', function(e){
       <div class="cert-carousel-track">
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" alt="Сертификат 1">
+            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 1">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -3244,7 +3475,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" alt="Сертификат 2">
+            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 2">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -3253,7 +3484,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" alt="Сертификат 3">
+            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 3">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
