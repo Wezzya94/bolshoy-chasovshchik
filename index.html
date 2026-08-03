@@ -1133,7 +1133,18 @@
   /* --- Блок 4: Избранные проекты --- */
   /* Сетка 2 колонки: карточка = кадр 3:2 + компактная подпись.
      Развёрнутый текст живёт в модалке, иначе 21 проект не читается */
-  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:56px}
+  /* Три столбца. Контейнер секции расширен, иначе карточки ужимаются на треть;
+     так потеря ширины карточки — около 6% против прежней сетки в два столбца */
+  #projects .container{max-width:1280px}
+  #projects .section-sub{max-width:720px;margin-left:auto;margin-right:auto}
+  .proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:56px}
+  @media (max-width:1180px){
+    #projects .container{max-width:920px}
+    .proj-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:680px){
+    .proj-grid{grid-template-columns:1fr}
+  }
   .proj-card{background:var(--bg-2);border:1px solid var(--border-2);display:flex;flex-direction:column;transition:border-color .25s;border-radius:16px;overflow:hidden}
   .proj-card:hover{border-color:var(--border)}
   .proj-card .photo{aspect-ratio:3 / 2;height:auto;border:none;border-bottom:1px solid var(--border-2);border-radius:0}
@@ -1742,6 +1753,8 @@
     will-change:opacity,transform;
   }
   html.js .reveal.in{opacity:1;transform:none;filter:none}
+  /* карточки проектов появляются по одной — задержка задаёт «набегание» ряда */
+  html.js .proj-reveal{transition-delay:var(--d,0s)}
   /* ушёл за верхний край — уезжает вверх, за нижний — вниз */
   html.js .reveal.out-up{transform:translateY(-30px) scale(0.994)}
   html.js .reveal.out-down{transform:translateY(30px) scale(0.994)}
@@ -2540,78 +2553,259 @@
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 6 — longines1917 -->
+      <article class="proj-card" onclick="openProject('longines1917')">
+        <div class="photo proj-photo">
+          <img src="img/projects/longines1917-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Longines 1917 года на тёмном кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · швейцарская механика</div>
           <h3 class="proj-name">Longines, <em>1917 год</em></h3>
           <div class="proj-lead">Ещё один экземпляр той же марки, шестью годами позже</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 7 — hebdomas8 -->
+      <article class="proj-card" onclick="openProject('hebdomas8')">
+        <div class="photo proj-photo">
+          <img src="img/projects/hebdomas8-05.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Hebdomas с восьмидневным заводом: белый циферблат с синими эмалевыми цифрами и открытым балансом">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Редкая механика</div>
-          <h3 class="proj-name">Часы с <em>8-дневным заводом</em></h3>
-          <div class="proj-lead">Неделя хода от одного завода</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <div class="proj-type">Редкая механика · восьмидневный завод</div>
+          <h3 class="proj-name">Hebdomas, <em>8 дней хода</em></h3>
+          <div class="proj-lead">Неделя автономности от одного завода — и открытый баланс прямо на циферблате</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 8 — orion1919 -->
+      <article class="proj-card" onclick="openProject('orion1919')">
+        <div class="photo proj-photo">
+          <img src="img/projects/orion1919-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Orion 1919 года на кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · историческая механика</div>
           <h3 class="proj-name">Orion, <em>1919 год</em></h3>
           <div class="proj-lead">Механизм межвоенного времени</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 9 — doxa1928 -->
+      <article class="proj-card" onclick="openProject('doxa1928')">
+        <div class="photo proj-photo">
+          <img src="img/projects/doxa1928-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Doxa 1928 года на кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">6 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Реставрация · швейцарская механика</div>
           <h3 class="proj-name">Doxa, <em>1928 год</em></h3>
           <div class="proj-lead">Классика конца двадцатых</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
 
-      <article class="proj-card soon">
-        <div class="photo velvet-photo">
-          <div class="grain"></div><div class="warmlight"></div><div class="vignette"></div>
+      <!-- 10 — dualtime1910 -->
+      <article class="proj-card" onclick="openProject('dualtime1910')">
+        <div class="photo proj-photo">
+          <img src="img/projects/dualtime1910-05.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы 1910 года с двумя циферблатами для разных часовых поясов на кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-          <div class="photo-ph"><div class="photo-ph-ring"></div></div>
           <div class="proj-count">9 кадров</div>
         </div>
         <div class="proj-body">
           <div class="proj-type">Редкая механика · усложнение</div>
           <h3 class="proj-name">Карманные часы с <em>двойным временем</em></h3>
           <div class="proj-lead">Два часовых пояса на одном циферблате, 1910 год</div>
-          <div class="proj-soon">— описание готовится —</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 11 — buregold1917 -->
+      <article class="proj-card" onclick="openProject('buregold1917')">
+        <div class="photo proj-photo">
+          <img src="img/projects/buregold1917-07.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Золотые часы Павелъ Буре 1917 года в корпусе-бочонке на бордовом кожаном ремне">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · русская школа</div>
+          <h3 class="proj-name">Павелъ Буре, <em>золото 1917 года</em></h3>
+          <div class="proj-lead">Золотой корпус-бочонок последнего года империи</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 12 — omega1912 -->
+      <article class="proj-card" onclick="openProject('omega1912')">
+        <div class="photo proj-photo">
+          <img src="img/projects/omega1912-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Omega 1912 года с откидной глухой крышкой на кожаном напульснике в фирменной коробке">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">Omega, <em>1912 год</em></h3>
+          <div class="proj-lead">Глухая крышка с гравировкой марки и года</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 13 — molnia1982 -->
+      <article class="proj-card" onclick="openProject('molnia1982')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia1982-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния 1982 года на кожаном напульснике среди коллекции механических часов">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · советская механика</div>
+          <h3 class="proj-name">Молния, <em>1982 год</em></h3>
+          <div class="proj-lead">Челябинский карманный калибр — на запястье</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 14 — molnia-cifermeh -->
+      <article class="proj-card" onclick="openProject('molnia-cifermeh')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia-cifermeh-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с авторским золотистым циферблатом и гравированным механизмом на коричневом ремне">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · циферблат и механизм</div>
+          <h3 class="proj-name">Молния, <em>ручная работа</em></h3>
+          <div class="proj-lead">Авторский циферблат и гравированный механизм — обе стороны сделаны вручную</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 15 — molnia-ruchn -->
+      <article class="proj-card" onclick="openProject('molnia-ruchn')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia-ruchn-04.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с гравированным мотоциклом на золотистом циферблате">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">9 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · гравировка циферблата</div>
+          <h3 class="proj-name">Молния, <em>мотоциклетный циферблат</em></h3>
+          <div class="proj-lead">Рисунок нанесён вручную по латунному циферблату</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 16 — molnia-shiva -->
+      <article class="proj-card" onclick="openProject('molnia-shiva')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia-shiva-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы-скелетон Молния с ручной гравировкой механизма на кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">7 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · скелетон</div>
+          <h3 class="proj-name">Молния, проект <em>«Шива»</em></h3>
+          <div class="proj-lead">Механизм раскрыт насквозь и покрыт ручной гравировкой</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 17 — molnia-tsoy -->
+      <article class="proj-card" onclick="openProject('molnia-tsoy')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia-tsoy-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с портретом Виктора Цоя и логотипом группы Кино на чёрном циферблате">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · памятная серия</div>
+          <h3 class="proj-name">Молния, <em>«Кино»</em></h3>
+          <div class="proj-lead">Портрет и автограф золотом по чёрному циферблату</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 18 — molnia-olymp80 -->
+      <article class="proj-card" onclick="openProject('molnia-olymp80')">
+        <div class="photo proj-photo">
+          <img src="img/projects/molnia-olymp80-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с олимпийской эмблемой Москва-80 на чёрном циферблате">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">9 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Авторская работа · памятная серия</div>
+          <h3 class="proj-name">Молния, <em>«Олимпиада-80»</em></h3>
+          <div class="proj-lead">Эмблема московских Игр золотом по чёрному</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 19 — vostok-amfibia -->
+      <article class="proj-card" onclick="openProject('vostok-amfibia')">
+        <div class="photo proj-photo">
+          <img src="img/projects/vostok-amfibia-10.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Кастомные часы Восток Амфибия с поворотным безелем на чёрном кожаном напульснике">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Кастом · советская механика</div>
+          <h3 class="proj-name">Восток Амфибия, <em>кастом</em></h3>
+          <div class="proj-lead">Дайверская классика, пересобранная под свой характер</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 20 — cyma1932 -->
+      <article class="proj-card" onclick="openProject('cyma1932')">
+        <div class="photo proj-photo">
+          <img src="img/projects/cyma1932-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы CYMA 1932 года с гравированным парусником на циферблате и коричневым кожаным ремнём">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">9 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">CYMA, <em>1932 год</em></h3>
+          <div class="proj-lead">Парусник, гравированный по циферблату</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
+        </div>
+      </article>
+
+      <!-- 21 — ulisse1919 -->
+      <article class="proj-card" onclick="openProject('ulisse1919')">
+        <div class="photo proj-photo">
+          <img src="img/projects/ulisse1919-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Ulysse Nardin 1919 года со светлым циферблатом на коричневом кожаном ремне">
+          <div class="grain"></div><div class="vignette"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="proj-count">10 кадров</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <h3 class="proj-name">Ulysse Nardin, <em>1919 год</em></h3>
+          <div class="proj-lead">Марка морских хронометров — в наручном формате</div>
+          <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
     </div>
@@ -2972,7 +3166,7 @@ if(!reduceMotion){
   document.documentElement.classList.add('js');
 
   // Сеткам раздаём каскад: дети проявляются по очереди, а не разом
-  var GRIDS = ['.dir-grid','.proj-grid','.route','.whyus-grid','.paths',
+  var GRIDS = ['.dir-grid','.route','.whyus-grid','.paths',
                '.workshop-grid','.trust-reviews','.price-hints','.hero-badges'];
   GRIDS.forEach(function(sel){
     document.querySelectorAll(sel).forEach(function(grid){
@@ -2984,6 +3178,20 @@ if(!reduceMotion){
       // сама сетка должна наблюдаться, даже если на ней не было .reveal
       if(!grid.classList.contains('reveal')) grid.classList.add('reveal');
     });
+  });
+
+  // Галерея проектов длиннее экрана в несколько раз: если вешать появление
+  // на всю сетку разом, нижние ряды отыграют анимацию задолго до того,
+  // как до них доскроллят. Поэтому наблюдаем за каждой карточкой отдельно,
+  // а задержку даём по месту в ряду — ряд «набегает» слева направо.
+  document.querySelectorAll('.proj-grid').forEach(function(grid){
+    grid.classList.remove('reveal','stagger');
+    var cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length || 1;
+    var kids = grid.children;
+    for(var i = 0; i < kids.length; i++){
+      kids[i].classList.add('reveal','proj-reveal');
+      kids[i].style.setProperty('--d', ((i % cols) * 0.075).toFixed(3) + 's');
+    }
   });
 
   var revs = document.querySelectorAll('.reveal');
@@ -3372,6 +3580,351 @@ var PROJECTS = {
       'img/projects/longines1911-01.jpg','img/projects/longines1911-02.jpg','img/projects/longines1911-03.jpg',
       'img/projects/longines1911-04.jpg','img/projects/longines1911-05.jpg','img/projects/longines1911-06.jpg',
       'img/projects/longines1911-07.jpg'
+    ]
+  },
+  'longines1917': {
+    type: 'Реставрация · швейцарская механика',
+    name: 'Longines, <em>1917 год</em>',
+    lead: 'Ещё один экземпляр той же марки, шестью годами позже',
+    body: [
+      'Longines 1917 года — второй экземпляр марки в собрании мастерской, на шесть лет моложе предыдущего. Серебряный корпус, эмалевый циферблат, отдельный счётчик секунд.',
+      'Механизм разобран, вычищен от старой смазки и собран заново, ход отрегулирован. Заводная головка и стекло — родные.',
+      'Ремень — кожаный напульсник ручного пошива с тиснёным клеймом марки; на съёмке часы сняты рядом со скрипкой и кларнетом, под стать возрасту вещи.'
+    ],
+    specs: [
+      ['Механизм', 'Швейцарский, серебряный корпус'],
+      ['Год', '1917'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/longines1917-01.jpg','img/projects/longines1917-02.jpg','img/projects/longines1917-03.jpg',
+      'img/projects/longines1917-04.jpg','img/projects/longines1917-05.jpg','img/projects/longines1917-06.jpg',
+      'img/projects/longines1917-07.jpg','img/projects/longines1917-08.jpg','img/projects/longines1917-09.jpg',
+      'img/projects/longines1917-10.jpg'
+    ]
+  },
+  'hebdomas8': {
+    type: 'Редкая механика · восьмидневный завод',
+    name: 'Hebdomas, <em>8 дней хода</em>',
+    lead: 'Неделя автономности от одного завода — и открытый баланс прямо на циферблате',
+    body: [
+      'Hebdomas — «восьмидневные» часы: одного завода пружины хватает на неделю с лишним хода, тогда как обычному механизму нужен ежедневный завод. Надписи «8 JOURS» и «HEBDOMAS» стоят прямо на циферблате.',
+      'Главная особенность — открытый баланс: в циферблате сделано окно, через которое видно, как работает сердце механизма. Цифры набраны синей эмалью по белому полю, между ними — россыпь звёзд.',
+      'Механизм вычищен и отрегулирован, крышка с фабричной гравировкой сохранена. Часы собраны на широком кожаном напульснике ручной работы с тиснением.'
+    ],
+    specs: [
+      ['Механизм', 'Восьмидневный завод, открытый баланс'],
+      ['Клеймо', '8 JOURS · HEBDOMAS'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, пошив напульсника']
+    ],
+    photos: [
+      'img/projects/hebdomas8-01.jpg','img/projects/hebdomas8-02.jpg','img/projects/hebdomas8-03.jpg',
+      'img/projects/hebdomas8-04.jpg','img/projects/hebdomas8-05.jpg','img/projects/hebdomas8-06.jpg',
+      'img/projects/hebdomas8-07.jpg','img/projects/hebdomas8-08.jpg','img/projects/hebdomas8-09.jpg',
+      'img/projects/hebdomas8-10.jpg'
+    ]
+  },
+  'orion1919': {
+    type: 'Реставрация · историческая механика',
+    name: 'Orion, <em>1919 год</em>',
+    lead: 'Механизм межвоенного времени',
+    body: [
+      'Orion 1919 года — механизм рубежа эпох, собранный сразу после Первой мировой. Эмалевый циферблат с арабскими цифрами и отдельным счётчиком секунд.',
+      'Механизм полностью разобран, вычищен, смазан заново и отрегулирован по ходу.',
+      'Часы переведены на кожаный напульсник ручного пошива — раскрой и прошивка под конкретный корпус.'
+    ],
+    specs: [
+      ['Механизм', 'Оригинальный, отреставрирован'],
+      ['Год', '1919'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/orion1919-01.jpg','img/projects/orion1919-02.jpg','img/projects/orion1919-03.jpg',
+      'img/projects/orion1919-04.jpg','img/projects/orion1919-05.jpg','img/projects/orion1919-06.jpg',
+      'img/projects/orion1919-07.jpg','img/projects/orion1919-08.jpg','img/projects/orion1919-09.jpg',
+      'img/projects/orion1919-10.jpg'
+    ]
+  },
+  'doxa1928': {
+    type: 'Реставрация · швейцарская механика',
+    name: 'Doxa, <em>1928 год</em>',
+    lead: 'Классика конца двадцатых',
+    body: [
+      'Швейцарская Doxa 1928 года — светлый циферблат с арабскими цифрами, отдельный счётчик секунд, спокойная геометрия конца двадцатых.',
+      'Механизм вычищен, смазан заново, ход отрегулирован.',
+      'Ремень — кожаный напульсник ручного пошива с прорезной отделкой по краю.'
+    ],
+    specs: [
+      ['Механизм', 'Швейцарский, отреставрирован'],
+      ['Год', '1928'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/doxa1928-01.jpg','img/projects/doxa1928-02.jpg','img/projects/doxa1928-03.jpg',
+      'img/projects/doxa1928-04.jpg','img/projects/doxa1928-05.jpg','img/projects/doxa1928-06.jpg'
+    ]
+  },
+  'dualtime1910': {
+    type: 'Редкая механика · усложнение',
+    name: 'Карманные часы с <em>двойным временем</em>',
+    lead: 'Два часовых пояса на одном циферблате, 1910 год',
+    body: [
+      'Редкое усложнение: на одном циферблате уживаются два независимых указателя времени — можно держать перед глазами сразу два часовых пояса. Для 1910 года это была вещь для тех, кто много ездил.',
+      'Механизм вычищен и отрегулирован, оба узла идут синхронно и держат ход.',
+      'Часы собраны на кожаном напульснике ручной работы с тиснением и глубокой посадкой корпуса; съёмка — на развороте старинной книги.'
+    ],
+    specs: [
+      ['Механизм', 'Два независимых указателя времени'],
+      ['Год', '1910'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, пошив напульсника']
+    ],
+    photos: [
+      'img/projects/dualtime1910-01.jpg','img/projects/dualtime1910-02.jpg','img/projects/dualtime1910-03.jpg',
+      'img/projects/dualtime1910-04.jpg','img/projects/dualtime1910-05.jpg','img/projects/dualtime1910-06.jpg',
+      'img/projects/dualtime1910-07.jpg','img/projects/dualtime1910-08.jpg','img/projects/dualtime1910-09.jpg'
+    ]
+  },
+  'buregold1917': {
+    type: 'Реставрация · русская школа',
+    name: 'Павелъ Буре, <em>золото 1917 года</em>',
+    lead: 'Золотой корпус-бочонок последнего года империи',
+    body: [
+      'Павелъ Буре, 1917 год — золотой корпус формы «бочонок» (tonneau), редкий для русского часового дома силуэт. Год выпуска — последний год существования империи, при которой фабрика была поставщиком двора.',
+      'Механизм вычищен, смазан заново, ход отрегулирован; корпус и циферблат сохранены без замен.',
+      'Ремень — бордовая кожа ручного пошива под цвет корпуса, с латунной пряжкой.'
+    ],
+    specs: [
+      ['Корпус', 'Золото, форма «бочонок»'],
+      ['Год', '1917'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Чистка, смазка, регулировка хода, пошив ремня']
+    ],
+    photos: [
+      'img/projects/buregold1917-01.jpg','img/projects/buregold1917-02.jpg','img/projects/buregold1917-03.jpg',
+      'img/projects/buregold1917-04.jpg','img/projects/buregold1917-05.jpg','img/projects/buregold1917-06.jpg',
+      'img/projects/buregold1917-07.jpg','img/projects/buregold1917-08.jpg','img/projects/buregold1917-09.jpg',
+      'img/projects/buregold1917-10.jpg'
+    ]
+  },
+  'omega1912': {
+    type: 'Реставрация · швейцарская механика',
+    name: 'Omega, <em>1912 год</em>',
+    lead: 'Глухая крышка с гравировкой марки и года',
+    body: [
+      'Omega 1912 года — карманный механизм в корпусе с глухой откидной крышкой: на ней выгравированы логотип марки и год выпуска, циферблат открывается движением пальца.',
+      'Механизм разобран, вычищен, смазан заново и отрегулирован. Крышка, петля и заводная головка — родные.',
+      'Часы собраны на кожаном напульснике ручного пошива; хранятся в фирменной коробке.'
+    ],
+    specs: [
+      ['Механизм', 'Швейцарский, отреставрирован'],
+      ['Год', '1912'],
+      ['Корпус', 'С откидной глухой крышкой'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/omega1912-01.jpg','img/projects/omega1912-02.jpg','img/projects/omega1912-03.jpg',
+      'img/projects/omega1912-04.jpg','img/projects/omega1912-05.jpg','img/projects/omega1912-06.jpg',
+      'img/projects/omega1912-07.jpg','img/projects/omega1912-08.jpg','img/projects/omega1912-09.jpg',
+      'img/projects/omega1912-10.jpg'
+    ]
+  },
+  'molnia1982': {
+    type: 'Реставрация · советская механика',
+    name: 'Молния, <em>1982 год</em>',
+    lead: 'Челябинский карманный калибр — на запястье',
+    body: [
+      'Молния — карманный калибр Челябинского часового завода, один из самых живучих советских механизмов: крупный, ремонтопригодный, с большим запасом хода.',
+      'Механизм вычищен, смазан заново и отрегулирован; циферблат и стрелки сохранены родные.',
+      'Корпус переведён с карманного ношения на запястье — широкий кожаный напульсник ручного пошива с клеймом мастерской на пряжке.'
+    ],
+    specs: [
+      ['Механизм', 'Молния, Челябинский часовой завод'],
+      ['Год', '1982'],
+      ['Формат', 'Карманные часы на кожаном напульснике'],
+      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+    ],
+    photos: [
+      'img/projects/molnia1982-01.jpg','img/projects/molnia1982-02.jpg','img/projects/molnia1982-03.jpg',
+      'img/projects/molnia1982-04.jpg','img/projects/molnia1982-05.jpg','img/projects/molnia1982-06.jpg',
+      'img/projects/molnia1982-07.jpg','img/projects/molnia1982-08.jpg','img/projects/molnia1982-09.jpg',
+      'img/projects/molnia1982-10.jpg'
+    ]
+  },
+  'molnia-cifermeh': {
+    type: 'Авторская работа · циферблат и механизм',
+    name: 'Молния, <em>ручная работа</em>',
+    lead: 'Авторский циферблат и гравированный механизм — обе стороны сделаны вручную',
+    body: [
+      'Работа, в которой переделаны обе стороны часов. Со стороны циферблата — авторская отделка в тёплом золотистом тоне с эмблемой «Молния · СССР»; со стороны задней крышки — раскрытый механизм под прозрачным окном.',
+      'Мосты и платины механизма обработаны вручную: снят заводской штамп, нанесён рисунок, детали отполированы и собраны заново с регулировкой хода.',
+      'Ремень — коричневая кожа ручного пошива с клеймом-звездой, подобранная под цвет корпуса.'
+    ],
+    specs: [
+      ['Механизм', 'Молния, ручная обработка мостов'],
+      ['Циферблат', 'Авторская отделка'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Гравировка, полировка, сборка, регулировка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/molnia-cifermeh-01.jpg','img/projects/molnia-cifermeh-02.jpg','img/projects/molnia-cifermeh-03.jpg',
+      'img/projects/molnia-cifermeh-04.jpg','img/projects/molnia-cifermeh-05.jpg','img/projects/molnia-cifermeh-06.jpg',
+      'img/projects/molnia-cifermeh-07.jpg','img/projects/molnia-cifermeh-08.jpg','img/projects/molnia-cifermeh-09.jpg',
+      'img/projects/molnia-cifermeh-10.jpg'
+    ]
+  },
+  'molnia-ruchn': {
+    type: 'Авторская работа · гравировка циферблата',
+    name: 'Молния, <em>мотоциклетный циферблат</em>',
+    lead: 'Рисунок нанесён вручную по латунному циферблату',
+    body: [
+      'Циферблат сделан с нуля: по латунной основе вручную нанесён рисунок мотоцикла и фирменная эмблема, поле затонировано в тёплый золотистый цвет.',
+      'Механизм Молния вычищен, смазан и отрегулирован; задняя сторона оставлена открытой — видно работу баланса и колёсной системы.',
+      'Ремень — рыжая кожа ручного пошива с тиснением, под цвет циферблата.'
+    ],
+    specs: [
+      ['Циферблат', 'Латунь, ручная гравировка'],
+      ['Механизм', 'Молния, отреставрирован'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Изготовление циферблата, сборка, регулировка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/molnia-ruchn-01.jpg','img/projects/molnia-ruchn-02.jpg','img/projects/molnia-ruchn-03.jpg',
+      'img/projects/molnia-ruchn-04.jpg','img/projects/molnia-ruchn-05.jpg','img/projects/molnia-ruchn-06.jpg',
+      'img/projects/molnia-ruchn-07.jpg','img/projects/molnia-ruchn-08.jpg','img/projects/molnia-ruchn-09.jpg'
+    ]
+  },
+  'molnia-shiva': {
+    type: 'Авторская работа · скелетон',
+    name: 'Молния, проект <em>«Шива»</em>',
+    lead: 'Механизм раскрыт насквозь и покрыт ручной гравировкой',
+    body: [
+      'Скелетон: из мостов и платины вырезано всё лишнее, так что механизм просматривается насквозь — от циферблата до задней крышки. Оставшийся металл покрыт ручной гравировкой с растительным орнаментом.',
+      'Работа кропотливая: каждый пропил делается так, чтобы не потерять жёсткость мостов и не сбить геометрию колёсной системы. После сборки ход отрегулирован заново.',
+      'Часы собраны на кожаном напульснике ручного пошива с контрастной прошивкой.'
+    ],
+    specs: [
+      ['Тип', 'Скелетон, сквозная проработка механизма'],
+      ['Отделка', 'Ручная гравировка мостов'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Пропил, гравировка, сборка, регулировка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/molnia-shiva-01.jpg','img/projects/molnia-shiva-02.jpg','img/projects/molnia-shiva-03.jpg',
+      'img/projects/molnia-shiva-04.jpg','img/projects/molnia-shiva-05.jpg','img/projects/molnia-shiva-06.jpg',
+      'img/projects/molnia-shiva-07.jpg'
+    ]
+  },
+  'molnia-tsoy': {
+    type: 'Авторская работа · памятная серия',
+    name: 'Молния, <em>«Кино»</em>',
+    lead: 'Портрет и автограф золотом по чёрному циферблату',
+    body: [
+      'Памятная работа по мотивам группы «Кино»: на чёрном матовом циферблате — портрет, автограф и логотип группы, выполненные золотом. Цифры накладные, объёмные.',
+      'Механизм Молния вычищен и отрегулирован, стрелки подобраны под золотую отделку циферблата.',
+      'Ремень — чёрная кожа ручного пошива с золочёной фурнитурой; на съёмке рядом стоит парная модель меньшего размера.'
+    ],
+    specs: [
+      ['Циферблат', 'Чёрное поле, золотая отделка, накладные цифры'],
+      ['Механизм', 'Молния, отреставрирован'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Изготовление циферблата, сборка, регулировка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/molnia-tsoy-01.jpg','img/projects/molnia-tsoy-02.jpg','img/projects/molnia-tsoy-03.jpg',
+      'img/projects/molnia-tsoy-04.jpg','img/projects/molnia-tsoy-05.jpg','img/projects/molnia-tsoy-06.jpg',
+      'img/projects/molnia-tsoy-07.jpg','img/projects/molnia-tsoy-08.jpg','img/projects/molnia-tsoy-09.jpg',
+      'img/projects/molnia-tsoy-10.jpg'
+    ]
+  },
+  'molnia-olymp80': {
+    type: 'Авторская работа · памятная серия',
+    name: 'Молния, <em>«Олимпиада-80»</em>',
+    lead: 'Эмблема московских Игр золотом по чёрному',
+    body: [
+      'Работа по мотивам московской Олимпиады 1980 года: на чёрном циферблате — золотая эмблема Игр с кольцами и надписью «Москва», цифры и стрелки в том же тоне.',
+      'Корпус в чёрном покрытии, механизм Молния вычищен и отрегулирован. К часам приложен заводской паспорт.',
+      'Ремень — чёрная кожа ручного пошива с жёлтой контрастной прошивкой, повторяющей цвет эмблемы.'
+    ],
+    specs: [
+      ['Циферблат', 'Чёрное поле, золотая олимпийская эмблема'],
+      ['Механизм', 'Молния, отреставрирован'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Изготовление циферблата, покрытие корпуса, сборка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/molnia-olymp80-01.jpg','img/projects/molnia-olymp80-02.jpg','img/projects/molnia-olymp80-03.jpg',
+      'img/projects/molnia-olymp80-04.jpg','img/projects/molnia-olymp80-05.jpg','img/projects/molnia-olymp80-06.jpg',
+      'img/projects/molnia-olymp80-07.jpg','img/projects/molnia-olymp80-08.jpg','img/projects/molnia-olymp80-09.jpg'
+    ]
+  },
+  'vostok-amfibia': {
+    type: 'Кастом · советская механика',
+    name: 'Восток Амфибия, <em>кастом</em>',
+    lead: 'Дайверская классика, пересобранная под свой характер',
+    body: [
+      'Восток Амфибия — советские дайверские часы с поворотным безелем и завинчивающейся головкой. В этой работе они пересобраны: заменены безель, головка и стрелки, корпус доведён вручную.',
+      'Механизм вычищен, смазан и отрегулирован; сохранена водозащита, ради которой Амфибию и делали.',
+      'Ремень — чёрная кожа ручного пошива с белой прошивкой и стальными заклёпками.'
+    ],
+    specs: [
+      ['Основа', 'Восток Амфибия, советский калибр'],
+      ['Доработки', 'Безель, заводная головка, стрелки, отделка корпуса'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Пересборка, чистка, регулировка, пошив ремня']
+    ],
+    photos: [
+      'img/projects/vostok-amfibia-01.jpg','img/projects/vostok-amfibia-02.jpg','img/projects/vostok-amfibia-03.jpg',
+      'img/projects/vostok-amfibia-04.jpg','img/projects/vostok-amfibia-05.jpg','img/projects/vostok-amfibia-06.jpg',
+      'img/projects/vostok-amfibia-07.jpg','img/projects/vostok-amfibia-08.jpg','img/projects/vostok-amfibia-09.jpg',
+      'img/projects/vostok-amfibia-10.jpg'
+    ]
+  },
+  'cyma1932': {
+    type: 'Реставрация · швейцарская механика',
+    name: 'CYMA, <em>1932 год</em>',
+    lead: 'Парусник, гравированный по циферблату',
+    body: [
+      'Швейцарская CYMA 1932 года. Циферблат украшен гравированным парусником — рисунок нанесён по металлу и затонирован, цифры остались читаемыми.',
+      'Механизм вычищен, смазан заново, ход отрегулирован; задняя крышка снята под прозрачное окно, чтобы видеть работу колёсной системы.',
+      'Ремень — коричневая кожа ручного пошива с фигурными накладками у корпуса.'
+    ],
+    specs: [
+      ['Механизм', 'CYMA, швейцарский'],
+      ['Год', '1932'],
+      ['Циферблат', 'Ручная гравировка, парусник'],
+      ['Работа', 'Чистка, смазка, регулировка хода, пошив ремня']
+    ],
+    photos: [
+      'img/projects/cyma1932-01.jpg','img/projects/cyma1932-02.jpg','img/projects/cyma1932-03.jpg',
+      'img/projects/cyma1932-04.jpg','img/projects/cyma1932-05.jpg','img/projects/cyma1932-06.jpg',
+      'img/projects/cyma1932-07.jpg','img/projects/cyma1932-08.jpg','img/projects/cyma1932-09.jpg'
+    ]
+  },
+  'ulisse1919': {
+    type: 'Реставрация · швейцарская механика',
+    name: 'Ulysse Nardin, <em>1919 год</em>',
+    lead: 'Марка морских хронометров — в наручном формате',
+    body: [
+      'Ulysse Nardin — марка, известная прежде всего морскими хронометрами: её приборами пользовались флоты десятков стран. Этот экземпляр 1919 года — со светлым эмалевым циферблатом и отдельным счётчиком секунд.',
+      'Механизм разобран, вычищен, смазан заново и отрегулирован по ходу.',
+      'Ремень — коричневая кожа ручного пошива с тиснёным названием марки на шлевках.'
+    ],
+    specs: [
+      ['Механизм', 'Ulysse Nardin, швейцарский'],
+      ['Год', '1919'],
+      ['Формат', 'Наручные часы'],
+      ['Работа', 'Чистка, смазка, регулировка хода, пошив ремня']
+    ],
+    photos: [
+      'img/projects/ulisse1919-01.jpg','img/projects/ulisse1919-02.jpg','img/projects/ulisse1919-03.jpg',
+      'img/projects/ulisse1919-04.jpg','img/projects/ulisse1919-05.jpg','img/projects/ulisse1919-06.jpg',
+      'img/projects/ulisse1919-07.jpg','img/projects/ulisse1919-08.jpg','img/projects/ulisse1919-09.jpg',
+      'img/projects/ulisse1919-10.jpg'
     ]
   }
 };
