@@ -1232,6 +1232,7 @@
   .pm-lead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;color:var(--gold);
     line-height:1.5;margin-bottom:15px}
   .pm-body p{font-size:11.5px;line-height:1.75;color:var(--text);margin-bottom:10px}
+  .pm-read-more{display:none}
   /* flex-shrink:0 — иначе в скроллящейся колонке блоки сжимаются и режут строки */
   .pm-body,.pm-specs,.pm-thumbs{flex-shrink:0}
   .pm-specs{display:grid;gap:1px;margin-top:16px;background:var(--border-2);
@@ -2580,6 +2581,11 @@
   .footer-contact p{color:var(--muted);font-size:10px;line-height:1.55;margin:2px 0 4px}
   .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px;padding-top:18px;border-top:1px solid var(--border-2)}
   .footer-bottom .footer-copy{font-size:10px;line-height:1.5;letter-spacing:.04em}
+
+  html.page-scroll-locked,body.page-scroll-locked{overflow:hidden;overscroll-behavior:none}
+  body.page-scroll-locked>.header{position:fixed;top:0;left:0;right:0;width:100%;transform:none!important}
+  .nav,.pm,.cert-modal,.single-lightbox{overscroll-behavior:none}
+  .mobile-nav-panel,.pm-side,.pm-thumbs,.cert-carousel-container,.single-lightbox-panel{overscroll-behavior:contain}
   .footer-made{color:var(--muted);font-size:9px;letter-spacing:.06em;white-space:nowrap}
   .footer-made a{color:var(--gold-3);text-decoration:none;transition:color .25s}
   .footer-made a:hover{color:var(--gold)}
@@ -2672,7 +2678,7 @@
     body.menu-open{overflow:hidden;touch-action:none}
 
     .header{
-      min-height:var(--mobile-header);padding:0!important;z-index:10010;
+      min-height:var(--mobile-header);padding:0!important;z-index:10012;
       background:rgba(8,7,6,.9);border-bottom-color:rgba(212,184,138,.13);
       backdrop-filter:blur(18px) saturate(1.08);-webkit-backdrop-filter:blur(18px) saturate(1.08);
       transform:none!important;will-change:auto;
@@ -2685,7 +2691,8 @@
     }
     .header .logo{
       width:max-content;min-width:0;height:58px;display:flex;align-items:center;
-      grid-column:1;justify-self:center;position:relative;left:auto;transform:none;z-index:10013
+      grid-column:1;justify-self:start;position:relative;left:auto;transform:none;z-index:10013;
+      margin-left:-15px
     }
     .header .logo-img{width:188px!important;max-width:188px!important;height:auto!important}
     .header-cta{display:none!important}
@@ -2705,14 +2712,14 @@
     .mobile-menu-toggle[aria-expanded="true"] .menu-line:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
     .nav{
-      display:block!important;position:fixed;inset:0;z-index:10011;padding:0!important;
+      display:block!important;position:fixed;inset:var(--mobile-header) 0 0;z-index:10011;padding:0!important;
       background:rgba(2,2,2,.68);opacity:0;visibility:hidden;pointer-events:none;
       transition:opacity .28s ease,visibility .28s ease;
     }
     .nav.is-open{opacity:1;visibility:visible;pointer-events:auto}
     .mobile-nav-panel{
-      display:flex;flex-direction:column;position:absolute;right:0;top:0;width:min(390px,100%);height:100dvh;
-      padding:calc(var(--mobile-header) + 22px) max(22px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) 22px;
+      display:flex;flex-direction:column;position:absolute;right:0;top:0;width:min(390px,100%);height:calc(100dvh - var(--mobile-header));
+      padding:22px max(22px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) 22px;
       background:
         radial-gradient(circle at 90% 12%,rgba(212,184,138,.09),transparent 31%),
         linear-gradient(160deg,#15100d 0%,#0d0a08 56%,#080706 100%);
@@ -2864,7 +2871,7 @@
     }
     .dir-grid::-webkit-scrollbar{display:none}
     .dir-cell{
-      flex:0 0 min(84vw,350px);padding:18px 18px 22px!important;scroll-snap-align:start;scroll-snap-stop:always;
+      flex:0 0 min(78vw,330px);padding:18px 18px 22px!important;scroll-snap-align:start;scroll-snap-stop:always;
       border:0!important;border-radius:20px;background:linear-gradient(155deg,#17110e,#0d0a08);
       box-shadow:0 18px 42px rgba(0,0,0,.24);
     }
@@ -2885,17 +2892,18 @@
     .about-text p{margin-bottom:14px}
     .about-quote{margin:18px 0 0;padding:11px 0 11px 15px;font-size:16px;line-height:1.42}
     .master-foot{display:flex;overflow-x:auto;gap:0;margin:22px calc(var(--mobile-gutter) * -1) 0;padding:16px var(--mobile-gutter) 4px;scrollbar-width:none;white-space:nowrap}
+    .master-foot{border-top:0!important}
     .master-foot::-webkit-scrollbar{display:none}
     .master-foot span:not(.sepd){font-size:13px}
 
-    .whyus-strip{padding:38px 0}
+    .whyus-strip{padding:38px 0;border-top:0;border-bottom:0}
     .whyus-grid{
       display:flex!important;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 10px;
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .whyus-grid::-webkit-scrollbar{display:none}
     .whyus-item,.whyus-item:first-child{
-      flex:0 0 min(82vw,330px);min-height:210px;padding:24px!important;scroll-snap-align:start;
+      flex:0 0 min(76vw,310px);min-height:210px;padding:24px!important;scroll-snap-align:start;
       border:0!important;border-radius:18px;background:rgba(212,184,138,.03);
     }
     .whyus-item::before{display:none!important}
@@ -2938,7 +2946,7 @@
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .trust-reviews::-webkit-scrollbar{display:none}
-    .trust-review{flex:0 0 min(82vw,330px);min-height:190px;padding:22px 20px;scroll-snap-align:start;border:0}
+    .trust-review{flex:0 0 min(76vw,310px);min-height:190px;padding:22px 20px;scroll-snap-align:start;border:0}
     .trust-review .qt{font-size:17px;line-height:1.48;max-width:94%}
     .trust-review .auth{font-size:12px;line-height:1.4;border-top:0;padding-top:5px}
 
@@ -2947,7 +2955,7 @@
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .paths::-webkit-scrollbar{display:none}
-    .path{flex:0 0 min(88vw,360px);padding:24px 21px;scroll-snap-align:start;scroll-snap-stop:always;border:0}
+    .path{flex:0 0 min(82vw,340px);padding:24px 21px;scroll-snap-align:start;scroll-snap-stop:always;border:0}
     .path>.flourish-corner,.path::after{display:none!important}
     .path-badge{width:54px;height:54px;font-size:28px;margin-bottom:18px}
     .path-tag{font-size:9px;line-height:1.45}
@@ -2956,12 +2964,14 @@
     .path .path-lead{font-size:15.5px;line-height:1.68}
     .path li{font-size:14px;line-height:1.48;padding:8px 0 8px 18px;border-bottom:0}
     .path-foot{font-size:16px;line-height:1.55}
-    .route{margin-top:24px;padding:4px 0;border:0;border-radius:0;background:transparent}
-    .route::before{left:48px;top:34px;bottom:34px}
-    .route-step{min-height:108px;padding:16px 8px 16px 72px;border-bottom:0}
+    .path-div{display:none}
+    .path-foot{border-top:0;padding-top:0}
+    .route{margin-top:24px;padding:4px 0;gap:14px;border:0;border-radius:0;background:transparent}
+    .route::before{display:none!important}
+    .route-step{min-height:108px;padding:18px 16px 18px 72px;border:0;border-radius:18px;background:rgba(212,184,138,.035)}
     .route-step:last-child{border-bottom:0}
     .route-node{left:12px;top:20px;width:44px;height:44px;display:grid;place-items:center}
-    .route-step::before{left:auto;right:14px;transform:scaleX(-1)}
+    .route-step::before{display:none!important}
     .route-step h4{font-size:18px;margin-bottom:5px}
     .route-step p{font-size:15px;line-height:1.58}
     .route-foot{font-size:15px}
@@ -2972,10 +2982,11 @@
     .contact-actions{gap:10px;margin:26px 0 20px}
     .btn-wide{min-height:56px;padding:0 18px!important;font-size:11px}
     .contact-place{font-size:16px;line-height:1.5}
-    .contact-side{padding:24px 18px;border-radius:20px}
+    .contact-side{padding:8px 0 0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+    .contact-side::after,.contact-side>.flourish-corner{display:none!important}
     .contact-side h3{font-size:29px}
     .contact-side .send{gap:0}
-    .contact-side .send .row{min-height:88px;padding:16px 0;align-items:flex-start;border-bottom:1px solid var(--border-2)}
+    .contact-side .send .row{min-height:0;padding:15px 0;align-items:flex-start;border-bottom:0}
     .contact-side .send .row:last-child{border-bottom:0}
     .contact-side .send .row .rn{font-size:18px;min-width:34px}
     .social-links{gap:8px}
@@ -2992,19 +3003,41 @@
     .footer-contact{gap:0}
     .footer-contact p{font-size:13px;line-height:1.55;margin-bottom:8px}
     .footer-bottom .footer-copy,.footer-made{font-size:11px}
+    .footer-bottom{border-top:0;padding-top:0}
+
+    .header{border-bottom-color:transparent!important}
+    .section{border-bottom:0}
+    .section>.container::before,.section>.container::after,.section-head::before{display:none!important}
+    .section-divider{display:none}
+    .dir-split .ln{display:none}
+    .mobile-nav-head,.nav-links a{border-bottom:0!important}
 
     .single-lightbox-figure{border-radius:16px}
     .pm{align-items:flex-end;padding:0}
-    .pm-inner{width:100%;max-height:96dvh;border-radius:22px 22px 0 0;grid-template-rows:minmax(270px,42dvh) minmax(0,1fr)}
-    .pm-stage{border-radius:22px 22px 0 0;padding:32px clamp(56px,15vw,68px) 26px}
+    .pm-inner{width:100%;max-height:96dvh;border-radius:22px 22px 0 0;grid-template-rows:minmax(320px,52dvh) minmax(0,1fr)}
+    .pm-stage{border-radius:22px 22px 0 0;padding:16px 12px 18px}
     .pm-stage img{border-radius:14px}
-    .pm-prev{left:9px}.pm-next{right:9px}
+    .pm-nav{display:none!important}
     .pm-counter{left:18px;bottom:13px}
     .pm-close{top:12px;right:12px}
     .pm-side{padding:22px 18px max(24px,env(safe-area-inset-bottom))}
     .pm-name{font-size:25px;line-height:1.15}
     .pm-lead{font-size:16px;line-height:1.45}
     .pm-body p{font-size:15px;line-height:1.65}
+    .pm-body:not(.expanded){max-height:8.1em;overflow:hidden;position:relative;
+      -webkit-mask-image:linear-gradient(#000 68%,transparent);mask-image:linear-gradient(#000 68%,transparent)}
+    .pm-read-more{
+      width:100%;min-height:46px;margin:2px 0 14px;padding:0;display:flex;align-items:center;justify-content:space-between;
+      border:0;border-bottom:1px solid rgba(212,184,138,.22);background:transparent;color:var(--gold);
+      font:500 10px/1 'Inter',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer
+    }
+    .pm-read-more::after{content:'+';font:300 22px/1 'Inter',sans-serif}
+    .pm-read-more[aria-expanded="true"]::after{content:'−'}
+    .pm-side:not(.details-expanded) .pm-specs{display:none}
+
+    @keyframes mobileSwipeCue{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+    .mobile-swipe-hint{color:#c7bca9;font-size:10px;font-weight:500;letter-spacing:.11em}
+    .mobile-swipe-hint b{animation:mobileSwipeCue 1.5s ease-in-out infinite;color:var(--gold);font-size:21px}
   }
 
   @media (max-width:360px){
@@ -3015,8 +3048,8 @@
     .hero .btn-gold{padding:0 14px;font-size:10px;letter-spacing:.1em}
     .hero-photo{height:330px}
     .section-title{font-size:32px}
-    .dir-cell{flex-basis:88vw}
-    .path{flex-basis:91vw}
+    .dir-cell{flex-basis:80vw}
+    .path{flex-basis:84vw}
     .mobile-nav-contact{grid-template-columns:1fr}
     .mobile-nav-contact-label{grid-column:auto}
   }
@@ -3030,7 +3063,7 @@
   }
 
   @media (max-width:900px) and (orientation:landscape) and (max-height:520px){
-    .mobile-nav-panel{width:min(520px,72%);padding-top:calc(var(--mobile-header) + 10px)}
+    .mobile-nav-panel{width:min(520px,72%);padding-top:10px}
     .nav-links{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}
     .nav-links a{min-height:46px;font-size:16px}
     .mobile-nav-contact{margin-top:16px;padding-top:12px}
@@ -3161,9 +3194,9 @@
     <div class="hero-photo photo velvet-photo reveal" aria-label="Евгений Деккер за работой в мастерской">
       <div class="hero-slides">
         <img class="hero-slide active" src="img/v3/hero-master-watch.webp" width="1334" height="2000" fetchpriority="high" decoding="async" alt="Евгений Деккер показывает открытый исторический механизм">
-        <img class="hero-slide" src="img/v3/hero-restoration-light.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Часовой мастер изучает механизм под ярким рабочим светом">
-        <img class="hero-slide" src="img/v3/hero-lathe.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Евгений Деккер изготавливает деталь на часовом токарном станке">
-        <img class="hero-slide" src="img/v3/master-portrait.webp" width="2000" height="1334" loading="lazy" decoding="async" alt="Портрет Евгения Деккера в мастерской «Твоё Время»">
+        <img class="hero-slide" data-src="img/v3/hero-restoration-light.webp" width="1334" height="2000" decoding="async" alt="Часовой мастер изучает механизм под ярким рабочим светом">
+        <img class="hero-slide" data-src="img/v3/hero-lathe.webp" width="1334" height="2000" decoding="async" alt="Евгений Деккер изготавливает деталь на часовом токарном станке">
+        <img class="hero-slide" data-src="img/v3/master-portrait.webp" width="2000" height="1334" decoding="async" alt="Портрет Евгения Деккера в мастерской «Твоё Время»">
       </div>
       <div class="grain"></div>
       <div class="warmlight"></div>
@@ -3292,7 +3325,7 @@
       <span class="ln"></span>
     </div>
 
-    <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте направления</span><b>→</b></div>
+    <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте вправо · ещё 3 направления</span><b>→</b></div>
     <div class="dir-grid reveal" role="region" aria-label="Дополнительные направления мастерской" tabindex="0">
       <div class="dir-cell">
         <div class="dir-num">II</div>
@@ -3396,7 +3429,7 @@
 <!-- ============================================================ -->
 <div class="whyus-strip reveal">
   <div class="container">
-    <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Три принципа мастерской</span><b>→</b></div>
+    <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Листайте вправо · ещё 2 принципа</span><b>→</b></div>
     <div class="whyus-grid" role="region" aria-label="Принципы мастерской" tabindex="0">
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
@@ -3820,7 +3853,7 @@
       </div>
 
       <div class="trust-reviews-wrap">
-        <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Отзывы</span><b>→</b></div>
+        <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Листайте вправо · ещё 2 отзыва</span><b>→</b></div>
         <div class="trust-reviews" role="region" aria-label="Отзывы клиентов" tabindex="0">
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
@@ -3873,7 +3906,7 @@
       <p class="section-sub"><span class="desktop-copy">К Евгению можно прийти двумя способами: когда часы уже есть — и когда есть только идея будущего проекта.</span><span class="mobile-copy">Можно прийти с готовыми часами или только с идеей.</span></p>
     </div>
 
-    <div class="mobile-swipe-hint" aria-hidden="true"><span>Два сценария обращения</span><b>→</b></div>
+    <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте вправо · ещё один сценарий</span><b>→</b></div>
     <div class="paths reveal" role="region" aria-label="Два сценария обращения в мастерскую" tabindex="0">
       <div class="path">
         <svg class='flourish-corner tr' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
@@ -4072,6 +4105,36 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   });
 });
 
+// Единая блокировка страницы для меню и модальных окон. Фиксированная позиция
+// сохраняет текущий scrollY и не позволяет колесу/свайпу прокручивать фон.
+var pageScrollLock = {y:0, owners:{}};
+function setPageScrollLock(owner, locked){
+  if(locked) pageScrollLock.owners[owner] = true;
+  else delete pageScrollLock.owners[owner];
+  var active = Object.keys(pageScrollLock.owners).length > 0;
+  var body = document.body;
+  if(active && !body.classList.contains('page-scroll-locked')){
+    pageScrollLock.y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add('page-scroll-locked');
+    body.classList.add('page-scroll-locked');
+    body.style.position = 'fixed';
+    body.style.top = '-' + pageScrollLock.y + 'px';
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+  } else if(!active && body.classList.contains('page-scroll-locked')){
+    var y = pageScrollLock.y;
+    document.documentElement.classList.remove('page-scroll-locked');
+    body.classList.remove('page-scroll-locked');
+    body.style.position = '';
+    body.style.top = '';
+    body.style.left = '';
+    body.style.right = '';
+    body.style.width = '';
+    window.scrollTo(0,y);
+  }
+}
+
 // Мобильное меню: полноценный drawer с фокусом, Escape и блокировкой фона.
 (function(){
   var toggle = document.querySelector('.mobile-menu-toggle');
@@ -4094,12 +4157,13 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     toggle.setAttribute('aria-label', open ? 'Закрыть меню':'Открыть меню');
     nav.setAttribute('aria-hidden', mobileQuery.matches && !open ? 'true':'false');
     document.body.classList.toggle('menu-open', open);
+    setPageScrollLock('menu',open);
     if(open){
       lastFocus = document.activeElement;
       var first = focusables()[0];
       if(first) setTimeout(function(){ first.focus(); }, 60);
     } else if(restoreFocus && lastFocus && typeof lastFocus.focus === 'function'){
-      lastFocus.focus();
+      try{ lastFocus.focus({preventScroll:true}); }catch(err){ lastFocus.focus(); }
     }
   }
 
@@ -4110,7 +4174,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(e.target === nav) setMenu(false, true);
   });
   nav.querySelectorAll('.nav-links a').forEach(function(link){
-    link.addEventListener('click', function(){ setMenu(false, true); });
+    link.addEventListener('click', function(){ setMenu(false, false); });
   });
   document.addEventListener('keydown', function(e){
     if(toggle.getAttribute('aria-expanded') !== 'true') return;
@@ -4278,10 +4342,7 @@ if(!reduceMotion){
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        if(en.isIntersecting){
-          en.target.classList.add('in');
-          io.unobserve(en.target);
-        }
+        en.target.classList.toggle('in',en.isIntersecting);
       });
     }, {threshold:0.08, rootMargin:'0px 0px -6% 0px'});
     revs.forEach(function(el){ io.observe(el); });
@@ -4398,7 +4459,7 @@ function openCertificatesModal() {
   var modal = document.getElementById('certificatesModal');
   modal.classList.add('active');
   modal.setAttribute('aria-hidden','false');
-  document.body.style.overflow = 'hidden';
+  setPageScrollLock('certificates',true);
   document.body.classList.add('modal-open');
   currentSlide = 0;
   showSlide(0);
@@ -4410,7 +4471,7 @@ function closeCertificatesModal() {
   var modal = document.getElementById('certificatesModal');
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden','true');
-  document.body.style.overflow = '';
+  setPageScrollLock('certificates',false);
   document.body.classList.remove('modal-open');
 }
 
@@ -4948,22 +5009,39 @@ function openProject(key){
   document.getElementById('pmName').innerHTML   = p.name;
   document.getElementById('pmLead').textContent = p.lead;
   document.getElementById('pmBody').innerHTML   = p.body.map(function(t){ return '<p>'+t+'</p>'; }).join('');
+  document.getElementById('pmBody').classList.remove('expanded');
+  document.querySelector('.pm-side').classList.remove('details-expanded');
+  var readMore = document.getElementById('pmReadMore');
+  readMore.setAttribute('aria-expanded','false');
+  readMore.textContent = 'Читать дальше';
   document.getElementById('pmSpecs').innerHTML  = p.specs.map(function(s){
     return '<div class="pm-spec"><span class="k">'+s[0]+'</span><span class="v">'+s[1]+'</span></div>';
   }).join('');
   document.getElementById('pmThumbs').innerHTML = p.photos.map(function(src,i){
-    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+src+'" loading="lazy" decoding="async" alt=""></button>';
+    var thumb = src.replace('img/projects/','img/projects/thumbs/').replace(/\.jpg$/i,'.webp');
+    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+thumb+'" loading="lazy" decoding="async" alt=""></button>';
   }).join('');
 
   document.getElementById('projModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  setPageScrollLock('project',true);
   document.body.classList.add('modal-open');
   pmShow(0);
 }
 
+function toggleProjectDetails(){
+  var body = document.getElementById('pmBody');
+  var side = document.querySelector('.pm-side');
+  var button = document.getElementById('pmReadMore');
+  var expanded = !body.classList.contains('expanded');
+  body.classList.toggle('expanded',expanded);
+  side.classList.toggle('details-expanded',expanded);
+  button.setAttribute('aria-expanded',expanded ? 'true':'false');
+  button.textContent = expanded ? 'Свернуть' : 'Читать дальше';
+}
+
 function closeProject(){
   document.getElementById('projModal').classList.remove('active');
-  document.body.style.overflow = '';
+  setPageScrollLock('project',false);
   document.body.classList.remove('modal-open');
 }
 
@@ -5121,6 +5199,7 @@ document.addEventListener('keydown', function(e){
       <h3 class="pm-name" id="pmName"></h3>
       <div class="pm-lead" id="pmLead"></div>
       <div class="pm-body" id="pmBody"></div>
+      <button class="pm-read-more" id="pmReadMore" type="button" aria-expanded="false" onclick="toggleProjectDetails()">Читать дальше</button>
       <div class="pm-specs" id="pmSpecs"></div>
     </aside>
   </div>
@@ -5152,7 +5231,7 @@ function openWorkshopPhoto(figure){
   renderWorkshopPhoto();
   modal.classList.add('active');
   document.body.classList.add('modal-open');
-  document.body.style.overflow = 'hidden';
+  setPageScrollLock('workshop',true);
   modal.querySelector('.single-lightbox-close').focus();
 }
 
@@ -5173,8 +5252,10 @@ function closeWorkshopPhoto(){
   if(!modal || !modal.classList.contains('active')) return;
   modal.classList.remove('active');
   document.body.classList.remove('modal-open');
-  document.body.style.overflow = '';
-  if(workshopLightboxReturnFocus) workshopLightboxReturnFocus.focus();
+  setPageScrollLock('workshop',false);
+  if(workshopLightboxReturnFocus){
+    try{ workshopLightboxReturnFocus.focus({preventScroll:true}); }catch(err){ workshopLightboxReturnFocus.focus(); }
+  }
 }
 
 document.addEventListener('keydown',function(event){
@@ -5220,6 +5301,12 @@ document.addEventListener('keydown',function(event){
 
   function show(index){
     current = (index + slides.length) % slides.length;
+    var activeSlide = slides[current];
+    var deferredSrc = activeSlide.getAttribute('data-src');
+    if(deferredSrc){
+      activeSlide.src = deferredSrc;
+      activeSlide.removeAttribute('data-src');
+    }
     slides.forEach(function(slide,i){ slide.classList.toggle('active',i === current); });
     dots.forEach(function(dot,i){
       dot.classList.toggle('active',i === current);
