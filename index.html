@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1280">
+<!-- Адаптивный viewport: макет перестраивается под фактическую ширину устройства. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Твоё Время — мастерская антикварных часов Евгения Деккера · Сургут</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1531,31 +1532,6 @@
     .watch-hour,.watch-min{transition:none}
   }
 
-  /* ===================== CUSTOM CURSOR ===================== */
-  html.has-cursor,html.has-cursor *{cursor:none!important}
-  .cur-dot{
-    position:fixed;top:0;left:0;width:10px;height:10px;border-radius:50%;
-    background:var(--gold);pointer-events:none;z-index:100001;
-    transform:translate(-50%,-50%);
-    transition:transform .08s linear,width .2s,height .2s,opacity .2s,background .2s;
-    opacity:0.9;mix-blend-mode:screen;
-  }
-  /* внутри модалки blend-mode делает точку невидимой — отключаем */
-  body.modal-open .cur-dot{mix-blend-mode:normal;background:var(--cream);opacity:1}
-  body.modal-open .cur-ring{border-color:rgba(212,184,138,0.8);opacity:0.85}
-  .cur-ring{
-    position:fixed;top:0;left:0;width:36px;height:36px;border-radius:50%;
-    border:1px solid rgba(212,184,138,0.55);pointer-events:none;z-index:100000;
-    transform:translate(-50%,-50%);
-    transition:width .22s cubic-bezier(0.16,1,0.3,1),height .22s cubic-bezier(0.16,1,0.3,1),
-               border-color .2s,opacity .2s,background .22s;
-    opacity:0.6;
-  }
-  .cur-dot.is-link{width:6px;height:6px;background:var(--cream);opacity:1}
-  .cur-ring.is-link{width:52px;height:52px;border-color:var(--gold);opacity:0.85;background:rgba(212,184,138,0.06)}
-  .cur-dot.is-btn{width:14px;height:14px;background:var(--gold-deep);opacity:0.6}
-  .cur-ring.is-btn{width:64px;height:64px;border-color:var(--gold);opacity:0.7;background:rgba(212,184,138,0.04)}
-
   /* ===================== ДЕТАЛИ ВНУТРИ БЛОКОВ =====================
      Мелкая графика, которая оживляет пустые зоны карточек.
      Специально не завиток: засечки, штриховка, точечная сетка */
@@ -1659,7 +1635,7 @@
 
   /* section-head eyebrow float */
   .section-eyebrow{transition:letter-spacing .4s cubic-bezier(0.16,1,0.3,1),opacity .3s}
-  .section:hover .section-eyebrow,.reveal.visible .section-eyebrow{letter-spacing:0.13em}
+  .section:hover .section-eyebrow{letter-spacing:0.13em}
 
   /* nav link magnetic feel */
   .nav a{transition:color .2s,letter-spacing .2s}
@@ -1707,24 +1683,6 @@
     box-shadow:0 10px 40px rgba(0,0,0,0.45);
   }
 
-  /* ===================== НОВЫЕ ЗАВИТУШКИ ===================== */
-  /* Тип A — маятник */
-  .fl-pendulum{position:absolute;width:72px;height:72px;color:var(--gold-3);
-    opacity:0.18;pointer-events:none;z-index:1}
-  /* Тип B — двойная волна */
-  .fl-wave{position:absolute;width:88px;height:44px;color:var(--gold-3);
-    opacity:0.16;pointer-events:none;z-index:1}
-  /* Тип C — компасная дуга */
-  .fl-compass{position:absolute;width:72px;height:72px;color:var(--gold-3);
-    opacity:0.18;pointer-events:none;z-index:1}
-  /* Позиции по блокам */
-  #trust .fl-pendulum{top:24px;left:20px;transform:rotate(-12deg)}
-  #trust .fl-compass{bottom:36px;right:16px;transform:rotate(18deg)}
-  #collaboration .fl-wave{top:28px;right:18px}
-  #collaboration .fl-pendulum{bottom:48px;left:14px;transform:scaleX(-1) rotate(8deg)}
-  #hero-about .fl-compass{top:18px;right:14px;transform:scaleX(-1)}
-  #process .fl-wave{bottom:32px;left:20px;transform:rotate(180deg)}
-  #process .fl-pendulum{top:22px;right:14px;transform:scaleX(-1) rotate(-10deg)}
   /* Размеры текста заданы в самих правилах блоков — секции-костыля
      с !important больше нет. Здесь только то, что нигде не объявлено */
   .path p{font-size:12px;line-height:1.8}
@@ -1740,24 +1698,18 @@
   .path-foot{transition:border-color .3s}
   .path:hover .path-foot{border-color:rgba(212,184,138,0.2)}
 
-  /* ===================== BIDIRECTIONAL REVEAL =====================
-     Блок появляется с той стороны, откуда к нему подошёл скролл,
-     и уходит в ту же сторону — движение всегда согласовано с прокруткой */
+  /* ===================== ONE-SHOT REVEAL =====================
+     Блок мягко появляется один раз и затем остаётся видимым. Это исключает
+     мерцание при якорных переходах и не держит лишние compositor-слои. */
   html.js .reveal{
     opacity:0;
     transform:translateY(30px) scale(0.994);
     transition:opacity .8s cubic-bezier(0.16,1,0.3,1),
-               transform .8s cubic-bezier(0.16,1,0.3,1),
-               filter .8s cubic-bezier(0.16,1,0.3,1);
-    filter:blur(2px);
-    will-change:opacity,transform;
+               transform .8s cubic-bezier(0.16,1,0.3,1);
   }
-  html.js .reveal.in{opacity:1;transform:none;filter:none}
+  html.js .reveal.in{opacity:1;transform:none}
   /* карточки проектов появляются по одной — задержка задаёт «набегание» ряда */
   html.js .proj-reveal{transition-delay:var(--d,0s)}
-  /* ушёл за верхний край — уезжает вверх, за нижний — вниз */
-  html.js .reveal.out-up{transform:translateY(-30px) scale(0.994)}
-  html.js .reveal.out-down{transform:translateY(30px) scale(0.994)}
 
   /* Каскад: карточки внутри сетки проявляются одна за другой */
   html.js .stagger > *{
@@ -1767,7 +1719,6 @@
                transform .62s cubic-bezier(0.16,1,0.3,1) var(--d,0s);
   }
   html.js .stagger.in > *{opacity:1;transform:none}
-  html.js .stagger.out-up > *{transform:translateY(-20px)}
 
   /* стрелы кнопок и inline-элементы */
   html.js .reveal-item{opacity:0;transform:translateY(14px);
@@ -1974,30 +1925,31 @@
   /* === ТОЧКИ (ИНДИКАТОРЫ) === */
   .cert-dots{
     position:absolute;
-    bottom:30px;
+    bottom:13px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:12px;
+    gap:0;
     z-index:10;
   }
   .cert-dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:rgba(212,184,138,0.3);
-    border:1px solid var(--border);
+    position:relative;width:44px;height:44px;padding:0;border:0;background:transparent;
     cursor:pointer;
-    transition:all .25s;
   }
-  .cert-dot:hover{
+  .cert-dot::before{
+    content:'';position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;
+    background:rgba(212,184,138,0.3);border:1px solid var(--border);
+    transform:translate(-50%,-50%);transition:background .25s,border-color .25s,transform .25s;
+  }
+  .cert-dot:hover::before{
     background:rgba(212,184,138,0.5);
   }
-  .cert-dot.active{
+  .cert-dot.active::before{
     background:var(--gold);
     border-color:var(--gold);
-    transform:scale(1.2);
+    transform:translate(-50%,-50%) scale(1.2);
   }
+  .cert-dot:focus-visible{outline:2px solid var(--gold);outline-offset:-6px;border-radius:50%}
 
   /* ===================== ЗАГРУЗОЧНЫЙ ЭКРАН ===================== */
   .preloader{
@@ -2066,7 +2018,7 @@
     position:absolute;top:0;left:0;bottom:0;width:100%;
     background:linear-gradient(90deg, transparent, var(--gold) 45%, var(--cream));
     transform:scaleX(0);transform-origin:left center;
-    animation:pl-fill 3.2s cubic-bezier(0.32,0.6,0.3,1) forwards;
+    animation:pl-fill 1.6s cubic-bezier(0.32,0.6,0.3,1) forwards;
   }
   @keyframes pl-fill{to{transform:scaleX(1)}}
 
@@ -2080,7 +2032,7 @@
     letter-spacing:0.16em;
     margin-top:-14px;
     --pl-num:0;
-    animation:pl-count 3.2s cubic-bezier(0.32,0.6,0.3,1) forwards;
+    animation:pl-count 1.6s cubic-bezier(0.32,0.6,0.3,1) forwards;
     counter-reset:plnum var(--pl-num);
   }
   .pl-pct::after{content:counter(plnum) '%'}
@@ -2117,6 +2069,948 @@
       height:38px;
       font-size:24px;
     }
+  }
+
+  /* ============================================================
+     V3 · ЖИВАЯ ФОТОГРАФИЯ И РЕДАКЦИОННАЯ ПОДАЧА
+     ============================================================ */
+  .real-photo{
+    position:absolute;inset:0;width:100%;height:100%;display:block;
+    object-fit:cover;max-width:2000px;
+  }
+  .photo > .real-photo{z-index:0}
+  .photo > .grain,.photo > .warmlight,.photo > .vignette,.photo > .corner,.photo > .photo-label{z-index:3}
+  .flagship-visual .fslide{object-fit:cover;object-position:50% 43%}
+
+  /* Hero: не случайная фотолента, а четыре кадра о мастере и ремесле */
+  .hero-photo{isolation:isolate;background:#0b0907}
+  .hero-slides{position:absolute;inset:0;z-index:0}
+  .hero-slide{
+    position:absolute;inset:0;width:100%;height:100%;max-width:2000px;
+    object-fit:cover;opacity:0;transform:scale(1.035);
+    transition:opacity 1.15s ease,transform 6.5s cubic-bezier(.16,1,.3,1);
+  }
+  .hero-slide.active{opacity:1;transform:scale(1)}
+  .hero-slide:nth-child(1){object-position:50% 42%}
+  .hero-slide:nth-child(2){object-position:50% 38%}
+  .hero-slide:nth-child(3){object-position:50% 52%}
+  .hero-slide:nth-child(4){object-position:58% 50%}
+  .hero-photo::after{
+    content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,rgba(4,3,2,.06) 35%,rgba(4,3,2,.76) 100%);
+  }
+  .hero-photo-meta{
+    position:absolute;left:22px;right:22px;bottom:18px;z-index:6;
+    display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  }
+  .hero-photo-caption{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    color:var(--cream-2);font-size:13px;letter-spacing:.07em;
+  }
+  .hero-photo-count{
+    font-family:'Inter',sans-serif;color:var(--gold);font-size:9px;
+    letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;
+  }
+  .hero-dots{position:absolute;right:20px;top:20px;z-index:7;display:flex;gap:7px}
+  .hero-dot{
+    width:18px;height:2px;padding:0;border:0;background:rgba(235,226,207,.28);
+    cursor:pointer;transition:width .35s ease,background .35s ease;
+  }
+  .hero-dot.active{width:34px;background:var(--gold)}
+
+  /* О мастере: портрет + макродеталь как редакционный разворот */
+  .about-photo-stage{position:relative;min-width:0;padding:0 24px 22px 0}
+  .about-photo-stage::before{
+    content:'MASTER · N° 01';position:absolute;left:-12px;top:48px;z-index:7;
+    color:var(--gold-3);font-size:8px;letter-spacing:.24em;text-transform:uppercase;
+    transform:rotate(-90deg) translateX(-100%);transform-origin:left top;
+  }
+  .about-photo{height:382px;border-radius:2px}
+  .about-photo .real-photo{object-position:55% 50%}
+  .about-photo::after{
+    content:'';position:absolute;inset:auto 0 0;height:52%;z-index:2;
+    background:linear-gradient(180deg,transparent,rgba(4,3,2,.78));pointer-events:none;
+  }
+  .about-photo .photo-label{left:22px;transform:none;width:auto;text-align:left;bottom:20px}
+  .about-inset{
+    position:absolute;right:0;bottom:0;width:144px;height:112px;z-index:8;
+    border:1px solid var(--gold-3);background:#0a0806;padding:5px;
+    box-shadow:0 22px 50px rgba(0,0,0,.65);
+  }
+  .about-inset img{width:100%;height:100%;max-width:400px;object-fit:cover;display:block}
+  .about-inset::after{
+    content:'МЕХАНИЗМ · РУЧНАЯ РАБОТА';position:absolute;right:8px;bottom:6px;
+    color:var(--cream);font-size:6px;letter-spacing:.15em;text-shadow:0 1px 8px #000;
+  }
+
+  /* Направления: каждый тезис подкреплён собственным кадром */
+  .dir-cell-media{
+    position:relative;height:112px;margin:0 0 24px;overflow:hidden;
+    border:1px solid var(--border);background:#090705;
+  }
+  .dir-cell-media img{
+    width:100%;height:100%;max-width:2000px;object-fit:cover;display:block;
+    filter:saturate(.82) contrast(1.05);transition:transform .8s cubic-bezier(.16,1,.3,1),filter .6s ease;
+  }
+  .dir-cell:hover .dir-cell-media img{transform:scale(1.035);filter:saturate(1) contrast(1.03)}
+  .dir-cell-media::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 42%,rgba(4,3,2,.7));pointer-events:none;
+  }
+  .dir-cell-media span{
+    position:absolute;left:12px;bottom:8px;z-index:2;color:var(--gold);
+    font-size:7px;letter-spacing:.2em;text-transform:uppercase;
+  }
+
+  /* Мастерская: многослойная редакционная сетка */
+  .workshop-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:168px 168px 132px;
+    gap:10px;margin-top:40px;
+  }
+  .workshop-grid .photo{min-width:0;min-height:0;border-radius:2px;cursor:default}
+  .workshop-grid .photo:nth-child(1){grid-column:1/7;grid-row:1/3}
+  .workshop-grid .photo:nth-child(2){grid-column:7/10;grid-row:1}
+  .workshop-grid .photo:nth-child(3){grid-column:10/13;grid-row:1}
+  .workshop-grid .photo:nth-child(4){grid-column:7/13;grid-row:2}
+  .workshop-grid .photo:nth-child(5){grid-column:1/4;grid-row:3}
+  .workshop-grid .photo:nth-child(6){grid-column:4/7;grid-row:3}
+  .workshop-grid .photo:nth-child(7){grid-column:7/10;grid-row:3}
+  .workshop-grid .photo:nth-child(8){grid-column:10/13;grid-row:3}
+  .workshop-grid .real-photo{filter:saturate(.78) contrast(1.05);transition:transform .9s cubic-bezier(.16,1,.3,1),filter .7s ease}
+  .workshop-grid .photo:hover .real-photo{transform:scale(1.035);filter:saturate(.98) contrast(1.03)}
+  .workshop-grid .photo::after{
+    content:'';position:absolute;inset:42% 0 0;z-index:2;
+    background:linear-gradient(180deg,transparent,rgba(3,2,2,.78));pointer-events:none;
+  }
+  .workshop-grid .photo-label{
+    left:14px;bottom:12px;transform:none;width:calc(100% - 28px);text-align:left;
+    font-family:'Inter',sans-serif;font-style:normal;font-size:7px;line-height:1.45;
+    letter-spacing:.17em;text-transform:uppercase;color:var(--cream-2);
+  }
+  .workshop-grid .photo-label::before{content:'N° ';color:var(--gold)}
+
+  .trust-proof{
+    display:grid;grid-template-columns:1.2fr .8fr;gap:10px;margin-top:34px;
+    border-top:1px solid var(--border-2);padding-top:18px;
+  }
+  .trust-proof figure{position:relative;height:142px;overflow:hidden;border:1px solid var(--border);background:#080705}
+  .trust-proof img{width:100%;height:100%;max-width:2000px;object-fit:cover;display:block;filter:saturate(.75) contrast(1.05)}
+  .trust-proof figure::after{content:'';position:absolute;inset:35% 0 0;background:linear-gradient(180deg,transparent,rgba(3,2,2,.82))}
+  .trust-proof figcaption{
+    position:absolute;left:14px;right:14px;bottom:11px;z-index:2;color:var(--cream-2);
+    font-size:7px;letter-spacing:.18em;text-transform:uppercase;
+  }
+  .trust-proof figcaption span{color:var(--gold);margin-right:8px}
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-slide,.dir-cell-media img,.workshop-grid .real-photo{transition:none!important;transform:none!important}
+  }
+
+  /* V3 · Планшет и телефон: композиция пересобирается, а не сжимается */
+  @media (max-width:900px){
+    html,body{font-size:15px}
+    .container{max-width:100%;padding-left:28px;padding-right:28px}
+    .bg-flourish{width:170px;height:170px;opacity:.05}
+
+    .header{padding:9px 0}
+    .header-grid{grid-template-columns:1fr auto;gap:16px}
+    .header .logo{margin-left:0}
+    .header .logo-img{height:52px;max-width:180px}
+    .nav{display:none}
+    .header-cta{grid-column:2}
+    .btn-cta-highlight{padding:9px 15px;font-size:9px}
+
+    .hero{min-height:0;padding:46px 0 62px}
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .hero-content{padding-right:0;max-width:680px}
+    .hero-title{font-size:clamp(38px,8vw,56px);max-width:620px}
+    .hero-sub{font-size:14px;max-width:620px}
+    .hero-photo{height:clamp(390px,72vw,540px)}
+    .hero-slide:nth-child(4){object-position:56% 50%}
+    .hero-badges{flex-wrap:wrap;row-gap:10px}
+    .hero-tagline{white-space:normal;text-align:left}
+
+    .section{padding:78px 0}
+    .section-head{margin-bottom:38px}
+    .section-title{font-size:38px}
+    .section-sub{font-size:14px;max-width:620px}
+    .section > .container::before{left:18px}
+    .section > .container::after{right:18px}
+
+    .flagship{margin-top:42px;border-radius:14px}
+    .flagship-visual{width:calc(100% - 40px);max-width:none;aspect-ratio:16/10}
+    .flagship-visual .fslide{object-fit:cover;object-position:50% 43%}
+    .flagship-body{padding:34px 28px 32px}
+    .flagship-body h3{font-size:30px}
+    .dir-grid{grid-template-columns:1fr;border-radius:14px}
+    .dir-cell{padding:32px 28px 34px}
+    .dir-cell-media{height:170px}
+    .dir-split .lbl{font-size:16px;white-space:normal}
+
+    .about-grid{grid-template-columns:1fr;gap:46px}
+    .about-photo-stage{max-width:680px;width:100%}
+    .about-photo{height:460px}
+    .about-text h2{font-size:34px}
+    .about-text p{font-size:14px}
+    .about-inset{width:170px;height:128px}
+
+    .whyus-strip{padding:62px 0}
+    .whyus-grid{grid-template-columns:1fr}
+    .whyus-item,.whyus-item:first-child{padding:30px 0;border-right:0;border-bottom:1px solid var(--border)}
+    .whyus-item:first-child{padding-top:0}
+    .whyus-item:last-child{border-bottom:0;padding-bottom:0}
+
+    #projects .container{max-width:100%;padding-left:28px;padding-right:28px}
+    .proj-grid{gap:18px;margin-top:40px}
+
+    .workshop-grid{
+      grid-template-columns:repeat(2,1fr);
+      grid-template-rows:280px 165px 190px 150px 150px;
+    }
+    .workshop-grid .photo:nth-child(1){grid-column:1/3;grid-row:1}
+    .workshop-grid .photo:nth-child(2){grid-column:1;grid-row:2}
+    .workshop-grid .photo:nth-child(3){grid-column:2;grid-row:2}
+    .workshop-grid .photo:nth-child(4){grid-column:1/3;grid-row:3}
+    .workshop-grid .photo:nth-child(5){grid-column:1;grid-row:4}
+    .workshop-grid .photo:nth-child(6){grid-column:2;grid-row:4}
+    .workshop-grid .photo:nth-child(7){grid-column:1;grid-row:5}
+    .workshop-grid .photo:nth-child(8){grid-column:2;grid-row:5}
+
+    .trust-grid{grid-template-columns:1fr;gap:38px}
+    .trust-proof{grid-template-columns:1fr 1fr}
+    .trust-proof figure{height:170px}
+
+    .paths{grid-template-columns:1fr}
+    .route{grid-template-columns:1fr;gap:0;margin-top:30px}
+    .route::before{left:18px;right:auto;top:20px;bottom:20px;width:1px;height:auto;background:linear-gradient(180deg,transparent,var(--gold-3),transparent)}
+    .route-step{padding:14px 0 22px 54px;text-align:left;min-height:0}
+    .route-node{position:absolute;left:0;top:12px}
+    .route-step h4,.route-step p{text-align:left}
+
+    .contact-grid{grid-template-columns:1fr;gap:42px}
+    .contact-info h2{font-size:38px}
+    .contact-side{padding:28px}
+
+    .pm{padding:14px}
+    .pm-inner{max-height:calc(100vh - 28px);grid-template-columns:1fr;grid-template-rows:minmax(250px,48vh) minmax(0,1fr)}
+    .pm-side{border-left:0;border-top:1px solid var(--border-2);padding:24px 22px}
+    .pm-close{top:10px;right:10px}
+  }
+
+  @media (max-width:680px){
+    .container,#projects .container{padding-left:20px;padding-right:20px}
+    .header .logo-img{height:46px;max-width:150px}
+    .btn-cta-highlight{padding:8px 11px;font-size:8px;letter-spacing:.1em}
+    .hero{padding:36px 0 50px}
+    .hero-eyebrow{font-size:12px;line-height:1.45}
+    .hero-title{font-size:36px}
+    .hero-sub{font-size:13px;line-height:1.72}
+    .btn-gold{width:100%;justify-content:center;padding:13px 16px;font-size:10px}
+    .hero-badges{gap:9px 12px}
+    .hero-badges .sep{display:none}
+    .hero-photo{height:380px}
+    .hero-photo-meta{left:16px;right:16px;bottom:15px}
+    .hero-photo-caption{font-size:11px;max-width:70%;line-height:1.35}
+    .hero-dots{right:15px;top:15px}
+
+    .section{padding:60px 0}
+    .section-head{margin-bottom:32px}
+    .section-eyebrow{font-size:11px;line-height:1.55}
+    .section-eyebrow .orn{margin:0 6px}
+    .section-title{font-size:31px}
+    .section-sub{font-size:13px}
+    .dir-flourish{display:none}
+    .flagship-visual{width:calc(100% - 24px);margin-top:12px}
+    .flagship-body{padding:28px 20px 26px}
+    .flagship-body h3{font-size:26px}
+    .dir-cell{padding:26px 20px 30px}
+    .dir-cell-media{height:145px;margin-bottom:20px}
+    .dir-split{gap:10px;margin-top:34px}
+    .dir-split .lbl{font-size:13px;letter-spacing:.1em}
+
+    .about-photo-stage{padding-right:12px;padding-bottom:16px}
+    .about-photo{height:350px}
+    .about-photo .real-photo{object-position:54% 50%}
+    .about-inset{width:118px;height:92px;padding:4px}
+    .about-inset::after{font-size:5px;left:6px;right:6px}
+    .about-text h2{font-size:29px}
+    .about-text p{font-size:13px}
+    .master-foot{gap:10px;margin-top:28px;padding-top:22px}
+
+    .proj-grid{grid-template-columns:1fr}
+    .proj-body{padding:18px}
+
+    .workshop-grid{grid-template-rows:235px 145px 170px 132px 132px;gap:7px}
+    .workshop-grid .photo-label{font-size:6px;left:9px;bottom:8px;width:calc(100% - 18px)}
+
+    .trust-proof{grid-template-columns:1fr}
+    .trust-proof figure{height:180px}
+    .trust-reviews{gap:14px}
+    .trust-review{padding:24px 20px}
+
+    .paths{margin-top:32px}
+    .path{padding:27px 22px}
+    .contact-info h2{font-size:32px}
+    .contact-actions{display:grid;grid-template-columns:1fr;gap:10px}
+    .btn-wide{width:100%;justify-content:center}
+    .contact-side{padding:24px 19px}
+    .social-links{gap:8px}
+
+    .pm-inner{grid-template-rows:minmax(220px,42vh) minmax(0,1fr)}
+    .pm-stage{padding:18px 10px 14px}
+    .pm-nav{width:38px;height:38px}
+    .pm-side{padding:20px 17px}
+    .pm-name{font-size:20px}
+    .cert-slide{padding:54px 24px 74px}
+    .cert-prev{left:4px}.cert-next{right:4px}
+  }
+
+  /* ============================================================
+     V4 · ЕДИНЫЙ ЯЗЫК СКРУГЛЕНИЙ И ФИРМЕННАЯ ПОЛИРОВКА
+     ============================================================ */
+  :root{
+    --radius-photo:18px;
+    --radius-card:22px;
+    --radius-soft:14px;
+    --radius-pill:999px;
+  }
+  html,body{min-width:0}
+
+  /* Ни одна новая фотография или управляющий элемент не остаётся с острым углом. */
+  .photo,.hero-photo,.about-photo,.flagship-visual,.dir-cell-media,
+  .workshop-grid .photo,.trust-proof figure,.pm-stage,.pm-thumb,
+  .cert-slide img,.single-lightbox-figure{border-radius:var(--radius-photo)}
+  .hero-photo{border-radius:24px}
+  .about-inset{border-radius:14px;overflow:hidden;padding:0}
+  .about-inset img{border-radius:inherit}
+  .proj-card,.flagship,.dir-grid,.path,.route-step,.contact-side,.pm-inner,
+  .cert-modal-content{border-radius:var(--radius-card)}
+  .btn-gold,.btn-outline,.btn-cta-highlight,.btn-certificates,.proj-open,
+  .social-links a{border-radius:12px!important}
+  .hero-nav,.pm-nav,.pm-close,.cert-nav,.cert-close,
+  .single-lightbox-close{border-radius:50%!important}
+  .photo .corner,.flagship-visual .corner,.section > .container::before,
+  .section > .container::after{display:none!important}
+
+  /* Старые схематичные маятники заменены орнаментом из пластики логотипа. */
+  .brand-scroll{
+    position:absolute;width:250px;height:150px;color:var(--gold);opacity:.105;
+    pointer-events:none;z-index:0;filter:drop-shadow(0 0 18px rgba(212,184,138,.08));
+  }
+  .brand-scroll-left{left:max(calc(50% - 650px),18px);top:48px}
+  .brand-scroll-right{right:max(calc(50% - 650px),18px);bottom:54px;transform:scale(-1,-1)}
+  .brand-scroll-contact{right:max(calc(50% - 650px),12px);top:44px;transform:scaleX(-1)}
+
+  /* Мастерская: кликабельная фотомозаика. */
+  .workshop-grid{gap:12px}
+  .workshop-grid .photo{
+    border-color:rgba(212,184,138,.18);cursor:zoom-in;
+    box-shadow:0 22px 55px rgba(0,0,0,.38);
+    transition:border-color .35s,box-shadow .45s,filter .35s;
+  }
+  .workshop-grid .photo:hover{
+    transform:none;border-color:rgba(212,184,138,.55);filter:brightness(1.055);
+    box-shadow:0 25px 64px rgba(0,0,0,.52),0 0 0 1px rgba(212,184,138,.1),0 0 44px rgba(212,184,138,.06);
+  }
+  .workshop-grid .photo:hover .real-photo{transform:none;filter:saturate(1.04) contrast(1.025)}
+  .workshop-grid .photo:focus-visible,.hero-nav:focus-visible,.single-lightbox-close:focus-visible,
+  .btn-gold:focus-visible,.btn-outline:focus-visible,.btn-certificates:focus-visible{
+    outline:2px solid var(--gold);outline-offset:4px;
+  }
+
+  /* Просмотр фотографий мастерской: листание внутри одного раздела. */
+  .single-lightbox{
+    position:fixed;inset:0;z-index:10020;display:flex;align-items:center;justify-content:center;
+    padding:46px;background:rgba(4,3,3,.93);backdrop-filter:blur(16px);
+    opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s ease;
+  }
+  .single-lightbox.active{opacity:1;visibility:visible}
+  .single-lightbox-panel{position:relative;max-width:min(1180px,88vw);max-height:88vh}
+  .single-lightbox-figure{
+    position:relative;margin:0;overflow:hidden;border:1px solid rgba(212,184,138,.28);
+    background:#080706;box-shadow:0 45px 140px rgba(0,0,0,.85);
+  }
+  .single-lightbox img{display:block;max-width:88vw;max-height:78vh;width:auto;height:auto}
+  .single-lightbox figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:46px 24px 18px;
+    background:linear-gradient(180deg,transparent,rgba(4,3,2,.92));
+    color:var(--cream-2);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  }
+  .single-lightbox-close{
+    position:absolute;right:-18px;top:-18px;z-index:4;width:46px;height:46px;
+    border:1px solid rgba(212,184,138,.42);background:rgba(10,8,6,.92);color:var(--cream);
+    display:grid;place-items:center;cursor:pointer;transition:transform .3s,background .3s;
+  }
+  .single-lightbox-close:hover{transform:rotate(90deg);background:rgba(212,184,138,.15)}
+  .single-lightbox-nav{
+    position:absolute;top:50%;z-index:5;width:48px;height:48px;display:grid;place-items:center;
+    transform:translateY(-50%);border:1px solid rgba(212,184,138,.42);border-radius:50%;
+    background:rgba(8,7,6,.76);backdrop-filter:blur(10px);color:var(--cream-2);cursor:pointer;
+    transition:background .3s,border-color .3s,color .3s,transform .3s;
+  }
+  .single-lightbox-nav:hover{background:rgba(212,184,138,.18);border-color:var(--gold);color:var(--cream);transform:translateY(-50%) scale(1.06)}
+  .single-lightbox-prev{left:-70px}.single-lightbox-next{right:-70px}
+  .single-lightbox-counter{
+    position:absolute;right:18px;bottom:16px;z-index:4;padding:6px 10px;border:1px solid rgba(212,184,138,.28);
+    border-radius:999px;background:rgba(7,6,5,.72);color:var(--gold);font:500 8px/1 ui-monospace,monospace;
+    letter-spacing:.16em;
+  }
+
+  /* Hero: крупные понятные стрелки остаются поверх любого кадра. */
+  .hero-nav{
+    position:absolute;top:50%;z-index:8;width:44px;height:44px;display:grid;place-items:center;
+    transform:translateY(-50%);border:1px solid rgba(212,184,138,.42);
+    background:rgba(8,7,6,.64);backdrop-filter:blur(10px);color:var(--cream-2);
+    cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.32);
+    transition:background .3s,border-color .3s,color .3s,transform .3s;
+  }
+  .hero-nav:hover{background:rgba(212,184,138,.18);border-color:var(--gold);color:var(--cream);transform:translateY(-50%) scale(1.06)}
+  .hero-prev{left:16px}.hero-next{right:16px}
+  .hero-dots{left:50%;right:auto;transform:translateX(-50%);top:20px}
+  .hero-dot{border-radius:999px}
+
+  /* Более близкий портрет мастера и мягкая журнальная рамка. */
+  .about-photo{height:420px;border-radius:24px}
+  .about-photo .real-photo{object-position:50% 35%}
+  .about-photo-stage{padding:0 22px 22px 0}
+  .about-inset{right:0;bottom:0;border-color:rgba(212,184,138,.48)}
+
+  /* Сертификаты больше не зациклены. */
+  .cert-nav:disabled{opacity:.18;cursor:default;pointer-events:none}
+  .cert-modal-content{overflow:hidden}
+
+  /* Блоки после «От задачи…»: больше глубины, гравюрной пластики и деталей. */
+  #collaboration{
+    isolation:isolate;overflow:hidden;
+    background:
+      radial-gradient(ellipse 520px 360px at 8% 22%,rgba(212,184,138,.07),transparent 70%),
+      radial-gradient(ellipse 620px 420px at 92% 78%,rgba(184,132,82,.055),transparent 72%),
+      linear-gradient(180deg,#0a0908 0%,#100c09 52%,#0a0908 100%);
+  }
+  #collaboration::before{
+    content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;
+    background-image:repeating-radial-gradient(ellipse at 50% 50%,transparent 0 34px,rgba(212,184,138,.045) 35px 36px,transparent 37px 72px);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+  }
+  #collaboration .container,#contacts .container{position:relative;z-index:2}
+  #contacts .contact-info::after{
+    content:'✦  ·  ТВОЁ ВРЕМЯ  ·  РУЧНАЯ РАБОТА  ·  ✦';display:block;margin:24px auto 0;
+    color:rgba(212,184,138,.5);font:500 7px/1 'Inter',sans-serif;letter-spacing:.28em;
+  }
+  .paths{gap:18px}
+  .path{
+    overflow:hidden;background:linear-gradient(145deg,rgba(25,18,14,.96),rgba(12,10,9,.98));
+    border-color:rgba(212,184,138,.2);box-shadow:0 28px 80px rgba(0,0,0,.32);
+  }
+  .path::before{
+    content:'';position:absolute;left:22px;right:22px;top:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.48;
+  }
+  .path::after{
+    content:'⌁';position:absolute;right:28px;bottom:20px;color:var(--gold);
+    font-family:'Cormorant Garamond',serif;font-size:36px;opacity:.12;
+  }
+  .path-badge{box-shadow:inset 0 0 28px rgba(212,184,138,.08),0 0 38px rgba(212,184,138,.04)}
+  .path,.path-badge,.path .flourish-corner,.path::after{
+    transition:transform .42s cubic-bezier(.16,1,.3,1),border-color .32s,box-shadow .42s,opacity .32s,color .32s;
+  }
+  .path:hover,html.js .stagger.in > .path:hover{
+    transform:translateY(-9px);border-color:rgba(212,184,138,.48);
+    box-shadow:0 38px 92px rgba(0,0,0,.58),0 0 54px rgba(212,184,138,.075);
+  }
+  .path:hover .path-badge{transform:translateY(-3px) rotate(-4deg) scale(1.055);border-color:rgba(212,184,138,.65);color:var(--cream)}
+  .path:hover .flourish-corner{opacity:.72;transform:translate(-4px,4px)}
+  .path:hover::after{opacity:.34;transform:translate(-5px,-3px)}
+  .route{
+    padding:20px;border:1px solid rgba(212,184,138,.14);border-radius:24px;
+    background:rgba(9,7,6,.5);box-shadow:inset 0 1px 0 rgba(255,240,210,.025);
+  }
+  .route-step{border:1px solid transparent;padding-left:10px;padding-right:10px}
+  .route-step:hover{border-color:rgba(212,184,138,.2);background:rgba(212,184,138,.035)}
+  .route-foot{
+    width:max-content;max-width:82%;margin:28px auto 0;padding:12px 22px;
+    border:1px solid rgba(212,184,138,.16);border-radius:999px;background:rgba(8,7,6,.48);
+  }
+  #contacts{overflow:hidden;background:radial-gradient(ellipse 700px 420px at 82% 24%,rgba(212,184,138,.055),transparent 70%)}
+  .contact-actions a{position:relative;display:flex;align-items:center;gap:12px;box-shadow:0 18px 48px rgba(0,0,0,.24)}
+  .contact-actions a::before{content:'◆';font-size:7px;opacity:.7}
+  .contact-side{overflow:hidden;border-color:rgba(212,184,138,.22);box-shadow:0 32px 95px rgba(0,0,0,.4)}
+  .contact-side::after{
+    content:'⌁';position:absolute;right:26px;bottom:16px;color:var(--gold);
+    font:52px/1 'Cormorant Garamond',serif;opacity:.1;pointer-events:none;
+  }
+  /* Верхний орнамент не должен заходить на заголовок контактной карточки. */
+  .contact-side > .flourish-corner.tl{
+    left:auto;right:18px;top:16px;transform:scaleX(-1);opacity:.3;
+  }
+
+  /* Финальная полировка по обратной связи: плотнее флагман, короче контактная карточка. */
+  .flagship-visual{width:calc(100% - 120px);max-width:560px;margin:26px auto 12px;aspect-ratio:16/9}
+  .flagship-proof{
+    width:calc(100% - 96px);max-width:650px;margin:0 auto 2px;display:grid;
+    grid-template-columns:repeat(3,1fr);border:1px solid rgba(212,184,138,.16);
+    border-radius:12px;overflow:hidden;background:rgba(9,7,6,.58);
+  }
+  .flagship-proof span{padding:11px 14px;color:var(--text);font-size:9px;line-height:1.35;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+  .flagship-proof span+span{border-left:1px solid rgba(212,184,138,.13)}
+  .flagship-proof b{margin-right:7px;color:var(--gold);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500}
+  #contacts .contact-grid{grid-template-columns:.76fr 1.24fr;gap:34px}
+  .contact-side{padding:30px 34px 28px}
+  .contact-side h3{margin-bottom:18px}
+  .contact-side .send{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px;margin-bottom:22px}
+  .contact-side .send .row{align-items:flex-start;gap:11px}
+  .contact-side .send .row:nth-child(3){grid-column:auto}
+  .contact-side .send .row p{font-size:12px;line-height:1.48}
+  .social-links{gap:8px}
+  .social-links a{padding:7px 12px}
+
+  /* Компактный функциональный подвал. */
+  .footer{padding:38px 0 22px;text-align:left}
+  .footer .footer-top-orn{margin-bottom:28px}
+  .footer-main{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:44px;align-items:start}
+  .footer-brand .logo{justify-content:flex-start;margin:0 0 14px}
+  .footer-brand .logo-img{height:62px;max-width:190px}
+  .footer-tagline{font-size:14px;line-height:1.45;margin-bottom:7px}
+  .footer-subdesc{font-size:9px;line-height:1.6;margin:0;letter-spacing:.12em}
+  .footer-heading{margin-bottom:13px;color:var(--gold);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+  .footer-nav{display:grid;grid-template-columns:1fr 1fr;gap:9px 20px}
+  .footer-nav a,.footer-contact a{color:var(--text);font-size:11px;line-height:1.45;text-decoration:none;transition:color .25s}
+  .footer-nav a:hover,.footer-contact a:hover{color:var(--gold)}
+  .footer-contact{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+  .footer-contact p{color:var(--muted);font-size:10px;line-height:1.55;margin:2px 0 4px}
+  .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px;padding-top:18px;border-top:1px solid var(--border-2)}
+  .footer-bottom .footer-copy{font-size:10px;line-height:1.5;letter-spacing:.04em}
+  .footer-made{color:var(--muted);font-size:9px;letter-spacing:.06em;white-space:nowrap}
+  .footer-made a{color:var(--gold-3);text-decoration:none;transition:color .25s}
+  .footer-made a:hover{color:var(--gold)}
+
+  /* Финальный адаптивный слой расположен после V4-полировки, чтобы поздние
+     desktop-правила не отменяли мобильную композицию. */
+  @media (max-width:980px){
+    html,body{width:100%;max-width:100%}
+    .flagship-body{grid-template-columns:1fr;gap:22px}
+    .flagship-visual,.flagship-proof{width:calc(100% - 48px);max-width:620px}
+    #contacts .contact-grid{grid-template-columns:1fr;gap:40px}
+    .contact-side .send{grid-template-columns:1fr;gap:14px}
+    .footer-main{grid-template-columns:1fr 1fr;gap:32px 46px}
+    .footer-contact{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:28px}
+    .footer-contact .footer-heading,.footer-contact p{grid-column:1/-1}
+    .single-lightbox-prev{left:14px}.single-lightbox-next{right:14px}
+  }
+
+  @media (max-width:680px){
+    .header-grid{grid-template-columns:minmax(0,1fr) auto}
+    .header .logo{min-width:0}
+    .header .logo-img{width:auto;max-width:142px;height:44px}
+    .hero-content,.hero-grid>*{min-width:0;max-width:100%}
+    .hero-title{font-size:clamp(33px,10vw,40px);line-height:1.04;overflow-wrap:anywhere}
+    .hero-eyebrow{max-width:100%;padding-left:34px}
+    .hero-photo{height:360px}
+    .hero-slide:nth-child(1){object-position:50% 43%}
+    .hero-slide:nth-child(2){object-position:48% 45%}
+    .hero-slide:nth-child(3){object-position:50% 45%}
+    .hero-slide:nth-child(4){object-position:55% 50%}
+    .section-eyebrow{overflow-wrap:anywhere}
+    .section-title{font-size:clamp(29px,8.7vw,35px)}
+    .flagship{margin-top:34px}
+    .flagship-visual{width:calc(100% - 24px);margin-top:12px;aspect-ratio:16/10}
+    .flagship-proof{width:calc(100% - 24px);grid-template-columns:repeat(3,minmax(0,1fr))}
+    .flagship-proof span{padding:9px 5px;font-size:7px;letter-spacing:.04em}
+    .flagship-proof b{display:block;margin:0 0 3px}
+    .flagship-body{padding:26px 20px 24px;gap:18px}
+    .flagship-body h3{font-size:25px}
+    .about-inset{padding:0}
+    .route{padding:12px}
+    .route-foot{width:auto;max-width:100%;padding:12px 16px;line-height:1.55}
+    .contact-side .send{grid-template-columns:1fr}
+    .footer{padding:30px 0 20px}
+    .footer .footer-top-orn{width:210px;margin-bottom:24px}
+    .footer-main{grid-template-columns:1fr;gap:26px}
+    .footer-contact{grid-column:auto;display:flex}
+    .footer-brand .logo-img{height:56px}
+    .footer-bottom{align-items:flex-start;flex-direction:column;gap:10px;margin-top:24px;padding-top:16px}
+    .footer-made{white-space:normal}
+    .single-lightbox{padding:12px}
+    .single-lightbox-panel{max-width:100%;width:100%}
+    .single-lightbox img{max-width:100%;max-height:76vh;margin:auto}
+    .single-lightbox-close{right:6px;top:6px;width:40px;height:40px}
+    .single-lightbox-nav{width:42px;height:42px}
+    .single-lightbox-prev{left:8px}.single-lightbox-next{right:8px}
+    .single-lightbox figcaption{padding:42px 62px 15px 16px;font-size:7px;line-height:1.4}
+    .single-lightbox-counter{right:14px;bottom:13px}
+    .pm{padding:8px}
+    .pm-inner{max-height:calc(100dvh - 16px)}
+    .cert-modal{padding:8px}
+  }
+
+  @media (max-width:390px){
+    .container,#projects .container{padding-left:16px;padding-right:16px}
+    .btn-cta-highlight{padding:8px 9px;font-size:7px}
+    .hero{padding-top:30px}
+    .hero-title{font-size:32px}
+    .hero-photo{height:330px}
+    .dir-cell{padding-left:17px;padding-right:17px}
+    .workshop-grid{grid-template-rows:215px 130px 155px 118px 118px}
+    .footer-nav{gap:8px 14px}
+  }
+
+  /* ============================================================
+     V5 · ПОЛНОЦЕННЫЙ МОБИЛЬНЫЙ ИНТЕРФЕЙС
+     Компоненты не только складываются, но меняют способ навигации,
+     плотность, ритм и сценарий взаимодействия под палец.
+     ============================================================ */
+  .mobile-menu-toggle,.mobile-nav-head,.mobile-nav-contact,
+  .mobile-swipe-hint,.projects-more{display:none}
+  .mobile-nav-panel,.nav-links{display:contents}
+  .nav-index{display:none}
+
+  @media (max-width:900px){
+    :root{--mobile-gutter:20px;--mobile-header:68px}
+    html{scroll-padding-top:calc(var(--mobile-header) + 12px)}
+    section[id]{scroll-margin-top:0}
+    body.menu-open{overflow:hidden;touch-action:none}
+
+    .header{
+      min-height:var(--mobile-header);padding:0!important;z-index:10010;
+      background:rgba(8,7,6,.9);border-bottom-color:rgba(212,184,138,.13);
+      backdrop-filter:blur(18px) saturate(1.08);-webkit-backdrop-filter:blur(18px) saturate(1.08);
+      transform:none!important;will-change:auto;
+    }
+    .header.header-hidden{transform:none!important;opacity:1!important;pointer-events:auto!important}
+    .header-grid{
+      min-height:var(--mobile-header);grid-template-columns:minmax(0,1fr) 48px!important;
+      align-items:center;gap:12px;padding-left:max(var(--mobile-gutter),env(safe-area-inset-left));
+      padding-right:max(var(--mobile-gutter),env(safe-area-inset-right));
+    }
+    .header .logo{width:max-content;min-width:0;height:52px;display:flex;align-items:center;position:relative;z-index:10013}
+    .header .logo-img{height:48px!important;max-width:156px!important;width:auto}
+    .header-cta{display:none!important}
+
+    .mobile-menu-toggle{
+      grid-column:2;display:grid;place-items:center;align-content:center;gap:5px;
+      width:48px;height:48px;padding:0;border:1px solid rgba(212,184,138,.3);border-radius:50%;
+      background:rgba(212,184,138,.045);color:var(--cream);cursor:pointer;position:relative;z-index:10013;
+      touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+      transition:background .25s,border-color .25s,transform .25s;
+    }
+    .mobile-menu-toggle .menu-line{display:block;width:19px;height:1px;background:currentColor;transition:transform .32s cubic-bezier(.16,1,.3,1),opacity .2s,width .25s}
+    .mobile-menu-toggle[aria-expanded="true"]{background:rgba(212,184,138,.13);border-color:rgba(212,184,138,.62)}
+    .mobile-menu-toggle[aria-expanded="true"] .menu-line:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .mobile-menu-toggle[aria-expanded="true"] .menu-line:nth-child(2){opacity:0;width:0}
+    .mobile-menu-toggle[aria-expanded="true"] .menu-line:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+    .nav{
+      display:block!important;position:fixed;inset:0;z-index:10011;padding:0!important;
+      background:rgba(2,2,2,.68);opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .28s ease,visibility .28s ease;
+    }
+    .nav.is-open{opacity:1;visibility:visible;pointer-events:auto}
+    .mobile-nav-panel{
+      display:flex;flex-direction:column;position:absolute;right:0;top:0;width:min(390px,100%);height:100dvh;
+      padding:calc(var(--mobile-header) + 22px) max(22px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) 22px;
+      background:
+        radial-gradient(circle at 90% 12%,rgba(212,184,138,.09),transparent 31%),
+        linear-gradient(160deg,#15100d 0%,#0d0a08 56%,#080706 100%);
+      border-left:1px solid rgba(212,184,138,.18);box-shadow:-28px 0 90px rgba(0,0,0,.65);
+      overflow-y:auto;overscroll-behavior:contain;transform:translateX(102%);
+      transition:transform .42s cubic-bezier(.16,1,.3,1);
+    }
+    .nav.is-open .mobile-nav-panel{transform:translateX(0)}
+    .mobile-nav-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 2px 16px;border-bottom:1px solid var(--border)}
+    .mobile-nav-head>span:first-child{font:500 11px/1 'Inter',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+    .mobile-nav-place{font:400 10px/1 'Cormorant Garamond',serif;font-style:italic;color:var(--muted)}
+    .nav-links{display:flex;flex-direction:column;margin-top:8px}
+    .nav-links a{
+      min-height:56px;padding:0 4px!important;display:flex!important;align-items:center;gap:16px;
+      border-bottom:1px solid rgba(212,184,138,.09);color:var(--cream-2)!important;
+      font:500 19px/1.15 'Playfair Display',serif!important;letter-spacing:0!important;text-transform:none!important;
+      text-decoration:none;touch-action:manipulation;
+    }
+    .nav-links a::after{display:none!important}
+    .nav-links a.active{color:var(--gold)!important}
+    .nav-index{display:inline-block;min-width:24px;color:var(--gold-3);font:500 9px/1 'Inter',sans-serif;letter-spacing:.12em}
+    .mobile-nav-contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:22px}
+    .mobile-nav-contact-label{grid-column:1/-1;color:var(--muted);font-size:9px;letter-spacing:.17em;text-transform:uppercase}
+    .mobile-nav-contact a{
+      min-height:50px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;
+      border:1px solid rgba(212,184,138,.3);border-radius:12px;color:var(--cream-2);font-size:11px;
+      letter-spacing:.08em;text-decoration:none;text-transform:uppercase;
+    }
+    .mobile-nav-primary{background:linear-gradient(135deg,#d7b980,#aa814d);color:#120d08!important;border-color:transparent!important}
+
+    /* Планшет тоже управляется пальцем: сохраняем тонкий вид контролов,
+       но увеличиваем их реальную активную область и основной текст. */
+    .hero-sub,.section-sub,.flagship-body p,.dir-cell p,.about-text p,
+    .whyus-item p,.trust-lead,.path-lead,.route-step p,
+    .contact-side .send .row p{font-size:14.5px;line-height:1.65}
+    .hero-nav{width:48px;height:48px}
+    .hero-dots{gap:0}
+    .hero-dot{position:relative;width:44px!important;height:44px!important;border:0!important;background:transparent!important;padding:0}
+    .hero-dot::before{content:'';position:absolute;left:50%;top:50%;width:18px;height:2px;border-radius:4px;background:rgba(212,184,138,.32);transform:translate(-50%,-50%);transition:width .25s,background .25s}
+    .hero-dot.active::before{width:29px;background:var(--gold)}
+    .proj-open{min-height:46px;padding-top:0;padding-bottom:0}
+    .footer-nav a,.footer-contact a,.social-links a{min-height:44px;display:flex;align-items:center}
+    .single-lightbox-close,.single-lightbox-nav,.pm-close,.pm-nav,.cert-close,.cert-nav{
+      width:48px!important;height:48px!important;min-width:48px;min-height:48px
+    }
+    /* В вертикальном маршруте номер и декоративный угол занимают разные стороны. */
+    .route::before{left:48px}
+    .route-step{padding-left:72px}
+    .route-node{left:12px}
+    .route-step::before{left:auto;right:14px;transform:scaleX(-1)}
+
+    .mobile-swipe-hint{
+      min-height:44px;margin:18px 0 12px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;
+      border:1px solid rgba(212,184,138,.15);border-radius:999px;background:rgba(212,184,138,.035);
+      color:var(--muted);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    }
+    .mobile-swipe-hint b{color:var(--gold);font-size:18px;font-weight:300}
+    .mobile-swipe-hint-compact{margin:0 0 12px}
+    .dir-grid:focus-visible,.whyus-grid:focus-visible,.trust-reviews:focus-visible,.paths:focus-visible{
+      outline:2px solid var(--gold);outline-offset:4px
+    }
+
+    .projects-more{
+      width:100%;min-height:56px;margin-top:20px;padding:0 18px;align-items:center;justify-content:space-between;
+      border:1px solid rgba(212,184,138,.42);border-radius:14px;background:rgba(212,184,138,.06);
+      color:var(--cream-2);font:500 11px/1 'Inter',sans-serif;letter-spacing:.13em;text-transform:uppercase;
+      cursor:pointer;touch-action:manipulation;
+    }
+    .projects-more b{color:var(--gold);font-size:20px;font-weight:300;transition:transform .3s}
+    .projects-more[aria-expanded="true"] b{transform:rotate(-90deg)}
+  }
+
+  @media (max-width:680px){
+    :root{--mobile-gutter:18px;--mobile-header:66px}
+    html,body{font-size:16px}
+    body{line-height:1.6;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    img,svg,video{max-width:100%}
+    .container,#projects .container{padding-left:var(--mobile-gutter);padding-right:var(--mobile-gutter)}
+
+    .hero{padding:28px 0 54px}
+    .hero-grid{gap:28px}
+    .hero-content{display:flex;flex-direction:column}
+    .hero-eyebrow{padding-left:30px;font-size:12px;line-height:1.5;letter-spacing:.08em}
+    .hero-title{font-size:clamp(38px,11.4vw,46px);line-height:.99;letter-spacing:-.035em;margin-bottom:22px;overflow-wrap:normal}
+    .hero-sub{font-size:16px;line-height:1.66;margin-bottom:24px;color:#c9beaa}
+    .hero .btn-gold{min-height:56px;padding:0 18px;font-size:11px;letter-spacing:.13em}
+    .hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+    .hero-badges .bdg{min-height:46px;padding:8px 10px;display:flex;align-items:center;border:1px solid rgba(212,184,138,.12);border-radius:12px;background:rgba(212,184,138,.025);font-size:10px;line-height:1.35}
+    .hero-badges .bdg:nth-child(5){grid-column:1/-1}
+    .hero-tagline{margin-top:18px;padding:0;text-align:center;font-size:11px;line-height:1.5;white-space:normal}
+    .hero-photo{height:min(92vw,390px);border-radius:20px}
+    .hero-photo-caption{max-width:62%;font-size:12px;line-height:1.35}
+    .hero-photo-index{font-size:10px}
+    .hero-nav{width:48px;height:48px}
+    .hero-prev{left:12px}.hero-next{right:12px}
+    .hero-dots{top:7px;gap:0}
+    .hero-dot{position:relative;width:46px!important;height:46px!important;border:0!important;background:transparent!important;padding:0}
+    .hero-dot::before{content:'';position:absolute;left:50%;top:50%;width:18px;height:2px;border-radius:4px;background:rgba(212,184,138,.32);transform:translate(-50%,-50%);transition:width .25s,background .25s}
+    .hero-dot.active::before{width:29px;background:var(--gold)}
+
+    .section{padding:66px 0}
+    .section-head{margin:0 0 28px;text-align:left}
+    .section-head::before{margin:0 0 18px}
+    .section-eyebrow{font-size:10px;line-height:1.55;letter-spacing:.12em;text-align:left}
+    .section-title{font-size:clamp(33px,9.5vw,39px);line-height:1.06;text-align:left;letter-spacing:-.025em}
+    .section-sub{max-width:36em;margin:15px 0 0;font-size:15.5px;line-height:1.65;text-align:left;color:#bcb19f}
+    .dir-flourish{margin-left:0}
+
+    .flagship{margin-top:28px;border-radius:20px}
+    .flagship-visual{width:100%;margin:0;aspect-ratio:4/3;border-radius:0!important;border:0}
+    .flagship-visual .fslide{object-position:50% 38%}
+    .flagship-proof{
+      width:100%;max-width:none;margin:0;padding:12px 16px;display:flex;gap:10px;overflow-x:auto;
+      scroll-snap-type:x mandatory;border:0;border-top:1px solid var(--border);border-radius:0;background:#0e0b09;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .flagship-proof::-webkit-scrollbar{display:none}
+    .flagship-proof span{
+      flex:0 0 152px;min-height:62px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;
+      scroll-snap-align:start;border:1px solid rgba(212,184,138,.13)!important;border-radius:11px;
+      background:rgba(212,184,138,.035);font-size:10px;line-height:1.4;text-align:left;
+    }
+    .flagship-proof b{display:block;margin:0 0 4px;font-size:15px}
+    .flagship-body{padding:26px 18px 24px;gap:22px}
+    .flagship-body h3{font-size:28px;line-height:1.12}
+    .flagship-sub{font-size:17px;line-height:1.4}
+    .flagship-body p,.dir-cell p,.about-text p,.whyus-item p,.trust-lead,
+    .path-lead,.route-step p,.contact-side .send .row p{font-size:15.5px;line-height:1.68}
+    .flagship-specs{gap:8px;margin-top:6px;background:transparent;border:0}
+    .fspec{padding:12px 13px;border:1px solid rgba(212,184,138,.12);border-radius:11px;background:rgba(212,184,138,.025)}
+
+    .dir-split{margin-top:30px}
+    .dir-grid{
+      display:flex!important;align-items:stretch;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);
+      padding:0 var(--mobile-gutter) 18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+      scroll-padding-left:var(--mobile-gutter);overscroll-behavior-inline:contain;border:0;background:transparent;
+      border-radius:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .dir-grid::-webkit-scrollbar{display:none}
+    .dir-cell{
+      flex:0 0 min(84vw,350px);padding:18px 18px 22px!important;scroll-snap-align:start;scroll-snap-stop:always;
+      border:1px solid rgba(212,184,138,.17)!important;border-radius:20px;background:linear-gradient(155deg,#17110e,#0d0a08);
+      box-shadow:0 20px 46px rgba(0,0,0,.3);
+    }
+    .dir-cell-media{height:190px;margin:-1px -1px 22px;border-radius:18px 18px 12px 12px}
+    .dir-cell h3{font-size:24px;line-height:1.18;margin-bottom:8px}
+    .dir-lead{font-size:15px;line-height:1.45;margin-bottom:16px}
+    .dir-list{gap:0;margin-top:18px;border-top:1px solid var(--border-2)}
+    .dir-list li{min-height:44px;padding:11px 0 11px 18px;display:flex;align-items:center;font-size:13px;line-height:1.45;border-bottom:1px solid var(--border-2)}
+    .dir-foot{font-size:10px;line-height:1.5;margin-top:16px}
+
+    .about-grid{gap:32px}
+    .about-photo-stage{padding:0 10px 14px 0}
+    .about-photo{height:min(105vw,390px)}
+    .about-inset{width:126px;height:98px}
+    .about-text h2{font-size:34px;line-height:1.08}
+    .about-text p{margin-bottom:18px}
+    .about-quote{padding:16px 0 16px 18px;font-size:17px;line-height:1.45}
+    .master-foot{display:flex;overflow-x:auto;gap:0;margin:22px calc(var(--mobile-gutter) * -1) 0;padding:16px var(--mobile-gutter) 4px;scrollbar-width:none;white-space:nowrap}
+    .master-foot::-webkit-scrollbar{display:none}
+    .master-foot span:not(.sepd){font-size:13px}
+
+    .whyus-strip{padding:46px 0}
+    .whyus-grid{
+      display:flex!important;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 10px;
+      overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
+    }
+    .whyus-grid::-webkit-scrollbar{display:none}
+    .whyus-item,.whyus-item:first-child{
+      flex:0 0 min(82vw,330px);min-height:260px;padding:24px!important;scroll-snap-align:start;
+      border:1px solid rgba(212,184,138,.16)!important;border-radius:18px;background:rgba(212,184,138,.025);
+    }
+    .whyus-item h4{font-size:22px;line-height:1.2}
+
+    #projects .section-head{margin-bottom:24px}
+    .proj-grid{gap:14px;margin-top:0}
+    .proj-card{border-radius:20px}
+    .proj-card .photo{aspect-ratio:4/3}
+    .proj-body{padding:20px 18px 18px}
+    .proj-type{font-size:9px;line-height:1.5}
+    .proj-name{font-size:22px;line-height:1.16}
+    .proj-lead{font-size:15px;line-height:1.5}
+    .proj-open{width:100%;min-height:50px;margin-top:18px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+    .projects-more{display:flex}
+    .proj-card[hidden]{display:none!important}
+
+    .workshop-grid{display:grid;grid-template-columns:1.18fr .82fr;grid-template-rows:230px 152px 152px 152px 152px;gap:9px}
+    .workshop-grid .photo:nth-child(1){grid-column:1/3;grid-row:1}
+    .workshop-grid .photo:nth-child(2){grid-column:1;grid-row:2}
+    .workshop-grid .photo:nth-child(3){grid-column:2;grid-row:2}
+    .workshop-grid .photo:nth-child(4){grid-column:1/3;grid-row:3}
+    .workshop-grid .photo:nth-child(5){grid-column:1;grid-row:4}
+    .workshop-grid .photo:nth-child(6){grid-column:2;grid-row:4}
+    .workshop-grid .photo:nth-child(7){grid-column:1;grid-row:5}
+    .workshop-grid .photo:nth-child(8){grid-column:2;grid-row:5}
+    .workshop-grid .photo-label{left:10px;right:10px;bottom:9px;width:auto;font-size:8px;line-height:1.35}
+
+    .trust-grid{gap:32px}
+    .trust-grid>*{min-width:0;max-width:100%}
+    .trust-reviews-wrap{min-width:0;max-width:100%;overflow:visible}
+    .trust-lead{margin-bottom:22px}
+    .fact{padding:18px 0}
+    .fact .k{font-size:27px}
+    .fact .d{font-size:13px;line-height:1.5}
+    .btn-certificates{width:100%;min-height:54px;padding:0 16px;font-size:10px}
+    .trust-reviews{
+      display:flex;flex-direction:row;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 10px;
+      overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
+    }
+    .trust-reviews::-webkit-scrollbar{display:none}
+    .trust-review{flex:0 0 min(82vw,330px);min-height:245px;padding:24px 21px;scroll-snap-align:start}
+    .trust-review .qt{font-size:18px;line-height:1.55;max-width:94%}
+    .trust-review .auth{font-size:13px;line-height:1.4}
+
+    .paths{
+      display:flex!important;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 16px;
+      overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
+    }
+    .paths::-webkit-scrollbar{display:none}
+    .path{flex:0 0 min(88vw,360px);padding:26px 22px;scroll-snap-align:start;scroll-snap-stop:always}
+    .path-badge{width:54px;height:54px;font-size:28px;margin-bottom:18px}
+    .path-tag{font-size:9px;line-height:1.45}
+    .path h3{font-size:23px;line-height:1.2}
+    .path .path-sub{font-size:15px;line-height:1.45}
+    .path .path-lead{font-size:15.5px;line-height:1.68}
+    .path li{font-size:14px;line-height:1.55;padding:10px 0 10px 18px;border-bottom:1px solid var(--border-2)}
+    .path-foot{font-size:16px;line-height:1.55}
+    .route{margin-top:26px;padding:8px 10px 8px 12px;border-radius:18px}
+    .route::before{left:48px;top:34px;bottom:34px}
+    .route-step{min-height:118px;padding:18px 8px 18px 72px;border-bottom:1px solid rgba(212,184,138,.09)}
+    .route-step:last-child{border-bottom:0}
+    .route-node{left:12px;top:20px;width:44px;height:44px;display:grid;place-items:center}
+    .route-step::before{left:auto;right:14px;transform:scaleX(-1)}
+    .route-step h4{font-size:18px;margin-bottom:5px}
+    .route-step p{font-size:15px;line-height:1.58}
+    .route-foot{font-size:15px}
+
+    #contacts .contact-grid{gap:30px}
+    .contact-info h2{font-size:38px;line-height:1.05}
+    .contact-info .lead{font-size:16px;line-height:1.65}
+    .contact-actions{gap:10px;margin:26px 0 20px}
+    .btn-wide{min-height:56px;padding:0 18px!important;font-size:11px}
+    .contact-place{font-size:16px;line-height:1.5}
+    .contact-side{padding:24px 18px;border-radius:20px}
+    .contact-side h3{font-size:29px}
+    .contact-side .send{gap:0}
+    .contact-side .send .row{min-height:88px;padding:16px 0;align-items:flex-start;border-bottom:1px solid var(--border-2)}
+    .contact-side .send .row:last-child{border-bottom:0}
+    .contact-side .send .row .rn{font-size:18px;min-width:34px}
+    .social-links{gap:8px}
+    .social-links .slbl{width:100%;margin-bottom:2px;font-size:9px}
+    .social-links a{min-height:44px;padding:0 14px;display:inline-flex;align-items:center;font-size:12px}
+
+    .footer{padding:40px 0 max(22px,env(safe-area-inset-bottom))}
+    .footer-main{gap:30px}
+    .footer-tagline{font-size:16px;line-height:1.5}
+    .footer-subdesc{font-size:11px}
+    .footer-heading{font-size:10px}
+    .footer-nav{gap:0 14px}
+    .footer-nav a,.footer-contact a{min-height:44px;display:flex;align-items:center;font-size:14px}
+    .footer-contact{gap:0}
+    .footer-contact p{font-size:13px;line-height:1.55;margin-bottom:8px}
+    .footer-bottom .footer-copy,.footer-made{font-size:11px}
+
+    .single-lightbox-figure{border-radius:16px}
+    .pm{align-items:flex-end;padding:0}
+    .pm-inner{width:100%;max-height:96dvh;border-radius:22px 22px 0 0;grid-template-rows:minmax(240px,40dvh) minmax(0,1fr)}
+    .pm-stage{border-radius:22px 22px 0 0;padding:16px 8px 12px}
+    .pm-side{padding:22px 18px max(24px,env(safe-area-inset-bottom))}
+    .pm-name{font-size:25px;line-height:1.15}
+    .pm-lead{font-size:16px;line-height:1.45}
+    .pm-body p{font-size:15px;line-height:1.65}
+  }
+
+  @media (max-width:360px){
+    :root{--mobile-gutter:15px}
+    .header .logo-img{height:44px!important;max-width:142px!important}
+    .hero-title{font-size:36px}
+    .hero-sub{font-size:15.5px}
+    .hero-badges{grid-template-columns:1fr}
+    .hero-badges .bdg:nth-child(5){grid-column:auto}
+    .hero-photo{height:330px}
+    .section-title{font-size:32px}
+    .dir-cell{flex-basis:88vw}
+    .path{flex-basis:91vw}
+    .mobile-nav-contact{grid-template-columns:1fr}
+    .mobile-nav-contact-label{grid-column:auto}
+  }
+
+  @media (hover:none),(pointer:coarse){
+    a,button,[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:rgba(212,184,138,.12)}
+    .proj-card:hover,.dir-cell:hover,.path:hover,.whyus-item:hover,.trust-review:hover,
+    .workshop-grid .photo:hover,.btn-gold:hover,.btn-outline:hover{transform:none!important;box-shadow:inherit}
+    .proj-card:active,.dir-cell:active,.path:active,.workshop-grid .photo:active,
+    .btn-gold:active,.btn-outline:active,.projects-more:active{filter:brightness(1.12);transform:scale(.992)!important}
+  }
+
+  @media (max-width:900px) and (orientation:landscape) and (max-height:520px){
+    .mobile-nav-panel{width:min(520px,72%);padding-top:calc(var(--mobile-header) + 10px)}
+    .nav-links{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}
+    .nav-links a{min-height:46px;font-size:16px}
+    .mobile-nav-contact{margin-top:16px;padding-top:12px}
   }
 </style>
 </head>
@@ -2159,26 +3053,40 @@
   </div>
 </div>
 
-<div class="cur-dot"></div>
-<div class="cur-ring"></div>
-
 <!-- ============================================================ -->
 <!-- ХЕДЕР                                                         -->
 <!-- ============================================================ -->
 <header class="header">
   <div class="container header-grid">
     <a href="#hero" class="logo">
-      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
+      <img src="assets/Image__64_-removebg-preview.png" width="829" height="301" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
     </a>
 
-    <nav class="nav">
-      <a href="#directions">Направления</a>
-      <a href="#master">О мастере</a>
-      <a href="#projects">Проекты</a>
-      <a href="#workshop">Мастерская</a>
-      <a href="#trust">Доверие</a>
-      <a href="#collaboration">Сотрудничество</a>
-      <a href="#contacts">Контакты</a>
+    <button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Открыть меню">
+      <span class="menu-line"></span><span class="menu-line"></span><span class="menu-line"></span>
+    </button>
+
+    <nav class="nav" id="siteNav" aria-label="Основная навигация">
+      <div class="mobile-nav-panel">
+        <div class="mobile-nav-head">
+          <span>Навигация</span>
+          <span class="mobile-nav-place">Сургут · мастерская</span>
+        </div>
+        <div class="nav-links">
+          <a href="#directions"><span class="nav-index">01</span>Направления</a>
+          <a href="#master"><span class="nav-index">02</span>О мастере</a>
+          <a href="#projects"><span class="nav-index">03</span>Проекты</a>
+          <a href="#workshop"><span class="nav-index">04</span>Мастерская</a>
+          <a href="#trust"><span class="nav-index">05</span>Доверие</a>
+          <a href="#collaboration"><span class="nav-index">06</span>Сотрудничество</a>
+          <a href="#contacts"><span class="nav-index">07</span>Контакты</a>
+        </div>
+        <div class="mobile-nav-contact">
+          <div class="mobile-nav-contact-label">Связаться напрямую</div>
+          <a class="mobile-nav-primary" href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram <span>→</span></a>
+          <a class="mobile-nav-secondary" href="https://wa.me/79224448586" target="_blank" rel="noopener">WhatsApp <span>→</span></a>
+        </div>
+      </div>
     </nav>
 
     <div class="header-cta">
@@ -2227,13 +3135,34 @@
       <div class="hero-tagline">Авторская мастерская <span class="ht-dot"></span> Сургут <span class="ht-dot"></span> Ручная работа</div>
     </div>
 
-    <div class="hero-photo photo velvet-photo reveal">
+    <div class="hero-photo photo velvet-photo reveal" aria-label="Евгений Деккер за работой в мастерской">
+      <div class="hero-slides">
+        <img class="hero-slide active" src="img/v3/hero-master-watch.webp" width="1334" height="2000" fetchpriority="high" decoding="async" alt="Евгений Деккер показывает открытый исторический механизм">
+        <img class="hero-slide" src="img/v3/hero-restoration-light.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Часовой мастер изучает механизм под ярким рабочим светом">
+        <img class="hero-slide" src="img/v3/hero-lathe.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Евгений Деккер изготавливает деталь на часовом токарном станке">
+        <img class="hero-slide" src="img/v3/master-portrait.webp" width="2000" height="1334" loading="lazy" decoding="async" alt="Портрет Евгения Деккера в мастерской «Твоё Время»">
+      </div>
       <div class="grain"></div>
       <div class="warmlight"></div>
       <div class="vignette"></div>
       <div class="corner tl"></div><div class="corner tr"></div>
       <div class="corner bl"></div><div class="corner br"></div>
-      <div class="photo-label">Крупный план авторских часов, исторического механизма или рабочего стола мастера</div>
+      <div class="hero-dots" aria-label="Кадры мастерской">
+        <button class="hero-dot active" type="button" data-hero-slide="0" aria-label="Кадр 1"></button>
+        <button class="hero-dot" type="button" data-hero-slide="1" aria-label="Кадр 2"></button>
+        <button class="hero-dot" type="button" data-hero-slide="2" aria-label="Кадр 3"></button>
+        <button class="hero-dot" type="button" data-hero-slide="3" aria-label="Кадр 4"></button>
+      </div>
+      <button class="hero-nav hero-prev" type="button" aria-label="Предыдущая фотография">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button class="hero-nav hero-next" type="button" aria-label="Следующая фотография">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <div class="hero-photo-meta">
+        <span class="hero-photo-caption" id="heroPhotoCaption">Исторический механизм в руках мастера</span>
+        <span class="hero-photo-count" id="heroPhotoCount">01 / 04</span>
+      </div>
     </div>
   </div>
 </section>
@@ -2296,7 +3225,7 @@
       <span class="flagship-hatch flagship-hatch-tr"></span>
       <div class="flagship-grid">
         <div class="flagship-visual">
-          <img class="fslide active" src="img/flagship-restoration.jpg" width="930" height="620" loading="lazy" decoding="async" alt="Открытый часовой механизм крупным планом: шестерни, камни, анкерная вилка, тёплый свет">
+          <img class="fslide active" src="img/v3/direction-restoration.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Евгений Деккер осматривает открытый исторический механизм через часовую лупу">
           <div class="fv-warm"></div>
           <div class="fv-vig"></div>
           <div class="fv-edge"></div>
@@ -2305,6 +3234,11 @@
           <div class="corner tr"></div>
           <div class="corner bl"></div>
           <div class="corner br"></div>
+        </div>
+        <div class="flagship-proof" aria-label="Ключевые этапы реставрации">
+          <span><b>01</b>Диагностика</span>
+          <span><b>02</b>Ручная работа</span>
+          <span><b>03</b>Настройка хода</span>
         </div>
 
         <div class="flagship-body">
@@ -2335,15 +3269,17 @@
       <span class="ln"></span>
     </div>
 
-    <div class="dir-grid reveal">
+    <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте направления</span><b>→</b></div>
+    <div class="dir-grid reveal" role="region" aria-label="Дополнительные направления мастерской" tabindex="0">
       <div class="dir-cell">
         <div class="dir-num">II</div>
+        <div class="dir-cell-media"><img src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок в мастерской"><span>Корпус · ручная подгонка</span></div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="15" y="10" width="16" height="26" rx="2"/><circle cx="23" cy="23" r="5"/><path d="M18 15h10M18 31h10" stroke-width="1.5"/><circle cx="23" cy="23" r="1.2" fill="currentColor" stroke="none"/></svg>
         <h3>Изготовление корпусов</h3>
         <div class="dir-lead">Ювелирная работа · золото, серебро, платина</div>
         <p>Создание корпусов из благородных металлов для исторических механизмов, марьяжа или авторских проектов. Полный цикл: от эскиза до финальной полировки и гравировки. Каждый корпус изготавливается под конкретный механизм и замысел.</p>
         <ul class="dir-list">
-          <li>Корпуса из золота, серебры, платины</li>
+          <li>Корпуса из золота, серебра, платины</li>
           <li>Гравировка, чеканка, художественная обработка</li>
           <li>Изготовление циферблатов и стрелок</li>
           <li>Посадка под исторический или современный механизм</li>
@@ -2352,6 +3288,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">III</div>
+        <div class="dir-cell-media"><img src="img/v3/master-detail.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Карманный механизм в руках мастера"><span>Историческая основа · новая форма</span></div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="18" y="4" width="10" height="7"/><rect x="18" y="35" width="10" height="7"/><circle cx="23" cy="23" r="12.5"/><line x1="23" y1="23" x2="23" y2="14"/><line x1="23" y1="23" x2="29" y2="26"/><circle cx="23" cy="23" r="1.4" fill="currentColor" stroke="none"/></svg>
         <h3>Марьяж</h3>
         <div class="dir-lead">Наручные часы из исторического механизма</div>
@@ -2366,6 +3303,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">IV</div>
+        <div class="dir-cell-media"><img src="img/v3/direction-author.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Ручная работа над авторским часовым механизмом"><span>Авторский механизм · финальная сборка</span></div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="23" cy="23" r="17"/><path d="M23 8v3M23 35v3M8 23h3M35 23h3M31 12l-2 2M15 32l-2 2M31 34l-2-2M15 14l-2-2"/><circle cx="23" cy="23" r="1.6" fill="currentColor" stroke="none"/><line x1="23" y1="23" x2="23" y2="13"/><line x1="23" y1="23" x2="30" y2="27"/></svg>
         <h3>Авторские часы и циферблаты</h3>
         <div class="dir-lead">Проект, который начинается с идеи</div>
@@ -2380,6 +3318,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">V</div>
+        <div class="dir-cell-media"><img src="img/v3/direction-leather-full.webp" width="1220" height="849" loading="lazy" decoding="async" alt="Кожаный напульсник ручной работы целиком, с пряжкой, тиснением и посадкой под карманные часы"><span>Кожа · посадка под конкретные часы</span></div>
         <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="14" y="6" width="18" height="34" rx="7"/><line x1="23" y1="10" x2="23" y2="36" stroke-dasharray="2 3"/><circle cx="23" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="23" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="32" r="1" fill="currentColor" stroke="none"/></svg>
         <h3>Кожаный ремешок и чехлы</h3>
         <div class="dir-lead">Карманные часы остаются собой — и переезжают на руку</div>
@@ -2402,19 +3341,16 @@
 <!-- БЛОК 3 — ЕВГЕНИЙ ДЕККЕР, МАСТЕР И ОСНОВАТЕЛЬ                  -->
 <!-- ============================================================ -->
 <section class="section" id="master">
-  <!-- Тип C: компасная дуга -->
-  <svg class="fl-compass" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="top:24px;right:12px">
-    <path d="M8 64 C8 36 36 8 64 8"/>
-    <line x1="8" y1="64" x2="12" y2="58" stroke-width="1.1"/>
-    <line x1="28" y1="36" x2="32" y2="32" stroke-width="0.8"/>
-    <line x1="48" y1="20" x2="52" y2="16" stroke-width="0.8"/>
-    <line x1="64" y1="8" x2="64" y2="14" stroke-width="1.1"/>
-    <circle cx="8" cy="64" r="2.2" fill="currentColor" stroke="none"/>
-  </svg>
   <div class="container">
     <div class="about-grid">
-      <div class="photo velvet-photo about-photo reveal">
-        <div class="grain"></div><div class="warmlight" style="background:radial-gradient(ellipse 60% 70% at 70% 30%, rgba(232,180,120,0.22), transparent 55%)"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Евгений Деккер за рабочим столом в мастерской</div>
+      <div class="about-photo-stage reveal">
+        <div class="photo velvet-photo about-photo">
+          <img class="real-photo" src="img/v3/master-closeup.webp" width="1200" height="1800" loading="lazy" decoding="async" alt="Евгений Деккер за точной работой с часовым механизмом">
+          <div class="grain"></div><div class="warmlight" style="background:radial-gradient(ellipse 60% 70% at 70% 30%, rgba(232,180,120,0.16), transparent 58%)"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Евгений Деккер · мастер и основатель</div>
+        </div>
+        <div class="about-inset" aria-hidden="true">
+          <img src="img/v3/master-detail.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="">
+        </div>
       </div>
 
       <div class="about-text reveal">
@@ -2441,7 +3377,8 @@
 <!-- ============================================================ -->
 <div class="whyus-strip reveal">
   <div class="container">
-    <div class="whyus-grid">
+    <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Три принципа мастерской</span><b>→</b></div>
+    <div class="whyus-grid" role="region" aria-label="Принципы мастерской" tabindex="0">
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
         <h4>Каждая деталь изготавливается</h4>
@@ -2472,7 +3409,7 @@
       <p class="section-sub">Не бесконечная фотолента, а несколько историй. Каждая показывает отдельную сторону мастерской — от реставрации до авторской работы.</p>
     </div>
 
-    <div class="proj-grid reveal">
+    <div class="proj-grid reveal" id="projectsGrid">
       <!-- 1 — Циферблат из серебряного рубля 1833 года -->
       <article class="proj-card" onclick="openProject('coin1833')">
         <div class="photo proj-photo">
@@ -2498,7 +3435,7 @@
           <div class="proj-count">8 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Реставрация · историческая механика</div>
+          <div class="proj-type">Марьяж · историческая механика</div>
           <h3 class="proj-name">Monnard, <em>1883 год</em></h3>
           <div class="proj-lead">Завод и перевод стрелок ключиком</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
@@ -2514,7 +3451,7 @@
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Реставрация · историческая механика</div>
+          <div class="proj-type">Марьяж · историческая механика</div>
           <h3 class="proj-name">Георгъ Фавръ Жако, <em>1887 год</em></h3>
           <div class="proj-lead">Тоже завод ключиком</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
@@ -2596,7 +3533,7 @@
         <div class="proj-body">
           <div class="proj-type">Реставрация · историческая механика</div>
           <h3 class="proj-name">Orion, <em>1919 год</em></h3>
-          <div class="proj-lead">Механизм межвоенного времени</div>
+          <div class="proj-lead">Механизм 1919 года в новом корпусе из стали 316</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2610,9 +3547,9 @@
           <div class="proj-count">6 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Реставрация · швейцарская механика</div>
+          <div class="proj-type">Марьяж · швейцарская механика</div>
           <h3 class="proj-name">Doxa, <em>1928 год</em></h3>
-          <div class="proj-lead">Классика конца двадцатых</div>
+          <div class="proj-lead">Механизм 1928 года в новом корпусе из стали 316</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2674,9 +3611,9 @@
           <div class="proj-count">10 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Реставрация · советская механика</div>
+          <div class="proj-type">Марьяж · советская механика</div>
           <h3 class="proj-name">Молния, <em>1982 год</em></h3>
-          <div class="proj-lead">Челябинский карманный калибр — на запястье</div>
+          <div class="proj-lead">Советский механизм в новом корпусе из стали 316</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2716,15 +3653,15 @@
       <!-- 16 — molnia-shiva -->
       <article class="proj-card" onclick="openProject('molnia-shiva')">
         <div class="photo proj-photo">
-          <img src="img/projects/molnia-shiva-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы-скелетон Молния с ручной гравировкой механизма на кожаном напульснике">
+          <img src="img/projects/molnia-shiva-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с ручной гравировкой механизма на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
           <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
           <div class="proj-count">7 кадров</div>
         </div>
         <div class="proj-body">
-          <div class="proj-type">Авторская работа · скелетон</div>
+          <div class="proj-type">Авторская работа · ручная гравировка</div>
           <h3 class="proj-name">Молния, проект <em>«Шива»</em></h3>
-          <div class="proj-lead">Механизм раскрыт насквозь и покрыт ручной гравировкой</div>
+          <div class="proj-lead">Гравировка механизма выполнена вручную по замыслу заказчика</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2740,7 +3677,7 @@
         <div class="proj-body">
           <div class="proj-type">Авторская работа · памятная серия</div>
           <h3 class="proj-name">Молния, <em>«Кино»</em></h3>
-          <div class="proj-lead">Портрет и автограф золотом по чёрному циферблату</div>
+          <div class="proj-lead">Портрет и автограф из латуни по чёрному циферблату</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2756,7 +3693,7 @@
         <div class="proj-body">
           <div class="proj-type">Авторская работа · памятная серия</div>
           <h3 class="proj-name">Молния, <em>«Олимпиада-80»</em></h3>
-          <div class="proj-lead">Эмблема московских Игр золотом по чёрному</div>
+          <div class="proj-lead">Латунная эмблема московских Игр по чёрному циферблату</div>
           <button class="proj-open" type="button">Смотреть проект <span class="arrow">&#8594;</span></button>
         </div>
       </article>
@@ -2809,6 +3746,9 @@
         </div>
       </article>
     </div>
+    <button class="projects-more" type="button" aria-controls="projectsGrid" aria-expanded="false">
+      <span>Показать ещё проекты</span><b>→</b>
+    </button>
   </div>
 </section>
 
@@ -2824,12 +3764,14 @@
     </div>
 
     <div class="workshop-grid reveal">
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-ph"><div class="photo-ph-ring"></div></div><div class="photo-label">Рабочий стол мастера · инструменты часовщика</div></div>
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Разборка и первичная диагностика</div></div>
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Работа с историческим механизмом</div></div>
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Изготовление детали на токарном станке</div></div>
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Работа с кожей</div></div>
-      <div class="photo velvet-photo"><div class="grain"></div><div class="warmlight"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Авторский циферблат · финальная сборка и регулировка</div></div>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: общий план мастерской" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-wide.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Общий план мастерской антикварных часов"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">01 · Общий план мастерской</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: токарная работа" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">02 · Токарная работа</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: диагностика под микроскопом" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-microscope.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Бинокулярный микроскоп на рабочем столе"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">03 · Диагностика под микроскопом</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: архив механизмов" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-mechanisms.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Разобранные карманные часы и механизмы"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">04 · Архив механизмов</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: изготовление деталей" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-mill.webp" width="853" height="1280" loading="lazy" decoding="async" alt="Сверлильно-фрезерный станок в мастерской"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">05 · Изготовление деталей</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: чистая зона сборки" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-white-bench.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светлая рабочая зона часовщика"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">06 · Чистая зона сборки</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: коллекция и рабочий архив" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-archive-wall.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Стена с часами и рабочий стол мастера"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">07 · Коллекция и рабочий архив</figcaption></figure>
+      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: вывеска мастерской" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-sign.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светящаяся вывеска мастерской «Твоё Время»"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">08 · «Твоё Время» · Сургут</figcaption></figure>
     </div>
   </div>
 </section>
@@ -2838,22 +3780,6 @@
 <!-- БЛОК 6 — ДОВЕРИЕ И РЕПУТАЦИЯ                                  -->
 <!-- ============================================================ -->
 <section class="section" id="trust">
-  <!-- Тип A: маятник -->
-  <svg class="fl-pendulum" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
-    <line x1="36" y1="6" x2="36" y2="30"/>
-    <path d="M16 20 C22 44 50 44 56 20" stroke-width="0.8"/>
-    <circle cx="36" cy="44" r="12" stroke-width="1"/>
-    <circle cx="36" cy="44" r="4" fill="currentColor" stroke="none"/>
-  </svg>
-  <!-- Тип C: компасная дуга -->
-  <svg class="fl-compass" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="bottom:36px;right:14px">
-    <path d="M8 64 C8 36 36 8 64 8"/>
-    <line x1="8" y1="64" x2="12" y2="58" stroke-width="1.1"/>
-    <line x1="28" y1="36" x2="32" y2="32" stroke-width="0.8"/>
-    <line x1="48" y1="20" x2="52" y2="16" stroke-width="0.8"/>
-    <line x1="64" y1="8" x2="64" y2="14" stroke-width="1.1"/>
-    <circle cx="8" cy="64" r="2.2" fill="currentColor" stroke="none"/>
-  </svg>
   <div class="container">
     <div class="section-head reveal">
       <div class="section-eyebrow">— Доверие и открытость <span class="orn">&#9670;</span> Многолетний публичный архив —</div>
@@ -2869,12 +3795,14 @@
         <div class="fact"><div class="k">ВКонтакте</div><div class="d">подтверждённая страница мастерской с работами, процессами и живым общением</div></div>
         <div class="trust-hint">— точные цифры и статусы площадок перепроверяются перед запуском сайта —</div>
 
-        <button class="btn-certificates" onclick="openCertificatesModal()">
+        <button class="btn-certificates" type="button" onclick="openCertificatesModal()">
           Смотреть сертификаты мастера
         </button>
       </div>
 
-      <div class="trust-reviews">
+      <div class="trust-reviews-wrap">
+        <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Отзывы</span><b>→</b></div>
+        <div class="trust-reviews" role="region" aria-label="Отзывы клиентов" tabindex="0">
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
           <div class="qt">Принёс старинные карманные часы деда — механизм не ходил лет двадцать. Евгений не только запустил, но и показал каждый этап работы с фотографиями.</div>
@@ -2890,8 +3818,10 @@
           <div class="qt">Это живой диалог с мастером. Видишь, как он думает, как подходит к каждой детали. Часы стали намного ближе.</div>
           <div class="auth">— Марина, Москва —</div>
         </div>
+        </div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -2901,19 +3831,21 @@
 <!-- БЛОК 7 — ОТ ЗАДАЧИ ИЛИ ИДЕИ К ГОТОВОЙ РАБОТЕ                 -->
 <!-- ============================================================ -->
 <section class="section ship" id="collaboration">
-  <!-- Тип B: двойная волна -->
-  <svg class="fl-wave" viewBox="0 0 88 44" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true" style="top:24px;right:18px">
-    <path d="M4 12 C14 4 24 20 34 12 C44 4 54 20 64 12 C74 4 82 16 86 12"/>
-    <path d="M4 28 C14 20 24 36 34 28 C44 20 54 36 64 28 C74 20 82 32 86 28" stroke-width="0.7"/>
-    <circle cx="4" cy="12" r="1.8" fill="currentColor" stroke="none"/>
-    <circle cx="4" cy="28" r="1.4" fill="currentColor" stroke="none"/>
+  <svg class="brand-scroll brand-scroll-left" viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+    <path d="M18 122 C54 122 68 96 72 72 C76 45 60 28 40 37 C24 44 28 65 43 66 C60 67 69 47 83 33 C99 17 124 14 139 28 C154 42 144 61 128 59 C111 57 110 37 126 31" stroke-width="1.4"/>
+    <path d="M72 72 C98 70 107 85 126 84 C148 83 153 58 174 57 C194 56 201 75 192 88 C184 101 165 98 165 84" stroke-width=".85"/>
+    <path d="M18 122 C62 134 111 127 151 112 C183 100 210 80 240 47" stroke-width=".65"/>
+    <circle cx="18" cy="122" r="4"/><circle cx="18" cy="122" r="9" stroke-width=".55"/>
+    <circle cx="139" cy="28" r="2.4" fill="currentColor" stroke="none"/>
+    <path d="M222 44 l10 -10 M230 52 l14 -4" stroke-width="1"/>
   </svg>
-  <!-- Тип A: маятник зеркальный -->
-  <svg class="fl-pendulum" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" style="bottom:44px;left:14px;transform:scaleX(-1) rotate(8deg)">
-    <line x1="36" y1="6" x2="36" y2="30"/>
-    <path d="M16 20 C22 44 50 44 56 20" stroke-width="0.8"/>
-    <circle cx="36" cy="44" r="12" stroke-width="1"/>
-    <circle cx="36" cy="44" r="4" fill="currentColor" stroke="none"/>
+  <svg class="brand-scroll brand-scroll-right" viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+    <path d="M18 122 C54 122 68 96 72 72 C76 45 60 28 40 37 C24 44 28 65 43 66 C60 67 69 47 83 33 C99 17 124 14 139 28 C154 42 144 61 128 59 C111 57 110 37 126 31" stroke-width="1.4"/>
+    <path d="M72 72 C98 70 107 85 126 84 C148 83 153 58 174 57 C194 56 201 75 192 88 C184 101 165 98 165 84" stroke-width=".85"/>
+    <path d="M18 122 C62 134 111 127 151 112 C183 100 210 80 240 47" stroke-width=".65"/>
+    <circle cx="18" cy="122" r="4"/><circle cx="18" cy="122" r="9" stroke-width=".55"/>
+    <circle cx="139" cy="28" r="2.4" fill="currentColor" stroke="none"/>
+    <path d="M222 44 l10 -10 M230 52 l14 -4" stroke-width="1"/>
   </svg>
   <div class="container">
     <div class="section-head reveal">
@@ -2922,7 +3854,8 @@
       <p class="section-sub">К Евгению можно прийти двумя способами: когда часы уже есть — и когда есть только идея будущего проекта.</p>
     </div>
 
-    <div class="paths reveal">
+    <div class="mobile-swipe-hint" aria-hidden="true"><span>Два сценария обращения</span><b>→</b></div>
+    <div class="paths reveal" role="region" aria-label="Два сценария обращения в мастерскую" tabindex="0">
       <div class="path">
         <svg class='flourish-corner tr' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
         <div class="path-badge">А</div>
@@ -3003,6 +3936,13 @@
 <!-- БЛОК 8 — КОНТАКТЫ                                             -->
 <!-- ============================================================ -->
 <section class="section contact" id="contacts">
+  <svg class="brand-scroll brand-scroll-contact" viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+    <path d="M18 122 C54 122 68 96 72 72 C76 45 60 28 40 37 C24 44 28 65 43 66 C60 67 69 47 83 33 C99 17 124 14 139 28 C154 42 144 61 128 59 C111 57 110 37 126 31" stroke-width="1.4"/>
+    <path d="M72 72 C98 70 107 85 126 84 C148 83 153 58 174 57 C194 56 201 75 192 88 C184 101 165 98 165 84" stroke-width=".85"/>
+    <path d="M18 122 C62 134 111 127 151 112 C183 100 210 80 240 47" stroke-width=".65"/>
+    <circle cx="18" cy="122" r="4"/><circle cx="18" cy="122" r="9" stroke-width=".55"/>
+    <circle cx="139" cy="28" r="2.4" fill="currentColor" stroke="none"/>
+  </svg>
   <div class="container">
     <div class="contact-grid">
       <div class="contact-info reveal">
@@ -3040,18 +3980,39 @@
 <footer class="footer">
   <span class="footer-top-orn"></span>
   <div class="container">
-    <div class="logo">
-      <img src="assets/Image__64_-removebg-preview.png" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="#hero" class="logo" aria-label="На первый экран">
+          <img src="assets/Image__64_-removebg-preview.png" width="829" height="301" loading="lazy" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
+        </a>
+        <p class="footer-tagline">Мастерская антикварных часов «Твоё Время» · Сургут</p>
+        <p class="footer-subdesc">Ремонт · реставрация · марьяж · авторские проекты</p>
+      </div>
+
+      <div>
+        <div class="footer-heading">Разделы сайта</div>
+        <nav class="footer-nav" aria-label="Навигация в подвале">
+          <a href="#directions">Направления</a>
+          <a href="#master">О мастере</a>
+          <a href="#projects">Проекты</a>
+          <a href="#workshop">Мастерская</a>
+          <a href="#trust">Доверие</a>
+          <a href="#collaboration">Как проходит работа</a>
+        </nav>
+      </div>
+
+      <div class="footer-contact">
+        <div class="footer-heading">Связаться с мастером</div>
+        <p>Сургут · проекты принимаются из разных городов после предварительного диалога.</p>
+        <a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram · @chasy_SSR</a>
+        <a href="https://wa.me/79224448586" target="_blank" rel="noopener">WhatsApp · +7 922 444-85-86</a>
+        <a href="#contacts">Все площадки мастерской →</a>
+      </div>
     </div>
 
-    <p class="footer-tagline">Мастерская антикварных часов «Твоё Время» · Сургут</p>
-    <p class="footer-subdesc">Ремонт · реставрация · авторские проекты · марьяж</p>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-copy">
-      <span class="city">Сургут · мастерская антикварных часов</span><br>
-      &#169; 2026 Мастерская антикварных часов «Твоё Время». Евгений Деккер.
+    <div class="footer-bottom">
+      <div class="footer-copy">&#169; 2026 «Твоё Время». Евгений Деккер.</div>
+      <div class="footer-made">Сделано: <a href="https://t.me/wezzya" target="_blank" rel="noopener">@wezzya</a></div>
     </div>
   </div>
 </footer>
@@ -3061,14 +4022,15 @@
 var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // === Загрузочный экран ===
-// Полосу и счётчик рисует CSS-анимация (3.2 c) — она идёт на композиторе
+// Полосу и счётчик рисует короткая CSS-анимация — она идёт на композиторе
 // и не замирает, пока главный поток занят картинками.
 // JS отвечает только за снятие экрана.
 (function(){
   var pre = document.getElementById('preloader');
   if(!pre) return;
 
-  var SHOW = 3450;   // держим экран чуть дольше анимации
+  var compactScreen = window.matchMedia && window.matchMedia('(max-width:900px)').matches;
+  var SHOW = reduceMotion ? 0 : (compactScreen ? 850 : 1400);
   var done = false;
 
   function finish(){
@@ -3077,7 +4039,7 @@ var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-moti
     document.body.classList.add('loaded');
     document.body.classList.remove('loading');
     // убираем из потока, чтобы не мешал кликам
-    setTimeout(function(){ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 900);
+    setTimeout(function(){ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 480);
   }
 
   setTimeout(finish, SHOW);
@@ -3090,6 +4052,105 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(t){ e.preventDefault(); t.scrollIntoView({behavior: reduceMotion ? 'auto':'smooth', block:'start'}); }
   });
 });
+
+// Мобильное меню: полноценный drawer с фокусом, Escape и блокировкой фона.
+(function(){
+  var toggle = document.querySelector('.mobile-menu-toggle');
+  var nav = document.getElementById('siteNav');
+  var panel = nav && nav.querySelector('.mobile-nav-panel');
+  if(!toggle || !nav || !panel) return;
+
+  var mobileQuery = window.matchMedia('(max-width:900px)');
+  var lastFocus = null;
+
+  function focusables(){
+    return Array.prototype.slice.call(panel.querySelectorAll('a[href],button:not([disabled])'))
+      .filter(function(el){ return !el.hasAttribute('hidden'); });
+  }
+
+  function setMenu(open, restoreFocus){
+    if(!mobileQuery.matches) open = false;
+    nav.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true':'false');
+    toggle.setAttribute('aria-label', open ? 'Закрыть меню':'Открыть меню');
+    nav.setAttribute('aria-hidden', mobileQuery.matches && !open ? 'true':'false');
+    document.body.classList.toggle('menu-open', open);
+    if(open){
+      lastFocus = document.activeElement;
+      var first = focusables()[0];
+      if(first) setTimeout(function(){ first.focus(); }, 60);
+    } else if(restoreFocus && lastFocus && typeof lastFocus.focus === 'function'){
+      lastFocus.focus();
+    }
+  }
+
+  toggle.addEventListener('click', function(){
+    setMenu(toggle.getAttribute('aria-expanded') !== 'true', true);
+  });
+  nav.addEventListener('click', function(e){
+    if(e.target === nav) setMenu(false, true);
+  });
+  nav.querySelectorAll('.nav-links a').forEach(function(link){
+    link.addEventListener('click', function(){ setMenu(false, true); });
+  });
+  document.addEventListener('keydown', function(e){
+    if(toggle.getAttribute('aria-expanded') !== 'true') return;
+    if(e.key === 'Escape'){
+      e.preventDefault();setMenu(false, true);return;
+    }
+    if(e.key !== 'Tab') return;
+    var items = focusables();
+    if(!items.length) return;
+    var first = items[0], last = items[items.length - 1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault();last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault();first.focus(); }
+  });
+  if(mobileQuery.addEventListener) mobileQuery.addEventListener('change', function(){ setMenu(false, false); });
+  nav.setAttribute('aria-hidden', mobileQuery.matches ? 'true':'false');
+})();
+
+// На телефоне длинная лента проектов раскрывается порциями, но все работы
+// остаются доступны одной кнопкой и полностью видны на планшете/десктопе.
+(function(){
+  var grid = document.getElementById('projectsGrid');
+  var more = document.querySelector('.projects-more');
+  if(!grid || !more) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.proj-card'));
+  var phone = window.matchMedia('(max-width:680px)');
+  var batch = 6;
+  var visible = batch;
+
+  function render(reset){
+    if(reset) visible = batch;
+    if(!phone.matches){
+      cards.forEach(function(card){ card.hidden = false; });
+      more.setAttribute('aria-expanded','false');
+      return;
+    }
+    cards.forEach(function(card,index){ card.hidden = index >= visible; });
+    var remaining = cards.length - visible;
+    more.setAttribute('aria-expanded', visible > batch ? 'true':'false');
+    if(remaining > 0){
+      more.querySelector('span').textContent = 'Показать ещё · ' + remaining;
+      more.querySelector('b').textContent = '→';
+    } else {
+      more.querySelector('span').textContent = 'Свернуть проекты';
+      more.querySelector('b').textContent = '↑';
+    }
+  }
+
+  more.addEventListener('click', function(){
+    if(visible >= cards.length){
+      visible = batch;render(false);
+      var heading = document.querySelector('#projects .section-head');
+      if(heading) heading.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+    } else {
+      visible = Math.min(cards.length, visible + batch);render(false);
+    }
+  });
+  if(phone.addEventListener) phone.addEventListener('change', function(){ render(true); });
+  render(true);
+})();
 
 // Живые стрелки часов в hero
 (function(){
@@ -3160,8 +4221,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   apply();
 })();
 
-// Мягкое появление секций — двунаправленное (появляется и исчезает при скролле).
-// Блок уезжает в ту сторону, за которую ушёл: вверх за шапку или вниз за экран.
+// Мягкое одноразовое появление секций. После входа в viewport наблюдение
+// прекращается: якорные переходы больше не прячут уже показанный контент.
 if(!reduceMotion){
   document.documentElement.classList.add('js');
 
@@ -3198,22 +4259,9 @@ if(!reduceMotion){
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        var el = en.target;
         if(en.isIntersecting){
-          el.classList.add('in');
-          el.classList.remove('out-up','out-down');
-        } else {
-          el.classList.remove('in');
-          // берём актуальный rect, а не снимок из записи: при быстрой
-          // прокрутке снимок устаревает и блок уезжает не в ту сторону
-          var r = el.getBoundingClientRect();
-          if(r.bottom < window.innerHeight * 0.5){
-            el.classList.add('out-up');
-            el.classList.remove('out-down');
-          } else {
-            el.classList.add('out-down');
-            el.classList.remove('out-up');
-          }
+          en.target.classList.add('in');
+          io.unobserve(en.target);
         }
       });
     }, {threshold:0.08, rootMargin:'0px 0px -6% 0px'});
@@ -3227,7 +4275,7 @@ if(!reduceMotion){
 // Считаем позицию сами: IntersectionObserver с порогом мигал на длинных секциях —
 // они физически не могут показать 50% своей высоты, поэтому подсветка гасла.
 (function(){
-  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
   var map = links.map(function(a){
     var id = a.getAttribute('href').slice(1);
     return { a:a, sec:document.getElementById(id) };
@@ -3299,84 +4347,14 @@ if(!reduceMotion){
   art.insertBefore(svg,art.firstChild);
 })();
 
-// Кастомный курсор + hover states
-(function(){
-  var dot = document.querySelector('.cur-dot');
-  var ring = document.querySelector('.cur-ring');
-  if(!dot || !ring) return;
-
-  document.documentElement.classList.add('has-cursor');
-  var mx=0, my=0;
-
-  document.addEventListener('mousemove', function(e){
-    mx = e.clientX;
-    my = e.clientY;
-  });
-
-  // Без сглаживания (lerp): скин и ховер-анимации остаются,
-  // но курсор идёт вплотную за мышью — как обычный системный
-  function animate(){
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
-    ring.style.left = mx + 'px';
-    ring.style.top = my + 'px';
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  // Hover states для ссылок и кнопок
-  document.addEventListener('mouseover', function(e){
-    var t = e.target;
-    if(t.tagName === 'A' || t.closest('a') || t.tagName === 'BUTTON' || t.closest('button')){
-      var isBtn = t.classList.contains('btn-gold') || t.classList.contains('btn-outline') ||
-                  t.classList.contains('btn-certificates') ||
-                  t.closest('.btn-gold') || t.closest('.btn-outline') || t.closest('.btn-certificates');
-      if(isBtn){
-        dot.classList.add('is-btn');
-        ring.classList.add('is-btn');
-      } else {
-        dot.classList.add('is-link');
-        ring.classList.add('is-link');
-      }
-    }
-  });
-
-  document.addEventListener('mouseout', function(e){
-    var t = e.target;
-    if(t.tagName === 'A' || t.closest('a') || t.tagName === 'BUTTON' || t.closest('button')){
-      dot.classList.remove('is-link','is-btn');
-      ring.classList.remove('is-link','is-btn');
-    }
-  });
-})();
-
-// Scroll reveal с IntersectionObserver
-(function(){
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        e.target.classList.add('visible');
-      }
-    });
-  }, {threshold: 0.1, rootMargin: '0px 0px -80px 0px'});
-
-  document.querySelectorAll('.reveal').forEach(function(el){
-    observer.observe(el);
-  });
-
-  // Stagger для dir-grid
-  document.querySelectorAll('.dir-grid .dir-cell').forEach(function(c, i){
-    c.style.setProperty('--i', i);
-  });
-})();
-
-// Частицы тёплого света — заметнее и живее, но отключаются при prefers-reduced-motion
-if(!reduceMotion){
+// Частицы тёплого света нужны только на большом экране. На телефоне они были
+// скрыты CSS, но всё равно создавали 30 лишних DOM-узлов.
+if(!reduceMotion && window.matchMedia('(min-width:901px)').matches){
   var seedX=[6,14,23,31,39,47,55,62,70,78,85,92,10,19,27,35,44,52,60,68,75,83,90,4,50,88,17,64,40,73];
   var seedY=[14,42,8,60,25,78,45,12,88,33,55,70,50,22,90,5,38,66,18,80,30,58,10,90,45,12,72,26,52,84];
   var dx=[18,26,-20,28,-16,22,-26,20,30,-22,15,-28,21,-18,27,-12,24,-20,30,-24,16,-30,22,-14,27,-10,25,-19,29,-15];
   var dy=[-30,-20,-36,24,-28,-16,-34,22,-24,30,-32,20,-27,34,-22,-30,25,-19,-33,26,-24,18,-28,32,-20,-30,24,-19,-26,28];
-  for(var i=0;i<30;i++){
+  for(var i=0;i<18;i++){
     var s=2+(i%4);                          // 2..5 px
     var dur=9+(i%7);                         // 9..15 s
     var del=(i%9)*0.55;
@@ -3397,26 +4375,31 @@ if(!reduceMotion){
 
 // === Модальное окно с каруселью сертификатов ===
 function openCertificatesModal() {
-  document.getElementById('certificatesModal').classList.add('active');
+  slides = document.querySelectorAll('.cert-slide');
+  var modal = document.getElementById('certificatesModal');
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden','false');
   document.body.style.overflow = 'hidden';
   document.body.classList.add('modal-open');
   currentSlide = 0;
   showSlide(0);
+  var close = modal.querySelector('.cert-close');
+  if(close) close.focus();
 }
 
 function closeCertificatesModal() {
-  document.getElementById('certificatesModal').classList.remove('active');
+  var modal = document.getElementById('certificatesModal');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden','true');
   document.body.style.overflow = '';
   document.body.classList.remove('modal-open');
 }
 
 let currentSlide = 0;
-const slides = document.querySelectorAll('.cert-slide');
+let slides = [];
 
 function showSlide(n) {
-  if (n >= slides.length) currentSlide = 0;
-  if (n < 0) currentSlide = slides.length - 1;
-  else currentSlide = n;
+  currentSlide = Math.max(0, Math.min(n, slides.length - 1));
 
   const offset = -currentSlide * 100;
   document.querySelector('.cert-carousel-track').style.transform = `translateX(${offset}%)`;
@@ -3424,7 +4407,13 @@ function showSlide(n) {
   // Обновляем точки
   document.querySelectorAll('.cert-dot').forEach((dot, i) => {
     dot.classList.toggle('active', i === currentSlide);
+    dot.setAttribute('aria-current', i === currentSlide ? 'true' : 'false');
   });
+
+  var prev = document.querySelector('.cert-prev');
+  var next = document.querySelector('.cert-next');
+  if(prev) prev.disabled = currentSlide === 0;
+  if(next) next.disabled = currentSlide === slides.length - 1;
 }
 
 function nextSlide() {
@@ -3542,14 +4531,14 @@ var PROJECTS = {
   bure1905: {
     type: 'Реставрация · русская школа',
     name: 'Павелъ Буре, <em>1905 год</em>',
-    lead: 'Часовой дом, поставлявший часы Императорскому двору — в охотничьем серебряном корпусе',
+    lead: 'Часы 1905 года в корпусе из оружейной стали',
     body: [
-      'Павелъ Буре — один из самых узнаваемых часовых домов дореволюционной России, поставщик Высочайшего двора. Часы 1905 года — в серебряном охотничьем корпусе с откидной крышкой, закрывающей циферблат.',
-      'Механизм извлечён, вычищен и смазан заново, ход отрегулирован. Крышка и заводная головка — родные, без замен.',
+      'Павелъ Буре — один из самых узнаваемых часовых домов дореволюционной России, поставщик Высочайшего двора. Часы 1905 года собраны в корпусе из оружейной стали — без верхней откидной крышки.',
+      'Механизм извлечён, вычищен и смазан заново, ход отрегулирован. Заводная головка сохранена без замены.',
       'Часы собраны на кожаном напульснике ручной работы с тиснением по мотивам фирменной рекламы фабрики — двуглавый орёл и название дома читаются на коже так же чётко, как на бумаге.'
     ],
     specs: [
-      ['Механизм', 'Швейцарский, серебряный охотничий корпус'],
+      ['Корпус', 'Оружейная сталь, без откидной крышки'],
       ['Год', '1905'],
       ['Формат', 'Карманные часы на кожаном напульснике'],
       ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
@@ -3587,12 +4576,12 @@ var PROJECTS = {
     name: 'Longines, <em>1917 год</em>',
     lead: 'Ещё один экземпляр той же марки, шестью годами позже',
     body: [
-      'Longines 1917 года — второй экземпляр марки в собрании мастерской, на шесть лет моложе предыдущего. Серебряный корпус, эмалевый циферблат, отдельный счётчик секунд.',
-      'Механизм разобран, вычищен от старой смазки и собран заново, ход отрегулирован. Заводная головка и стекло — родные.',
+      'Longines 1917 года — второй экземпляр марки в собрании мастерской, на шесть лет моложе предыдущего. Стальной корпус, эмалевый циферблат и отдельный секундный сектор.',
+      'Механизм разобран, вычищен от старой смазки и собран заново, ход отрегулирован. Установлено минеральное стекло.',
       'Ремень — кожаный напульсник ручного пошива с тиснёным клеймом марки; на съёмке часы сняты рядом со скрипкой и кларнетом, под стать возрасту вещи.'
     ],
     specs: [
-      ['Механизм', 'Швейцарский, серебряный корпус'],
+      ['Корпус', 'Сталь, минеральное стекло'],
       ['Год', '1917'],
       ['Формат', 'Карманные часы на кожаном напульснике'],
       ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
@@ -3627,19 +4616,19 @@ var PROJECTS = {
     ]
   },
   'orion1919': {
-    type: 'Реставрация · историческая механика',
+    type: 'Марьяж · историческая механика',
     name: 'Orion, <em>1919 год</em>',
-    lead: 'Механизм межвоенного времени',
+    lead: 'Механизм 1919 года в новом корпусе из стали 316',
     body: [
-      'Orion 1919 года — механизм рубежа эпох, собранный сразу после Первой мировой. Эмалевый циферблат с арабскими цифрами и отдельным счётчиком секунд.',
+      'Orion 1919 года — механизм рубежа эпох, собранный сразу после Первой мировой. Эмалевый циферблат с арабскими цифрами и отдельным секундным сектором.',
       'Механизм полностью разобран, вычищен, смазан заново и отрегулирован по ходу.',
-      'Часы переведены на кожаный напульсник ручного пошива — раскрой и прошивка под конкретный корпус.'
+      'Для марьяжа использован новый корпус из стали 316: корпус проточен и точно подогнан под исторический механизм. Кожаный напульсник сшит вручную под готовые часы.'
     ],
     specs: [
-      ['Механизм', 'Оригинальный, отреставрирован'],
-      ['Год', '1919'],
-      ['Формат', 'Карманные часы на кожаном напульснике'],
-      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+      ['Механизм', 'Orion, 1919 год, обслужен'],
+      ['Корпус', 'Новый, сталь 316'],
+      ['Формат', 'Наручные часы · марьяж'],
+      ['Работа', 'Проточка корпуса под механизм, сборка, регулировка, пошив напульсника']
     ],
     photos: [
       'img/projects/orion1919-01.jpg','img/projects/orion1919-02.jpg','img/projects/orion1919-03.jpg',
@@ -3649,19 +4638,19 @@ var PROJECTS = {
     ]
   },
   'doxa1928': {
-    type: 'Реставрация · швейцарская механика',
+    type: 'Марьяж · швейцарская механика',
     name: 'Doxa, <em>1928 год</em>',
-    lead: 'Классика конца двадцатых',
+    lead: 'Механизм 1928 года в новом корпусе из стали 316',
     body: [
-      'Швейцарская Doxa 1928 года — светлый циферблат с арабскими цифрами, отдельный счётчик секунд, спокойная геометрия конца двадцатых.',
+      'Швейцарская Doxa 1928 года — светлый циферблат с арабскими цифрами, отдельный секундный сектор и спокойная геометрия конца двадцатых.',
       'Механизм вычищен, смазан заново, ход отрегулирован.',
-      'Ремень — кожаный напульсник ручного пошива с прорезной отделкой по краю.'
+      'Для марьяжа использован новый корпус из стали 316: корпус проточен под старый механизм. Ремень — кожаный напульсник ручного пошива с прорезной отделкой по краю.'
     ],
     specs: [
-      ['Механизм', 'Швейцарский, отреставрирован'],
-      ['Год', '1928'],
-      ['Формат', 'Карманные часы на кожаном напульснике'],
-      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+      ['Механизм', 'Doxa, 1928 год, обслужен'],
+      ['Корпус', 'Новый, сталь 316'],
+      ['Формат', 'Наручные часы · марьяж'],
+      ['Работа', 'Проточка корпуса под механизм, сборка, регулировка, пошив напульсника']
     ],
     photos: [
       'img/projects/doxa1928-01.jpg','img/projects/doxa1928-02.jpg','img/projects/doxa1928-03.jpg',
@@ -3734,19 +4723,19 @@ var PROJECTS = {
     ]
   },
   'molnia1982': {
-    type: 'Реставрация · советская механика',
+    type: 'Марьяж · советская механика',
     name: 'Молния, <em>1982 год</em>',
-    lead: 'Челябинский карманный калибр — на запястье',
+    lead: 'Советский механизм в новом корпусе из стали 316',
     body: [
       'Молния — карманный калибр Челябинского часового завода, один из самых живучих советских механизмов: крупный, ремонтопригодный, с большим запасом хода.',
-      'Механизм вычищен, смазан заново и отрегулирован; циферблат и стрелки сохранены родные.',
-      'Корпус переведён с карманного ношения на запястье — широкий кожаный напульсник ручного пошива с клеймом мастерской на пряжке.'
+      'Циферблат не заводской: Евгений разработал его сам, после чего циферблат изготовили по авторскому макету. Механизм вычищен, смазан заново и отрегулирован.',
+      'Для марьяжа использован новый редкий корпус из стали 316 с минеральным стеклом. Широкий кожаный напульсник с клеймом мастерской сшит вручную.'
     ],
     specs: [
-      ['Механизм', 'Молния, Челябинский часовой завод'],
-      ['Год', '1982'],
-      ['Формат', 'Карманные часы на кожаном напульснике'],
-      ['Работа', 'Чистка, смазка, регулировка хода, перевод на напульсник']
+      ['Механизм', 'Молния, 1982 год, обслужен'],
+      ['Циферблат', 'Авторский, изготовлен по макету мастера'],
+      ['Корпус', 'Новый, сталь 316, минеральное стекло'],
+      ['Работа', 'Марьяж, сборка, регулировка, пошив напульсника']
     ],
     photos: [
       'img/projects/molnia1982-01.jpg','img/projects/molnia1982-02.jpg','img/projects/molnia1982-03.jpg',
@@ -3799,19 +4788,19 @@ var PROJECTS = {
     ]
   },
   'molnia-shiva': {
-    type: 'Авторская работа · скелетон',
+    type: 'Авторская работа · ручная гравировка',
     name: 'Молния, проект <em>«Шива»</em>',
-    lead: 'Механизм раскрыт насквозь и покрыт ручной гравировкой',
+    lead: 'Гравировка механизма выполнена вручную по замыслу заказчика',
     body: [
-      'Скелетон: из мостов и платины вырезано всё лишнее, так что механизм просматривается насквозь — от циферблата до задней крышки. Оставшийся металл покрыт ручной гравировкой с растительным орнаментом.',
-      'Работа кропотливая: каждый пропил делается так, чтобы не потерять жёсткость мостов и не сбить геометрию колёсной системы. После сборки ход отрегулирован заново.',
-      'Часы собраны на кожаном напульснике ручного пошива с контрастной прошивкой.'
+      'Это не скелетон: механизм не прорезан и не просматривается насквозь. Чёрное поле подчёркивает ручную гравировку, выполненную в точности по замыслу заказчика.',
+      'В основе — механизм Молния 3603 с противоударным узлом баланса. Механизм выпущен в 1992 году и до этой работы ни разу не использовался: более тридцати лет он хранился в заводской коробке вместе с документами.',
+      'Механизм обслужен и собран в марьяж; часы дополнены кожаным напульсником ручного пошива.'
     ],
     specs: [
-      ['Тип', 'Скелетон, сквозная проработка механизма'],
-      ['Отделка', 'Ручная гравировка мостов'],
-      ['Формат', 'Наручные часы'],
-      ['Работа', 'Пропил, гравировка, сборка, регулировка, пошив ремня']
+      ['Тип', 'Ручная гравировка, не скелетон'],
+      ['Механизм', 'Молния 3603, противоударный узел баланса'],
+      ['Состояние', 'Новый с документами, 1992 год'],
+      ['Работа', 'Гравировка, обслуживание, марьяж, пошив ремня']
     ],
     photos: [
       'img/projects/molnia-shiva-01.jpg','img/projects/molnia-shiva-02.jpg','img/projects/molnia-shiva-03.jpg',
@@ -3822,14 +4811,14 @@ var PROJECTS = {
   'molnia-tsoy': {
     type: 'Авторская работа · памятная серия',
     name: 'Молния, <em>«Кино»</em>',
-    lead: 'Портрет и автограф золотом по чёрному циферблату',
+    lead: 'Портрет и автограф из латуни по чёрному циферблату',
     body: [
-      'Памятная работа по мотивам группы «Кино»: на чёрном матовом циферблате — портрет, автограф и логотип группы, выполненные золотом. Цифры накладные, объёмные.',
-      'Механизм Молния вычищен и отрегулирован, стрелки подобраны под золотую отделку циферблата.',
-      'Ремень — чёрная кожа ручного пошива с золочёной фурнитурой; на съёмке рядом стоит парная модель меньшего размера.'
+      'Памятная работа по мотивам группы «Кино»: на чёрном матовом циферблате — портрет, автограф и логотип группы, выполненные из латуни. Цифры накладные, объёмные.',
+      'Механизм Молния вычищен и отрегулирован, стрелки подобраны под латунную отделку циферблата.',
+      'Ремень — чёрная кожа ручного пошива с фурнитурой в тон латунным элементам; на съёмке рядом стоит парная модель меньшего размера.'
     ],
     specs: [
-      ['Циферблат', 'Чёрное поле, золотая отделка, накладные цифры'],
+      ['Циферблат', 'Чёрное поле, латунные элементы, накладные цифры'],
       ['Механизм', 'Молния, отреставрирован'],
       ['Формат', 'Наручные часы'],
       ['Работа', 'Изготовление циферблата, сборка, регулировка, пошив ремня']
@@ -3844,15 +4833,15 @@ var PROJECTS = {
   'molnia-olymp80': {
     type: 'Авторская работа · памятная серия',
     name: 'Молния, <em>«Олимпиада-80»</em>',
-    lead: 'Эмблема московских Игр золотом по чёрному',
+    lead: 'Латунная эмблема московских Игр по чёрному циферблату',
     body: [
-      'Работа по мотивам московской Олимпиады 1980 года: на чёрном циферблате — золотая эмблема Игр с кольцами и надписью «Москва», цифры и стрелки в том же тоне.',
-      'Корпус в чёрном покрытии, механизм Молния вычищен и отрегулирован. К часам приложен заводской паспорт.',
-      'Ремень — чёрная кожа ручного пошива с жёлтой контрастной прошивкой, повторяющей цвет эмблемы.'
+      'Работа по мотивам московской Олимпиады 1980 года: на чёрном циферблате — латунная эмблема Игр с кольцами и надписью «Москва», цифры и стрелки выдержаны в том же тоне.',
+      'В основе — новый механизм Молния 3603 с противоударным узлом баланса, выпущенный в 1992 году. До этой работы механизм более тридцати лет хранился в заводской коробке вместе с документами и ни разу не использовался.',
+      'Корпус выполнен в чёрном покрытии. Ремень — чёрная кожа ручного пошива с контрастной строчкой в тон латунной эмблеме.'
     ],
     specs: [
-      ['Циферблат', 'Чёрное поле, золотая олимпийская эмблема'],
-      ['Механизм', 'Молния, отреставрирован'],
+      ['Циферблат', 'Чёрное поле, латунная олимпийская эмблема'],
+      ['Механизм', 'Молния 3603, новый с документами, 1992 год'],
       ['Формат', 'Наручные часы'],
       ['Работа', 'Изготовление циферблата, покрытие корпуса, сборка, пошив ремня']
     ],
@@ -3910,7 +4899,7 @@ var PROJECTS = {
     name: 'Ulysse Nardin, <em>1919 год</em>',
     lead: 'Марка морских хронометров — в наручном формате',
     body: [
-      'Ulysse Nardin — марка, известная прежде всего морскими хронометрами: её приборами пользовались флоты десятков стран. Этот экземпляр 1919 года — со светлым эмалевым циферблатом и отдельным счётчиком секунд.',
+      'Ulysse Nardin — марка, известная прежде всего морскими хронометрами: её приборами пользовались флоты десятков стран. Этот экземпляр 1919 года — со светлым эмалевым циферблатом и отдельным секундным сектором.',
       'Механизм разобран, вычищен, смазан заново и отрегулирован по ходу.',
       'Ремень — коричневая кожа ручного пошива с тиснёным названием марки на шлевках.'
     ],
@@ -4009,17 +4998,37 @@ document.addEventListener('keydown', function(e){
 })();
 </script>
 
+<!-- Просмотр фотографий мастерской с листанием внутри раздела -->
+<div id="workshopLightbox" class="single-lightbox" role="dialog" aria-modal="true" aria-label="Фотография мастерской" onclick="if(event.target===this) closeWorkshopPhoto()">
+  <div class="single-lightbox-panel">
+    <button class="single-lightbox-close" type="button" onclick="closeWorkshopPhoto()" aria-label="Закрыть фотографию">
+      <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+    </button>
+    <figure class="single-lightbox-figure">
+      <img id="workshopLightboxImg" alt="">
+      <figcaption id="workshopLightboxCaption"></figcaption>
+      <span class="single-lightbox-counter" id="workshopLightboxCounter"></span>
+    </figure>
+    <button class="single-lightbox-nav single-lightbox-prev" type="button" onclick="workshopPhotoPrev()" aria-label="Предыдущая фотография">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="single-lightbox-nav single-lightbox-next" type="button" onclick="workshopPhotoNext()" aria-label="Следующая фотография">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+</div>
+
 <!-- Модальное окно с каруселью сертификатов -->
-<div id="certificatesModal" class="cert-modal" onclick="if(event.target === this) closeCertificatesModal()">
+<div id="certificatesModal" class="cert-modal" role="dialog" aria-modal="true" aria-label="Сертификаты мастерской" aria-hidden="true" onclick="if(event.target === this) closeCertificatesModal()">
   <div class="cert-modal-content">
-    <button class="cert-close" onclick="closeCertificatesModal()">
+    <button class="cert-close" type="button" onclick="closeCertificatesModal()" aria-label="Закрыть сертификаты">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
     </button>
     <div class="cert-carousel-container">
       <div class="cert-carousel-track">
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 1">
+            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" width="898" height="1280" loading="lazy" decoding="async" alt="Сертификат 1">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -4028,7 +5037,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 2">
+            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" width="1280" height="893" loading="lazy" decoding="async" alt="Сертификат 2">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -4037,7 +5046,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" loading="lazy" decoding="async" alt="Сертификат 3">
+            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" width="901" height="1280" loading="lazy" decoding="async" alt="Сертификат 3">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -4046,29 +5055,29 @@ document.addEventListener('keydown', function(e){
         </div>
       </div>
 
-      <button class="cert-nav cert-prev" onclick="prevSlide()">
+      <button class="cert-nav cert-prev" type="button" onclick="prevSlide()" aria-label="Предыдущий сертификат">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </button>
 
-      <button class="cert-nav cert-next" onclick="nextSlide()">
+      <button class="cert-nav cert-next" type="button" onclick="nextSlide()" aria-label="Следующий сертификат">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </button>
 
       <div class="cert-dots">
-        <span class="cert-dot active" onclick="goToSlide(0)"></span>
-        <span class="cert-dot" onclick="goToSlide(1)"></span>
-        <span class="cert-dot" onclick="goToSlide(2)"></span>
+        <button class="cert-dot active" type="button" aria-label="Сертификат 1" aria-current="true" onclick="goToSlide(0)"></button>
+        <button class="cert-dot" type="button" aria-label="Сертификат 2" aria-current="false" onclick="goToSlide(1)"></button>
+        <button class="cert-dot" type="button" aria-label="Сертификат 3" aria-current="false" onclick="goToSlide(2)"></button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Модальное окно проекта — содержимое подставляется из PROJECTS -->
-<div id="projModal" class="pm" onclick="if(event.target === this) closeProject()">
+<div id="projModal" class="pm" role="dialog" aria-modal="true" aria-labelledby="pmName" onclick="if(event.target === this) closeProject()">
   <div class="pm-inner">
     <button class="pm-close" type="button" onclick="closeProject()" aria-label="Закрыть">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
@@ -4076,7 +5085,7 @@ document.addEventListener('keydown', function(e){
 
     <div class="pm-left">
       <div class="pm-stage">
-        <img id="pmImg" src="" alt="">
+        <img id="pmImg" alt="">
         <button class="pm-nav pm-prev" type="button" onclick="pmPrev()" aria-label="Предыдущий кадр">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
@@ -4097,6 +5106,133 @@ document.addEventListener('keydown', function(e){
     </aside>
   </div>
 </div>
+
+<script>
+var workshopLightboxReturnFocus = null;
+var workshopPhotoIndex = 0;
+var workshopPhotoFigures = [];
+
+function renderWorkshopPhoto(){
+  var figure = workshopPhotoFigures[workshopPhotoIndex];
+  var source = figure && figure.querySelector('img');
+  var caption = figure && figure.querySelector('figcaption');
+  if(!source) return;
+  document.getElementById('workshopLightboxImg').src = source.currentSrc || source.src;
+  document.getElementById('workshopLightboxImg').alt = source.alt || 'Фотография мастерской';
+  document.getElementById('workshopLightboxCaption').textContent = caption ? caption.textContent : source.alt;
+  document.getElementById('workshopLightboxCounter').textContent = String(workshopPhotoIndex + 1).padStart(2,'0') + ' / ' + String(workshopPhotoFigures.length).padStart(2,'0');
+}
+
+function openWorkshopPhoto(figure){
+  var modal = document.getElementById('workshopLightbox');
+  var source = figure && figure.querySelector('img');
+  if(!modal || !source) return;
+  workshopPhotoFigures = Array.prototype.slice.call(document.querySelectorAll('#workshop .workshop-grid .photo'));
+  workshopPhotoIndex = Math.max(0,workshopPhotoFigures.indexOf(figure));
+  workshopLightboxReturnFocus = figure;
+  renderWorkshopPhoto();
+  modal.classList.add('active');
+  document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
+  modal.querySelector('.single-lightbox-close').focus();
+}
+
+function workshopPhotoPrev(){
+  if(!workshopPhotoFigures.length) return;
+  workshopPhotoIndex = (workshopPhotoIndex - 1 + workshopPhotoFigures.length) % workshopPhotoFigures.length;
+  renderWorkshopPhoto();
+}
+
+function workshopPhotoNext(){
+  if(!workshopPhotoFigures.length) return;
+  workshopPhotoIndex = (workshopPhotoIndex + 1) % workshopPhotoFigures.length;
+  renderWorkshopPhoto();
+}
+
+function closeWorkshopPhoto(){
+  var modal = document.getElementById('workshopLightbox');
+  if(!modal || !modal.classList.contains('active')) return;
+  modal.classList.remove('active');
+  document.body.classList.remove('modal-open');
+  document.body.style.overflow = '';
+  if(workshopLightboxReturnFocus) workshopLightboxReturnFocus.focus();
+}
+
+document.addEventListener('keydown',function(event){
+  var workshopModal = document.getElementById('workshopLightbox');
+  if(!workshopModal.classList.contains('active')) return;
+  if(event.key === 'Escape') closeWorkshopPhoto();
+  if(event.key === 'ArrowLeft') workshopPhotoPrev();
+  if(event.key === 'ArrowRight') workshopPhotoNext();
+});
+
+(function(){
+  var modal = document.getElementById('workshopLightbox');
+  var startX = 0;
+  modal.addEventListener('touchstart',function(event){startX = event.touches[0].clientX;},{passive:true});
+  modal.addEventListener('touchend',function(event){
+    var delta = event.changedTouches[0].clientX - startX;
+    if(delta < -45) workshopPhotoNext();
+    if(delta > 45) workshopPhotoPrev();
+  },{passive:true});
+})();
+
+// Hero v3: спокойная ротация живых кадров. Пауза на hover и focus,
+// ручное управление кнопками, без автопрокрутки при reduced motion.
+(function(){
+  var root = document.querySelector('.hero-photo');
+  if(!root) return;
+  var slides = Array.prototype.slice.call(root.querySelectorAll('.hero-slide'));
+  var dots = Array.prototype.slice.call(root.querySelectorAll('.hero-dot'));
+  var count = document.getElementById('heroPhotoCount');
+  var caption = document.getElementById('heroPhotoCaption');
+  var prev = root.querySelector('.hero-prev');
+  var next = root.querySelector('.hero-next');
+  var captions = [
+    'Исторический механизм в руках мастера',
+    'Диагностика и точная работа под лупой',
+    'Изготовление детали на часовом станке',
+    'Евгений Деккер · мастерская «Твоё Время»'
+  ];
+  var current = 0;
+  var timer = null;
+  var heroInView = true;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(index){
+    current = (index + slides.length) % slides.length;
+    slides.forEach(function(slide,i){ slide.classList.toggle('active',i === current); });
+    dots.forEach(function(dot,i){
+      dot.classList.toggle('active',i === current);
+      dot.setAttribute('aria-current',i === current ? 'true' : 'false');
+    });
+    count.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
+    caption.textContent = captions[current];
+  }
+  function stop(){ if(timer){ clearInterval(timer);timer = null; } }
+  function start(){
+    stop();
+    if(!reduce && heroInView && !document.hidden) timer = setInterval(function(){ show(current + 1); },6500);
+  }
+  dots.forEach(function(dot){
+    dot.addEventListener('click',function(){ show(Number(dot.getAttribute('data-hero-slide')));start(); });
+  });
+  if(prev) prev.addEventListener('click',function(){ show(current - 1);start(); });
+  if(next) next.addEventListener('click',function(){ show(current + 1);start(); });
+  root.addEventListener('mouseenter',stop);
+  root.addEventListener('mouseleave',start);
+  root.addEventListener('focusin',stop);
+  root.addEventListener('focusout',start);
+  document.addEventListener('visibilitychange',function(){ document.hidden ? stop() : start(); });
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      heroInView = entries[0] ? entries[0].isIntersecting : true;
+      heroInView ? start() : stop();
+    },{threshold:0.05}).observe(root);
+  }
+  show(0);start();
+})();
+</script>
 
 </body>
 </html>
