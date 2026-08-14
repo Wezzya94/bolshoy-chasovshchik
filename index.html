@@ -1358,7 +1358,6 @@
     background:linear-gradient(180deg,transparent 10%,var(--gold-3) 40%,var(--gold-3) 60%,transparent 90%);opacity:0.32}
   .dir-num{position:absolute;top:16px;right:18px;font-family:'Cormorant Garamond',serif;font-style:italic;
     font-size:72px;color:rgba(212,184,138,0.14);line-height:0.85;letter-spacing:-0.02em;z-index:1;font-weight:400}
-  .dir-mark{color:var(--gold);opacity:0.85;margin-bottom:14px;display:block}
   .dir-cell h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;
     margin-bottom:6px;line-height:1.22;position:relative;z-index:2}
   .dir-lead{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:13px;
@@ -2662,6 +2661,7 @@
      ============================================================ */
   .mobile-menu-toggle,.mobile-nav-head,.mobile-nav-contact,
   .mobile-swipe-hint,.projects-more{display:none}
+  .mobile-copy{display:none}
   .mobile-nav-panel,.nav-links{display:contents}
   .nav-index{display:none}
 
@@ -2679,13 +2679,17 @@
     }
     .header.header-hidden{transform:none!important;opacity:1!important;pointer-events:auto!important}
     .header-grid{
-      min-height:var(--mobile-header);grid-template-columns:minmax(0,1fr) 48px!important;
+      min-height:var(--mobile-header);grid-template-columns:minmax(0,1fr) 48px!important;position:relative;
       align-items:center;gap:12px;padding-left:max(var(--mobile-gutter),env(safe-area-inset-left));
       padding-right:max(var(--mobile-gutter),env(safe-area-inset-right));
     }
-    .header .logo{width:max-content;min-width:0;height:52px;display:flex;align-items:center;position:relative;z-index:10013}
-    .header .logo-img{height:48px!important;max-width:156px!important;width:auto}
+    .header .logo{
+      width:max-content;min-width:0;height:58px;display:flex;align-items:center;
+      grid-column:1;justify-self:center;position:relative;left:auto;transform:none;z-index:10013
+    }
+    .header .logo-img{width:188px!important;max-width:188px!important;height:auto!important}
     .header-cta{display:none!important}
+    .hero-flourish{display:none!important}
 
     .mobile-menu-toggle{
       grid-column:2;display:grid;place-items:center;align-content:center;gap:5px;
@@ -2782,23 +2786,28 @@
   }
 
   @media (max-width:680px){
-    :root{--mobile-gutter:18px;--mobile-header:66px}
+    :root{--mobile-gutter:18px;--mobile-header:76px}
     html,body{font-size:16px}
     body{line-height:1.6;-webkit-text-size-adjust:100%;text-size-adjust:100%}
     img,svg,video{max-width:100%}
     .container,#projects .container{padding-left:var(--mobile-gutter);padding-right:var(--mobile-gutter)}
 
-    .hero{padding:28px 0 54px}
+    .desktop-copy{display:none!important}
+    .mobile-copy{display:inline!important}
+    .mobile-optional{display:none!important}
+
+    .hero{padding:30px 0 50px}
     .hero-grid{gap:28px}
     .hero-content{display:flex;flex-direction:column}
-    .hero-eyebrow{padding-left:30px;font-size:12px;line-height:1.5;letter-spacing:.08em}
+    .hero-eyebrow{padding-left:0;font-size:11px;line-height:1.5;letter-spacing:.07em}
+    .hero-eyebrow::before{display:none}
     .hero-title{font-size:clamp(38px,11.4vw,46px);line-height:.99;letter-spacing:-.035em;margin-bottom:22px;overflow-wrap:normal}
-    .hero-sub{font-size:16px;line-height:1.66;margin-bottom:24px;color:#c9beaa}
+    .hero-sub{font-size:16px;line-height:1.58;margin-bottom:22px;color:#c9beaa}
     .hero .btn-gold{min-height:56px;padding:0 18px;font-size:11px;letter-spacing:.13em}
-    .hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
-    .hero-badges .bdg{min-height:46px;padding:8px 10px;display:flex;align-items:center;border:1px solid rgba(212,184,138,.12);border-radius:12px;background:rgba(212,184,138,.025);font-size:10px;line-height:1.35}
-    .hero-badges .bdg:nth-child(5){grid-column:1/-1}
-    .hero-tagline{margin-top:18px;padding:0;text-align:center;font-size:11px;line-height:1.5;white-space:normal}
+    .hero-badges{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:17px}
+    .hero-badges .bdg{min-height:0;padding:2px 0;display:flex;align-items:center;border:0;border-radius:0;background:none;font-size:10px;line-height:1.4}
+    .hero-badges .bdg:nth-child(5){grid-column:auto}
+    .hero-tagline{display:none}
     .hero-photo{height:min(92vw,390px);border-radius:20px}
     .hero-photo-caption{max-width:62%;font-size:12px;line-height:1.35}
     .hero-photo-index{font-size:10px}
@@ -2809,13 +2818,19 @@
     .hero-dot::before{content:'';position:absolute;left:50%;top:50%;width:18px;height:2px;border-radius:4px;background:rgba(212,184,138,.32);transform:translate(-50%,-50%);transition:width .25s,background .25s}
     .hero-dot.active::before{width:29px;background:var(--gold)}
 
-    .section{padding:66px 0}
+    .section{padding:58px 0}
     .section-head{margin:0 0 28px;text-align:left}
     .section-head::before{margin:0 0 18px}
     .section-eyebrow{font-size:10px;line-height:1.55;letter-spacing:.12em;text-align:left}
     .section-title{font-size:clamp(33px,9.5vw,39px);line-height:1.06;text-align:left;letter-spacing:-.025em}
-    .section-sub{max-width:36em;margin:15px 0 0;font-size:15.5px;line-height:1.65;text-align:left;color:#bcb19f}
+    .section-sub{max-width:32em;margin:13px 0 0;font-size:15px;line-height:1.58;text-align:left;color:#bcb19f}
     .dir-flourish{margin-left:0}
+    .mobile-swipe-hint{
+      min-height:30px;margin:10px 0 9px;padding:0 2px;border:0;border-radius:0;background:transparent;
+      color:var(--muted);font-size:9px;letter-spacing:.12em
+    }
+    .mobile-swipe-hint b{font-size:16px}
+    .mobile-swipe-hint-compact{margin:0 0 8px}
 
     .flagship{margin-top:28px;border-radius:20px}
     .flagship-visual{width:100%;margin:0;aspect-ratio:4/3;border-radius:0!important;border:0}
@@ -2828,7 +2843,7 @@
     .flagship-proof::-webkit-scrollbar{display:none}
     .flagship-proof span{
       flex:0 0 152px;min-height:62px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;
-      scroll-snap-align:start;border:1px solid rgba(212,184,138,.13)!important;border-radius:11px;
+      scroll-snap-align:start;border:0!important;border-radius:11px;
       background:rgba(212,184,138,.035);font-size:10px;line-height:1.4;text-align:left;
     }
     .flagship-proof b{display:block;margin:0 0 4px;font-size:15px}
@@ -2838,7 +2853,7 @@
     .flagship-body p,.dir-cell p,.about-text p,.whyus-item p,.trust-lead,
     .path-lead,.route-step p,.contact-side .send .row p{font-size:15.5px;line-height:1.68}
     .flagship-specs{gap:8px;margin-top:6px;background:transparent;border:0}
-    .fspec{padding:12px 13px;border:1px solid rgba(212,184,138,.12);border-radius:11px;background:rgba(212,184,138,.025)}
+    .fspec{padding:12px 13px;border:0;border-radius:11px;background:rgba(212,184,138,.035)}
 
     .dir-split{margin-top:30px}
     .dir-grid{
@@ -2850,37 +2865,40 @@
     .dir-grid::-webkit-scrollbar{display:none}
     .dir-cell{
       flex:0 0 min(84vw,350px);padding:18px 18px 22px!important;scroll-snap-align:start;scroll-snap-stop:always;
-      border:1px solid rgba(212,184,138,.17)!important;border-radius:20px;background:linear-gradient(155deg,#17110e,#0d0a08);
-      box-shadow:0 20px 46px rgba(0,0,0,.3);
+      border:0!important;border-radius:20px;background:linear-gradient(155deg,#17110e,#0d0a08);
+      box-shadow:0 18px 42px rgba(0,0,0,.24);
     }
-    .dir-cell-media{height:190px;margin:-1px -1px 22px;border-radius:18px 18px 12px 12px}
+    .dir-cell::before,.dir-cell::after{display:none!important}
+    .dir-cell-media{height:190px;margin:0 0 22px;border:0;border-radius:18px 18px 12px 12px}
+    .dir-cell-media span{left:14px;right:14px;bottom:10px;line-height:1.35}
     .dir-cell h3{font-size:24px;line-height:1.18;margin-bottom:8px}
     .dir-lead{font-size:15px;line-height:1.45;margin-bottom:16px}
-    .dir-list{gap:0;margin-top:18px;border-top:1px solid var(--border-2)}
-    .dir-list li{min-height:44px;padding:11px 0 11px 18px;display:flex;align-items:center;font-size:13px;line-height:1.45;border-bottom:1px solid var(--border-2)}
+    .dir-list{gap:3px;margin-top:15px;border-top:0}
+    .dir-list li{min-height:0;padding:7px 0 7px 18px;display:flex;align-items:center;font-size:13px;line-height:1.42;border-bottom:0}
     .dir-foot{font-size:10px;line-height:1.5;margin-top:16px}
 
-    .about-grid{gap:32px}
+    .about-grid{gap:28px}
     .about-photo-stage{padding:0 10px 14px 0}
     .about-photo{height:min(105vw,390px)}
     .about-inset{width:126px;height:98px}
     .about-text h2{font-size:34px;line-height:1.08}
-    .about-text p{margin-bottom:18px}
-    .about-quote{padding:16px 0 16px 18px;font-size:17px;line-height:1.45}
+    .about-text p{margin-bottom:14px}
+    .about-quote{margin:18px 0 0;padding:11px 0 11px 15px;font-size:16px;line-height:1.42}
     .master-foot{display:flex;overflow-x:auto;gap:0;margin:22px calc(var(--mobile-gutter) * -1) 0;padding:16px var(--mobile-gutter) 4px;scrollbar-width:none;white-space:nowrap}
     .master-foot::-webkit-scrollbar{display:none}
     .master-foot span:not(.sepd){font-size:13px}
 
-    .whyus-strip{padding:46px 0}
+    .whyus-strip{padding:38px 0}
     .whyus-grid{
       display:flex!important;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 10px;
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .whyus-grid::-webkit-scrollbar{display:none}
     .whyus-item,.whyus-item:first-child{
-      flex:0 0 min(82vw,330px);min-height:260px;padding:24px!important;scroll-snap-align:start;
-      border:1px solid rgba(212,184,138,.16)!important;border-radius:18px;background:rgba(212,184,138,.025);
+      flex:0 0 min(82vw,330px);min-height:210px;padding:24px!important;scroll-snap-align:start;
+      border:0!important;border-radius:18px;background:rgba(212,184,138,.03);
     }
+    .whyus-item::before{display:none!important}
     .whyus-item h4{font-size:22px;line-height:1.2}
 
     #projects .section-head{margin-bottom:24px}
@@ -2909,36 +2927,38 @@
     .trust-grid{gap:32px}
     .trust-grid>*{min-width:0;max-width:100%}
     .trust-reviews-wrap{min-width:0;max-width:100%;overflow:visible}
-    .trust-lead{margin-bottom:22px}
-    .fact{padding:18px 0}
+    .trust-lead{margin-bottom:16px}
+    .fact{padding:12px 0;border-bottom:0!important}
     .fact .k{font-size:27px}
     .fact .d{font-size:13px;line-height:1.5}
-    .btn-certificates{width:100%;min-height:54px;padding:0 16px;font-size:10px}
+    .trust-hint{display:none}
+    .btn-certificates{width:100%;min-height:50px;padding:0 16px;border:0;font-size:10px;background:rgba(212,184,138,.08)}
     .trust-reviews{
       display:flex;flex-direction:row;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 10px;
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .trust-reviews::-webkit-scrollbar{display:none}
-    .trust-review{flex:0 0 min(82vw,330px);min-height:245px;padding:24px 21px;scroll-snap-align:start}
-    .trust-review .qt{font-size:18px;line-height:1.55;max-width:94%}
-    .trust-review .auth{font-size:13px;line-height:1.4}
+    .trust-review{flex:0 0 min(82vw,330px);min-height:190px;padding:22px 20px;scroll-snap-align:start;border:0}
+    .trust-review .qt{font-size:17px;line-height:1.48;max-width:94%}
+    .trust-review .auth{font-size:12px;line-height:1.4;border-top:0;padding-top:5px}
 
     .paths{
       display:flex!important;gap:12px;margin:0 calc(var(--mobile-gutter) * -1);padding:0 var(--mobile-gutter) 16px;
       overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--mobile-gutter);scrollbar-width:none;
     }
     .paths::-webkit-scrollbar{display:none}
-    .path{flex:0 0 min(88vw,360px);padding:26px 22px;scroll-snap-align:start;scroll-snap-stop:always}
+    .path{flex:0 0 min(88vw,360px);padding:24px 21px;scroll-snap-align:start;scroll-snap-stop:always;border:0}
+    .path>.flourish-corner,.path::after{display:none!important}
     .path-badge{width:54px;height:54px;font-size:28px;margin-bottom:18px}
     .path-tag{font-size:9px;line-height:1.45}
     .path h3{font-size:23px;line-height:1.2}
     .path .path-sub{font-size:15px;line-height:1.45}
     .path .path-lead{font-size:15.5px;line-height:1.68}
-    .path li{font-size:14px;line-height:1.55;padding:10px 0 10px 18px;border-bottom:1px solid var(--border-2)}
+    .path li{font-size:14px;line-height:1.48;padding:8px 0 8px 18px;border-bottom:0}
     .path-foot{font-size:16px;line-height:1.55}
-    .route{margin-top:26px;padding:8px 10px 8px 12px;border-radius:18px}
+    .route{margin-top:24px;padding:4px 0;border:0;border-radius:0;background:transparent}
     .route::before{left:48px;top:34px;bottom:34px}
-    .route-step{min-height:118px;padding:18px 8px 18px 72px;border-bottom:1px solid rgba(212,184,138,.09)}
+    .route-step{min-height:108px;padding:16px 8px 16px 72px;border-bottom:0}
     .route-step:last-child{border-bottom:0}
     .route-node{left:12px;top:20px;width:44px;height:44px;display:grid;place-items:center}
     .route-step::before{left:auto;right:14px;transform:scaleX(-1)}
@@ -2975,8 +2995,12 @@
 
     .single-lightbox-figure{border-radius:16px}
     .pm{align-items:flex-end;padding:0}
-    .pm-inner{width:100%;max-height:96dvh;border-radius:22px 22px 0 0;grid-template-rows:minmax(240px,40dvh) minmax(0,1fr)}
-    .pm-stage{border-radius:22px 22px 0 0;padding:16px 8px 12px}
+    .pm-inner{width:100%;max-height:96dvh;border-radius:22px 22px 0 0;grid-template-rows:minmax(270px,42dvh) minmax(0,1fr)}
+    .pm-stage{border-radius:22px 22px 0 0;padding:32px clamp(56px,15vw,68px) 26px}
+    .pm-stage img{border-radius:14px}
+    .pm-prev{left:9px}.pm-next{right:9px}
+    .pm-counter{left:18px;bottom:13px}
+    .pm-close{top:12px;right:12px}
     .pm-side{padding:22px 18px max(24px,env(safe-area-inset-bottom))}
     .pm-name{font-size:25px;line-height:1.15}
     .pm-lead{font-size:16px;line-height:1.45}
@@ -2985,11 +3009,10 @@
 
   @media (max-width:360px){
     :root{--mobile-gutter:15px}
-    .header .logo-img{height:44px!important;max-width:142px!important}
+    .header .logo-img{width:170px!important;max-width:170px!important;height:auto!important}
     .hero-title{font-size:36px}
     .hero-sub{font-size:15.5px}
-    .hero-badges{grid-template-columns:1fr}
-    .hero-badges .bdg:nth-child(5){grid-column:auto}
+    .hero .btn-gold{padding:0 14px;font-size:10px;letter-spacing:.1em}
     .hero-photo{height:330px}
     .section-title{font-size:32px}
     .dir-cell{flex-basis:88vw}
@@ -3123,12 +3146,12 @@
     <div class="hero-content reveal">
       <div class="hero-eyebrow">Мастерская антикварных часов «Твоё Время» · Сургут</div>
       <h1 class="hero-title">История времени <span>в руках мастера</span></h1>
-      <p class="hero-sub">Евгений Деккер восстанавливает исторические механизмы, создаёт марьяжи и авторские часы — сохраняя характер времени и историю каждой отдельной вещи.</p>
+      <p class="hero-sub"><span class="desktop-copy">Евгений Деккер восстанавливает исторические механизмы, создаёт марьяжи и авторские часы — сохраняя характер времени и историю каждой отдельной вещи.</span><span class="mobile-copy">Евгений Деккер реставрирует исторические механизмы и создаёт авторские часы, сохраняя характер каждой вещи.</span></p>
       <a class="btn-gold" href="#projects">Смотреть избранные проекты <span class="arrow">&#8594;</span></a>
       <div class="hero-badges">
         <div class="bdg"><span class="ico">&#9670;</span> Сургут</div>
         <span class="sep"></span>
-        <div class="bdg"><span class="ico">&#9670;</span> Работа с проектами из разных городов</div>
+        <div class="bdg"><span class="ico">&#9670;</span> <span class="desktop-copy">Работа с проектами из разных городов</span><span class="mobile-copy">Проекты из разных городов</span></div>
         <span class="sep"></span>
         <div class="bdg"><span class="ico">&#9670;</span> Авторская мастерская</div>
       </div>
@@ -3213,7 +3236,7 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Реставрация <span class="orn">&#9670;</span> Ювелирка <span class="orn">&#9670;</span> Марьяж <span class="orn">&#9670;</span> Авторские часы <span class="orn">&#9670;</span> Кожа —</div>
       <h2 class="section-title">Направления <em>мастерской</em></h2>
-      <p class="section-sub">Мастерская работает шире обычного ремонта: от бережного восстановления и реставрации исторических механизмов, изготовления корпусов и авторских часов с нуля — до пошива кожаных ремешков и чехлов.</p>
+      <p class="section-sub"><span class="desktop-copy">Мастерская работает шире обычного ремонта: от бережного восстановления и реставрации исторических механизмов, изготовления корпусов и авторских часов с нуля — до пошива кожаных ремешков и чехлов.</span><span class="mobile-copy">От реставрации механизмов до авторских корпусов, часов и изделий из кожи.</span></p>
     </div>
 
     <!-- ФЛАГМАНСКОЕ НАПРАВЛЕНИЕ — реставрация и обслуживание механизмов -->
@@ -3246,9 +3269,9 @@
             <div class="flagship-eyebrow"><span class="dot"></span> Главное направление мастерской</div>
             <h3>Реставрация и обслуживание <em>механизмов</em></h3>
             <div class="flagship-sub">Возвращение хода и характера старым часам</div>
-            <p>Работа начинается с диагностики: разбор, чистка, оценка состояния деталей и причины, по которой механизм встал. <span class="accent">Смазка и регулировка хода</span> возвращают точность вещам, которые десятилетиями простояли без дела.</p>
-            <p>Если нужной детали не существует или её не найти — <span class="accent">она изготавливается в мастерской.</span> Восстанавливаются и внешние элементы: корпус, циферблат, стрелки — с тем же вниманием к оригиналу.</p>
-            <p>Отдельное место занимают <span class="accent">исторические и семейные часы:</span> в основе работы — уважение к возрасту и ценности вещи, а не желание сделать её «как новую» любой ценой.</p>
+            <p><span class="desktop-copy">Работа начинается с диагностики: разбор, чистка, оценка состояния деталей и причины, по которой механизм встал. <span class="accent">Смазка и регулировка хода</span> возвращают точность вещам, которые десятилетиями простояли без дела.</span><span class="mobile-copy">Диагностика, чистка и регулировка возвращают механизму точный ход.</span></p>
+            <p class="mobile-optional">Если нужной детали не существует или её не найти — <span class="accent">она изготавливается в мастерской.</span> Восстанавливаются и внешние элементы: корпус, циферблат, стрелки — с тем же вниманием к оригиналу.</p>
+            <p class="mobile-optional">Отдельное место занимают <span class="accent">исторические и семейные часы:</span> в основе работы — уважение к возрасту и ценности вещи, а не желание сделать её «как новую» любой ценой.</p>
           </div>
 
           <div class="flagship-right">
@@ -3274,10 +3297,9 @@
       <div class="dir-cell">
         <div class="dir-num">II</div>
         <div class="dir-cell-media"><img src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок в мастерской"><span>Корпус · ручная подгонка</span></div>
-        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="15" y="10" width="16" height="26" rx="2"/><circle cx="23" cy="23" r="5"/><path d="M18 15h10M18 31h10" stroke-width="1.5"/><circle cx="23" cy="23" r="1.2" fill="currentColor" stroke="none"/></svg>
         <h3>Изготовление корпусов</h3>
         <div class="dir-lead">Ювелирная работа · золото, серебро, платина</div>
-        <p>Создание корпусов из благородных металлов для исторических механизмов, марьяжа или авторских проектов. Полный цикл: от эскиза до финальной полировки и гравировки. Каждый корпус изготавливается под конкретный механизм и замысел.</p>
+        <p><span class="desktop-copy">Создание корпусов из благородных металлов для исторических механизмов, марьяжа или авторских проектов. Полный цикл: от эскиза до финальной полировки и гравировки. Каждый корпус изготавливается под конкретный механизм и замысел.</span><span class="mobile-copy">Корпус создаётся под конкретный механизм: от эскиза до полировки и гравировки.</span></p>
         <ul class="dir-list">
           <li>Корпуса из золота, серебра, платины</li>
           <li>Гравировка, чеканка, художественная обработка</li>
@@ -3289,10 +3311,9 @@
       <div class="dir-cell">
         <div class="dir-num">III</div>
         <div class="dir-cell-media"><img src="img/v3/master-detail.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Карманный механизм в руках мастера"><span>Историческая основа · новая форма</span></div>
-        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="18" y="4" width="10" height="7"/><rect x="18" y="35" width="10" height="7"/><circle cx="23" cy="23" r="12.5"/><line x1="23" y1="23" x2="23" y2="14"/><line x1="23" y1="23" x2="29" y2="26"/><circle cx="23" cy="23" r="1.4" fill="currentColor" stroke="none"/></svg>
         <h3>Марьяж</h3>
         <div class="dir-lead">Наручные часы из исторического механизма</div>
-        <p>Создание наручных часов на основе старинного карманного механизма. Характер и история механизма сохраняются, но он получает новый корпус и новую жизнь на руке. Корпус, композиция и детали подбираются или изготавливаются под конкретный проект.</p>
+        <p><span class="desktop-copy">Создание наручных часов на основе старинного карманного механизма. Характер и история механизма сохраняются, но он получает новый корпус и новую жизнь на руке. Корпус, композиция и детали подбираются или изготавливаются под конкретный проект.</span><span class="mobile-copy">Исторический механизм сохраняет характер и получает новый корпус для ношения на руке.</span></p>
         <ul class="dir-list">
           <li>Подбор исторической основы под задачу</li>
           <li>Изготовление корпуса под механизм</li>
@@ -3304,10 +3325,9 @@
       <div class="dir-cell">
         <div class="dir-num">IV</div>
         <div class="dir-cell-media"><img src="img/v3/direction-author.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Ручная работа над авторским часовым механизмом"><span>Авторский механизм · финальная сборка</span></div>
-        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="23" cy="23" r="17"/><path d="M23 8v3M23 35v3M8 23h3M35 23h3M31 12l-2 2M15 32l-2 2M31 34l-2-2M15 14l-2-2"/><circle cx="23" cy="23" r="1.6" fill="currentColor" stroke="none"/><line x1="23" y1="23" x2="23" y2="13"/><line x1="23" y1="23" x2="30" y2="27"/></svg>
         <h3>Авторские часы и циферблаты</h3>
         <div class="dir-lead">Проект, который начинается с идеи</div>
-        <p>Создание часов с нуля или на основе выбранного механизма: тематические и персональные проекты, авторское оформление и художественная работа с циферблатом. Можно прийти не с готовыми часами, а с идеей — дальше обсуждаются образ и техническая реализуемость.</p>
+        <p><span class="desktop-copy">Создание часов с нуля или на основе выбранного механизма: тематические и персональные проекты, авторское оформление и художественная работа с циферблатом. Можно прийти не с готовыми часами, а с идеей — дальше обсуждаются образ и техническая реализуемость.</span><span class="mobile-copy">Персональные часы создаются с нуля или вокруг выбранного механизма и вашей идеи.</span></p>
         <ul class="dir-list">
           <li>Тематические и посвящённые проекты</li>
           <li>Художественная работа по циферблату</li>
@@ -3319,10 +3339,9 @@
       <div class="dir-cell">
         <div class="dir-num">V</div>
         <div class="dir-cell-media"><img src="img/v3/direction-leather-full.webp" width="1220" height="849" loading="lazy" decoding="async" alt="Кожаный напульсник ручной работы целиком, с пряжкой, тиснением и посадкой под карманные часы"><span>Кожа · посадка под конкретные часы</span></div>
-        <svg class="dir-mark" width="46" height="46" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="14" y="6" width="18" height="34" rx="7"/><line x1="23" y1="10" x2="23" y2="36" stroke-dasharray="2 3"/><circle cx="23" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="23" r="1" fill="currentColor" stroke="none"/><circle cx="23" cy="32" r="1" fill="currentColor" stroke="none"/></svg>
         <h3>Кожаный ремешок и чехлы</h3>
         <div class="dir-lead">Карманные часы остаются собой — и переезжают на руку</div>
-        <p>Карманные часы не разбираются и не переделываются: сохраняются в аутентичном виде, а на руку выходят на ремешке, сшитом под конкретный экземпляр — по обмерам, с посадкой и вырезом под циферблат.</p>
+        <p><span class="desktop-copy">Карманные часы не разбираются и не переделываются: сохраняются в аутентичном виде, а на руку выходят на ремешке, сшитом под конкретный экземпляр — по обмерам, с посадкой и вырезом под циферблат.</span><span class="mobile-copy">Ремешок шьётся по размерам конкретных часов, сохраняя их в исходном виде.</span></p>
         <ul class="dir-list">
           <li>Кожа растительного дубления, ручная обработка</li>
           <li>Тонировка, тиснение — герб, монограмма, имя</li>
@@ -3356,10 +3375,10 @@
       <div class="about-text reveal">
         <div class="about-text-eyebrow">— Мастер и основатель</div>
         <h2>Евгений Деккер, <em>часовой мастер</em></h2>
-        <p>Евгений — часовой мастер и основатель мастерской «Твоё Время» в Сургуте. Он работает с историческими и коллекционными механизмами, занимается реставрацией, марьяжем и авторскими часовыми проектами.</p>
-        <p>Для Евгения часы — не только прибор, показывающий время, но и предмет со своей историей. <strong>Иногда задача в том, чтобы бережно вернуть ход старым часам, а иногда — создать на основе старого механизма совершенно новую вещь.</strong></p>
+        <p><span class="desktop-copy">Евгений — часовой мастер и основатель мастерской «Твоё Время» в Сургуте. Он работает с историческими и коллекционными механизмами, занимается реставрацией, марьяжем и авторскими часовыми проектами.</span><span class="mobile-copy">Евгений Деккер — основатель мастерской «Твоё Время» и мастер по историческим механизмам.</span></p>
+        <p><span class="desktop-copy">Для Евгения часы — не только прибор, показывающий время, но и предмет со своей историей. <strong>Иногда задача в том, чтобы бережно вернуть ход старым часам, а иногда — создать на основе старого механизма совершенно новую вещь.</strong></span><span class="mobile-copy">Он бережно возвращает ход старым часам и создаёт на их основе новые вещи.</span></p>
         <div class="about-quote">Здесь техническая точность не отделяется от уважения к истории вещи.</div>
-        <p>Мастерскую Евгений развивает сам и открыто показывает ремесло — процессы, инструменты и работы — в своих социальных сетях. За его работой можно наблюдать месяцами, а не судить по одному кадру.</p>
+        <p class="mobile-optional">Мастерскую Евгений развивает сам и открыто показывает ремесло — процессы, инструменты и работы — в своих социальных сетях. За его работой можно наблюдать месяцами, а не судить по одному кадру.</p>
 
         <div class="master-foot">
           <span>Реставрация</span><span class="sepd">&#9670;</span>
@@ -3382,17 +3401,17 @@
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
         <h4>Каждая деталь изготавливается</h4>
-        <p>Когда нужная деталь не существует — она появляется в мастерской. Токарный станок, ювелирная работа, ручная подгонка под конкретный механизм.</p>
+        <p><span class="desktop-copy">Когда нужная деталь не существует — она появляется в мастерской. Токарный станок, ювелирная работа, ручная подгонка под конкретный механизм.</span><span class="mobile-copy">Утраченные детали изготавливаются и подгоняются вручную.</span></p>
       </div>
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
         <h4>Вещи сохраняют характер</h4>
-        <p>Механизм не переделывается, история не стирается. Реставрация — это возвращение достоинства, а не стирание следов времени.</p>
+        <p><span class="desktop-copy">Механизм не переделывается, история не стирается. Реставрация — это возвращение достоинства, а не стирание следов времени.</span><span class="mobile-copy">Реставрация возвращает достоинство, не стирая следы времени.</span></p>
       </div>
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
         <h4>Диалог напрямую с мастером</h4>
-        <p>Никаких менеджеров, форм и «мы вам перезвоним». Вопрос — ответ. Оценка — по существу. Решение — вместе.</p>
+        <p><span class="desktop-copy">Никаких менеджеров, форм и «мы вам перезвоним». Вопрос — ответ. Оценка — по существу. Решение — вместе.</span><span class="mobile-copy">Вопросы, оценка и решения обсуждаются напрямую с Евгением.</span></p>
       </div>
     </div>
   </div>
@@ -3406,7 +3425,7 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Избранные работы <span class="orn">&#9670;</span> Каждая раскрывает свою грань —</div>
       <h2 class="section-title">Избранные <em>проекты</em></h2>
-      <p class="section-sub">Не бесконечная фотолента, а несколько историй. Каждая показывает отдельную сторону мастерской — от реставрации до авторской работы.</p>
+      <p class="section-sub"><span class="desktop-copy">Не бесконечная фотолента, а несколько историй. Каждая показывает отдельную сторону мастерской — от реставрации до авторской работы.</span><span class="mobile-copy">Несколько историй — от реставрации до авторской работы.</span></p>
     </div>
 
     <div class="proj-grid reveal" id="projectsGrid">
@@ -3760,7 +3779,7 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Взгляд внутрь ремесла <span class="orn">&#9670;</span> Руки, инструменты, детали —</div>
       <h2 class="section-title">Внутри <em>мастерской</em></h2>
-      <p class="section-sub">Как выглядит настоящая работа изнутри: инструменты, механизмы и детали крупным планом. Меньше слов — больше самого ремесла.</p>
+      <p class="section-sub"><span class="desktop-copy">Как выглядит настоящая работа изнутри: инструменты, механизмы и детали крупным планом. Меньше слов — больше самого ремесла.</span><span class="mobile-copy">Инструменты, механизмы и детали крупным планом.</span></p>
     </div>
 
     <div class="workshop-grid reveal">
@@ -3784,15 +3803,15 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Доверие и открытость <span class="orn">&#9670;</span> Многолетний публичный архив —</div>
       <h2 class="section-title">Почему мастеру <em>доверяют</em></h2>
-      <p class="section-sub">Ценную, старую или памятную вещь доверяют не по громким обещаниям, а по тому, что мастера видно — задолго до собственного обращения.</p>
+      <p class="section-sub"><span class="desktop-copy">Ценную, старую или памятную вещь доверяют не по громким обещаниям, а по тому, что мастера видно — задолго до собственного обращения.</span><span class="mobile-copy">Открытая работа мастера говорит убедительнее обещаний.</span></p>
     </div>
 
     <div class="trust-grid reveal">
       <div class="trust-facts">
-        <p class="trust-lead">Доверие здесь строится не на рекламной фразе, а на <strong>открытом многолетнем архиве работ, процессов и общения</strong>. Мастерскую «Твоё Время» можно наблюдать сразу на нескольких площадках и видеть, как устроена работа изнутри.</p>
-        <div class="fact"><div class="k">1 000+</div><div class="d">публикаций о работах, процессах и истории механизмов — в открытом публичном архиве</div></div>
-        <div class="fact"><div class="k">Сотни</div><div class="d">видео на YouTube и RUTUBE — многолетний видеоархив ремесла в деталях</div></div>
-        <div class="fact"><div class="k">ВКонтакте</div><div class="d">подтверждённая страница мастерской с работами, процессами и живым общением</div></div>
+        <p class="trust-lead"><span class="desktop-copy">Доверие здесь строится не на рекламной фразе, а на <strong>открытом многолетнем архиве работ, процессов и общения</strong>. Мастерскую «Твоё Время» можно наблюдать сразу на нескольких площадках и видеть, как устроена работа изнутри.</span><span class="mobile-copy">Работы и процессы годами открыто публикуются на площадках мастерской.</span></p>
+        <div class="fact"><div class="k">1 000+</div><div class="d"><span class="desktop-copy">публикаций о работах, процессах и истории механизмов — в открытом публичном архиве</span><span class="mobile-copy">публикаций о работах и механизмах</span></div></div>
+        <div class="fact"><div class="k">Сотни</div><div class="d"><span class="desktop-copy">видео на YouTube и RUTUBE — многолетний видеоархив ремесла в деталях</span><span class="mobile-copy">видео с процессами и деталями</span></div></div>
+        <div class="fact"><div class="k">ВКонтакте</div><div class="d"><span class="desktop-copy">подтверждённая страница мастерской с работами, процессами и живым общением</span><span class="mobile-copy">работы и прямое общение</span></div></div>
         <div class="trust-hint">— точные цифры и статусы площадок перепроверяются перед запуском сайта —</div>
 
         <button class="btn-certificates" type="button" onclick="openCertificatesModal()">
@@ -3805,17 +3824,17 @@
         <div class="trust-reviews" role="region" aria-label="Отзывы клиентов" tabindex="0">
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
-          <div class="qt">Принёс старинные карманные часы деда — механизм не ходил лет двадцать. Евгений не только запустил, но и показал каждый этап работы с фотографиями.</div>
+          <div class="qt"><span class="desktop-copy">Принёс старинные карманные часы деда — механизм не ходил лет двадцать. Евгений не только запустил, но и показал каждый этап работы с фотографиями.</span><span class="mobile-copy">Вернул ход старинным часам деда и показал каждый этап работы.</span></div>
           <div class="auth">— Алексей, Сургут —</div>
         </div>
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
-          <div class="qt">Заказал авторские часы на годовщину свадьбы. Работали вместе над идеей несколько недель — результат превзошёл ожидания.</div>
+          <div class="qt"><span class="desktop-copy">Заказал авторские часы на годовщину свадьбы. Работали вместе над идеей несколько недель — результат превзошёл ожидания.</span><span class="mobile-copy">Вместе продумали авторские часы на годовщину — результат превзошёл ожидания.</span></div>
           <div class="auth">— Дмитрий, Тюмень —</div>
         </div>
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
-          <div class="qt">Это живой диалог с мастером. Видишь, как он думает, как подходит к каждой детали. Часы стали намного ближе.</div>
+          <div class="qt"><span class="desktop-copy">Это живой диалог с мастером. Видишь, как он думает, как подходит к каждой детали. Часы стали намного ближе.</span><span class="mobile-copy">Живой диалог с мастером и внимательное отношение к каждой детали.</span></div>
           <div class="auth">— Марина, Москва —</div>
         </div>
         </div>
@@ -3851,7 +3870,7 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">— Два входа <span class="orn">&#9670;</span> Один спокойный путь —</div>
       <h2 class="section-title">От задачи или идеи — <em>к готовой работе</em></h2>
-      <p class="section-sub">К Евгению можно прийти двумя способами: когда часы уже есть — и когда есть только идея будущего проекта.</p>
+      <p class="section-sub"><span class="desktop-copy">К Евгению можно прийти двумя способами: когда часы уже есть — и когда есть только идея будущего проекта.</span><span class="mobile-copy">Можно прийти с готовыми часами или только с идеей.</span></p>
     </div>
 
     <div class="mobile-swipe-hint" aria-hidden="true"><span>Два сценария обращения</span><b>→</b></div>
@@ -3862,15 +3881,15 @@
         <div class="path-tag">Формат 1 · работа с существующей вещью</div>
         <h3>Уже есть часы или механизм</h3>
         <div class="path-sub">Нужно восстановить, обслужить или переосмыслить</div>
-        <p class="path-lead">Самый частый случай: вещь уже на руках — семейные часы, находка, старый карманный механизм или наручные часы, которым нужна помощь мастера.</p>
+        <p class="path-lead"><span class="desktop-copy">Самый частый случай: вещь уже на руках — семейные часы, находка, старый карманный механизм или наручные часы, которым нужна помощь мастера.</span><span class="mobile-copy">Покажите часы и кратко расскажите, что с ними произошло.</span></p>
         <div class="path-div"></div>
         <ul>
           <li>Вы показываете вещь и рассказываете её историю или что именно с ней не так</li>
           <li>Евгений предварительно оценивает направление работы по фотографиям и описанию</li>
-          <li>Окончательные возможности определяются после осмотра и диагностики вживую</li>
-          <li>Результат — обслуживание, реставрация, доработка или новый проект на основе механизма</li>
+          <li class="mobile-optional">Окончательные возможности определяются после осмотра и диагностики вживую</li>
+          <li class="mobile-optional">Результат — обслуживание, реставрация, доработка или новый проект на основе механизма</li>
         </ul>
-        <div class="path-foot"><b>Подходит, если</b> часы остановились, требуют ухода, потеряли деталь — или хочется дать старому механизму новую форму.</div>
+        <div class="path-foot"><span class="desktop-copy"><b>Подходит, если</b> часы остановились, требуют ухода, потеряли деталь — или хочется дать старому механизму новую форму.</span><span class="mobile-copy"><b>Подходит:</b> ремонт, уход или новая форма старого механизма.</span></div>
       </div>
       <div class="path">
         <svg class='flourish-corner tr' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
@@ -3878,15 +3897,15 @@
         <div class="path-tag">Формат 2 · создание с нуля</div>
         <h3>Пока есть только идея</h3>
         <div class="path-sub">Готовой вещи нет, но есть образ будущих часов</div>
-        <p class="path-lead">Второй путь — когда часов ещё нет, но есть замысел: тема, повод, посвящение или просто ощущение, какими они должны быть.</p>
+        <p class="path-lead"><span class="desktop-copy">Второй путь — когда часов ещё нет, но есть замысел: тема, повод, посвящение или просто ощущение, какими они должны быть.</span><span class="mobile-copy">Опишите тему, повод или образ будущих часов.</span></p>
         <div class="path-div"></div>
         <ul>
           <li>Вы описываете образ, тему, назначение или личную историю будущих часов</li>
           <li>Вместе обсуждается техническая реализуемость идеи</li>
-          <li>Подбираются основа, механизм, корпус, циферблат, кожа и другие элементы</li>
-          <li>Согласуется концепция будущей работы — ещё до начала мастерской</li>
+          <li class="mobile-optional">Подбираются основа, механизм, корпус, циферблат, кожа и другие элементы</li>
+          <li class="mobile-optional">Согласуется концепция будущей работы — ещё до начала мастерской</li>
         </ul>
-        <div class="path-foot"><b>Подходит, если</b> нужен подарочный или именной проект, авторский циферблат или часы вокруг конкретной истории.</div>
+        <div class="path-foot"><span class="desktop-copy"><b>Подходит, если</b> нужен подарочный или именной проект, авторский циферблат или часы вокруг конкретной истории.</span><span class="mobile-copy"><b>Подходит:</b> подарок, именной проект или личная история.</span></div>
       </div>
     </div>
 
