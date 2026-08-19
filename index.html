@@ -4,11 +4,63 @@
 <meta charset="UTF-8">
 <!-- Адаптивный viewport: макет перестраивается под фактическую ширину устройства. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Мастерская антикварных часов «Твоё Время» в Сургуте: реставрация исторических механизмов, марьяж, авторские часы, корпуса и изделия из кожи.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
 <title>Твоё Время — мастерская антикварных часов Евгения Деккера · Сургут</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Твоё Время">
+<meta property="og:title" content="Твоё Время — мастерская антикварных часов Евгения Деккера">
+<meta property="og:description" content="Реставрация исторических механизмов, марьяж, авторские часы, корпуса и изделия из кожи в Сургуте.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="assets/icons/favicon-mark.svg?v=2">
+<link rel="icon" type="image/png" href="assets/icons/favicon-32.png?v=2" sizes="32x32">
+<link rel="icon" href="favicon.ico?v=2" sizes="any">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="img/optimized/hero-master-watch-900.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="assets/fonts/inter-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-normal-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Твоё Время",
+  "description": "Мастерская антикварных часов Евгения Деккера: реставрация исторических механизмов, марьяж и авторские проекты.",
+  "founder": {
+    "@type": "Person",
+    "name": "Евгений Деккер"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Сургут",
+    "addressCountry": "RU"
+  },
+  "telephone": "+7-922-444-85-86",
+  "sameAs": [
+    "https://t.me/tvoe_vremya_sgt",
+    "https://vk.ru/chasy_sssr_sgt",
+    "https://youtube.com/@tvoe_vremya_sgt",
+    "https://rutube.ru/channel/25778998"
+  ]
+}
+</script>
 <style>
+  @font-face{font-family:'Inter';font-style:normal;font-weight:300 600;font-display:swap;src:url('assets/fonts/inter-cyr.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:300 600;font-display:swap;src:url('assets/fonts/inter-lat.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Playfair Display';font-style:normal;font-weight:400 600;font-display:swap;src:url('assets/fonts/playfair-normal-cyr.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:'Playfair Display';font-style:normal;font-weight:400 600;font-display:swap;src:url('assets/fonts/playfair-normal-lat.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Playfair Display';font-style:italic;font-weight:400 500;font-display:swap;src:url('assets/fonts/playfair-italic-cyr.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:'Playfair Display';font-style:italic;font-weight:400 500;font-display:swap;src:url('assets/fonts/playfair-italic-lat.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:400 600;font-display:swap;src:url('assets/fonts/cormorant-normal-cyr.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:400 600;font-display:swap;src:url('assets/fonts/cormorant-normal-lat.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400 500;font-display:swap;src:url('assets/fonts/cormorant-italic-cyr.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400 500;font-display:swap;src:url('assets/fonts/cormorant-italic-lat.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
   :root{
     --bg:#0a0a0a;
     --bg-2:#121010;
@@ -27,6 +79,9 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{overflow-x:clip}
+  .skip-link{position:fixed;left:16px;top:12px;z-index:100000;padding:10px 14px;background:var(--cream);color:var(--bg);font-weight:600;text-decoration:none;border-radius:8px;transform:translateY(-160%);transition:transform .2s ease}
+  .skip-link:focus{transform:translateY(0)}
+  a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
   html,body{
     background:var(--bg);
     color:var(--text);
@@ -187,6 +242,7 @@
     gap:10px;
   }
   .hero-eyebrow:before{content:'';display:inline-block;width:28px;height:1px;background:var(--gold)}
+  .contact-eyebrow{margin-bottom:16px}
   .hero-title{
     font-family:'Playfair Display',serif;
     color:var(--cream);
@@ -995,7 +1051,7 @@
   .whyus-item:first-child{padding-left:0}
   .whyus-item:last-child{border-right:none}
   .whyus-ico{display:block;color:var(--gold);font-size:12px;margin-bottom:20px;letter-spacing:0.4em}
-  .whyus-item h4{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;margin-bottom:12px;letter-spacing:0.02em}
+  .whyus-item h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);font-weight:500;margin-bottom:12px;letter-spacing:0.02em}
   .whyus-item p{font-size:13px;line-height:1.75;color:var(--text)}
 
   /* ===================== PRICE HINTS ===================== */
@@ -1651,7 +1707,7 @@
 
   /* === Стили нового подвала === */
   .footer-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);letter-spacing:0.08em;margin-bottom:8px}
-  .footer-subdesc{font-size:11px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:26px;opacity:0.7}
+  .footer-subdesc{font-size:11px;color:#a69d90;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:26px}
 
   /* ===================== REVIEWS — 3 статичных ===================== */
   .trust-reviews{display:flex;flex-direction:column;gap:18px}
@@ -1675,6 +1731,7 @@
     transform:translateY(-104%);
     opacity:0;
   }
+  .photo .warmlight.about-warm-light{background:radial-gradient(ellipse 60% 70% at 70% 30%,rgba(232,180,120,0.16),transparent 58%)}
   /* Когда страница отскроллена — шапка чуть плотнее и с более глубоким блюром */
   .header.header-scrolled{
     background:rgba(10,10,10,0.82);
@@ -1782,12 +1839,15 @@
     align-items:center;
     justify-content:center;
     opacity:0;
+    visibility:hidden;
     pointer-events:none;
-    transition:opacity .4s cubic-bezier(0.16,1,0.3,1);
+    transition:opacity .4s cubic-bezier(0.16,1,0.3,1),visibility 0s linear .4s;
   }
   .cert-modal.active{
     opacity:1;
+    visibility:visible;
     pointer-events:auto;
+    transition-delay:0s;
   }
   .cert-modal-content{
     position:relative;
@@ -1824,7 +1884,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:all .25s;
+    transition:background .25s,border-color .25s,transform .25s;
     backdrop-filter:blur(8px);
   }
   .cert-close:hover{
@@ -1964,7 +2024,7 @@
     align-items:center;
     justify-content:center;
     gap:30px;
-    transition:opacity .85s cubic-bezier(0.16,1,0.3,1), visibility .85s;
+    transition:opacity .28s cubic-bezier(0.16,1,0.3,1), visibility .28s;
   }
   .preloader::after{
     content:'';position:absolute;inset:0;pointer-events:none;
@@ -2167,7 +2227,7 @@
     display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:168px 168px 132px;
     gap:10px;margin-top:40px;
   }
-  .workshop-grid .photo{min-width:0;min-height:0;border-radius:2px;cursor:default}
+  .workshop-grid .photo{width:100%;min-width:0;min-height:0;padding:0;border-radius:2px;font:inherit;color:inherit;text-align:left;cursor:default}
   .workshop-grid .photo:nth-child(1){grid-column:1/7;grid-row:1/3}
   .workshop-grid .photo:nth-child(2){grid-column:7/10;grid-row:1}
   .workshop-grid .photo:nth-child(3){grid-column:10/13;grid-row:1}
@@ -2422,9 +2482,9 @@
   .single-lightbox{
     position:fixed;inset:0;z-index:20030;display:flex;align-items:center;justify-content:center;
     padding:46px;background:rgba(4,3,3,.93);backdrop-filter:blur(16px);
-    opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s ease;
+    opacity:0;visibility:hidden;transition:opacity .35s ease,visibility 0s linear .35s;
   }
-  .single-lightbox.active{opacity:1;visibility:visible}
+  .single-lightbox.active{opacity:1;visibility:visible;transition-delay:0s}
   .single-lightbox-panel{position:relative;max-width:min(1180px,88vw);max-height:88vh}
   .single-lightbox-figure{
     position:relative;margin:0;overflow:hidden;border:1px solid rgba(212,184,138,.28);
@@ -2548,12 +2608,12 @@
   /* Финальная полировка по обратной связи: плотнее флагман, короче контактная карточка. */
   .flagship-visual{width:calc(100% - 120px);max-width:560px;margin:26px auto 12px;aspect-ratio:16/9}
   .flagship-proof{
-    width:calc(100% - 96px);max-width:650px;margin:0 auto 2px;display:grid;
+    width:calc(100% - 96px);max-width:650px;margin:0 auto 2px;padding:0;display:grid;
     grid-template-columns:repeat(3,1fr);border:1px solid rgba(212,184,138,.16);
-    border-radius:12px;overflow:hidden;background:rgba(9,7,6,.58);
+    border-radius:12px;overflow:hidden;background:rgba(9,7,6,.58);list-style:none;
   }
-  .flagship-proof span{padding:11px 14px;color:var(--text);font-size:9px;line-height:1.35;letter-spacing:.08em;text-transform:uppercase;text-align:center}
-  .flagship-proof span+span{border-left:1px solid rgba(212,184,138,.13)}
+  .flagship-proof li{padding:11px 14px;color:var(--text);font-size:9px;line-height:1.35;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+  .flagship-proof li+li{border-left:1px solid rgba(212,184,138,.13)}
   .flagship-proof b{margin-right:7px;color:var(--gold);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500}
   #contacts .contact-grid{grid-template-columns:.76fr 1.24fr;gap:34px}
   .contact-side{padding:30px 34px 28px}
@@ -2587,7 +2647,7 @@
   .nav,.pm,.cert-modal,.single-lightbox{overscroll-behavior:none}
   .mobile-nav-panel,.pm-side,.pm-thumbs,.cert-carousel-container,.single-lightbox-panel{overscroll-behavior:contain}
   .footer-made{color:var(--muted);font-size:9px;letter-spacing:.06em;white-space:nowrap}
-  .footer-made a{color:var(--gold-3);text-decoration:none;transition:color .25s}
+  .footer-made a{color:var(--gold);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;transition:color .25s}
   .footer-made a:hover{color:var(--gold)}
 
   /* Финальный адаптивный слой расположен после V4-полировки, чтобы поздние
@@ -2621,7 +2681,7 @@
     .flagship{margin-top:34px}
     .flagship-visual{width:calc(100% - 24px);margin-top:12px;aspect-ratio:16/10}
     .flagship-proof{width:calc(100% - 24px);grid-template-columns:repeat(3,minmax(0,1fr))}
-    .flagship-proof span{padding:9px 5px;font-size:7px;letter-spacing:.04em}
+    .flagship-proof li{padding:9px 5px;font-size:7px;letter-spacing:.04em}
     .flagship-proof b{display:block;margin:0 0 3px}
     .flagship-body{padding:26px 20px 24px;gap:18px}
     .flagship-body h3{font-size:25px}
@@ -2848,7 +2908,7 @@
       scrollbar-width:none;-webkit-overflow-scrolling:touch;
     }
     .flagship-proof::-webkit-scrollbar{display:none}
-    .flagship-proof span{
+    .flagship-proof li{
       flex:0 0 152px;min-height:62px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;
       scroll-snap-align:start;border:0!important;border-radius:11px;
       background:rgba(212,184,138,.035);font-size:10px;line-height:1.4;text-align:left;
@@ -2907,7 +2967,7 @@
       border:0!important;border-radius:18px;background:rgba(212,184,138,.03);
     }
     .whyus-item::before{display:none!important}
-    .whyus-item h4{font-size:22px;line-height:1.2}
+    .whyus-item h3{font-size:22px;line-height:1.2}
 
     #projects .section-head{margin-bottom:24px}
     .proj-grid{gap:14px;margin-top:0}
@@ -3072,10 +3132,12 @@
 </head>
 <body class="loading">
 
+<a class="skip-link" href="#main-content">Перейти к содержимому</a>
+
 <!-- ============================================================ -->
 <!-- ЗАГРУЗОЧНЫЙ ЭКРАН                                             -->
 <!-- ============================================================ -->
-<div class="preloader" id="preloader">
+<div class="preloader" id="preloader" aria-hidden="true">
   <div class="pl-inner">
     <div class="pl-watch">
       <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
@@ -3115,7 +3177,7 @@
 <header class="header">
   <div class="container header-grid">
     <a href="#hero" class="logo">
-      <img src="assets/Image__64_-removebg-preview.png" width="829" height="301" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
+      <img src="assets/logo.webp" width="420" height="152" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
     </a>
 
     <button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Открыть меню">
@@ -3139,17 +3201,19 @@
         </div>
         <div class="mobile-nav-contact">
           <div class="mobile-nav-contact-label">Связаться напрямую</div>
-          <a class="mobile-nav-primary" href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram <span>→</span></a>
+          <a class="mobile-nav-primary" href="https://t.me/tvoe_vremya_sgt" target="_blank" rel="noopener">Telegram <span>→</span></a>
           <a class="mobile-nav-secondary" href="https://wa.me/79224448586" target="_blank" rel="noopener">WhatsApp <span>→</span></a>
         </div>
       </div>
     </nav>
 
     <div class="header-cta">
-      <button class="btn-outline btn-cta-highlight" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">Связаться</button>
+      <button class="btn-outline btn-cta-highlight" type="button" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">Связаться</button>
     </div>
   </div>
 </header>
+
+<main id="main-content">
 
 <!-- ============================================================ -->
 <!-- БЛОК 1 — ПЕРВЫЙ ЭКРАН                                         -->
@@ -3191,19 +3255,19 @@
       <div class="hero-tagline">Авторская мастерская <span class="ht-dot"></span> Сургут <span class="ht-dot"></span> Ручная работа</div>
     </div>
 
-    <div class="hero-photo photo velvet-photo reveal" aria-label="Евгений Деккер за работой в мастерской">
+    <div class="hero-photo photo velvet-photo reveal" role="group" aria-label="Евгений Деккер за работой в мастерской">
       <div class="hero-slides">
-        <img class="hero-slide active" src="img/v3/hero-master-watch.webp" width="1334" height="2000" fetchpriority="high" decoding="async" alt="Евгений Деккер показывает открытый исторический механизм">
-        <img class="hero-slide" data-src="img/v3/hero-restoration-light.webp" width="1334" height="2000" decoding="async" alt="Часовой мастер изучает механизм под ярким рабочим светом">
-        <img class="hero-slide" data-src="img/v3/hero-lathe.webp" width="1334" height="2000" decoding="async" alt="Евгений Деккер изготавливает деталь на часовом токарном станке">
-        <img class="hero-slide" data-src="img/v3/master-portrait.webp" width="2000" height="1334" decoding="async" alt="Портрет Евгения Деккера в мастерской «Твоё Время»">
+        <img class="hero-slide active" src="img/optimized/hero-master-watch-900.webp" width="900" height="1350" fetchpriority="high" decoding="async" alt="Евгений Деккер показывает открытый исторический механизм">
+        <img class="hero-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="img/optimized/hero-restoration-light-900.webp" width="900" height="1350" decoding="async" alt="Часовой мастер изучает механизм под ярким рабочим светом">
+        <img class="hero-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="img/optimized/hero-lathe-900.webp" width="900" height="1350" decoding="async" alt="Евгений Деккер изготавливает деталь на часовом токарном станке">
+        <img class="hero-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="img/optimized/master-portrait-900.webp" width="900" height="600" decoding="async" alt="Портрет Евгения Деккера в мастерской «Твоё Время»">
       </div>
       <div class="grain"></div>
       <div class="warmlight"></div>
       <div class="vignette"></div>
       <div class="corner tl"></div><div class="corner tr"></div>
       <div class="corner bl"></div><div class="corner br"></div>
-      <div class="hero-dots" aria-label="Кадры мастерской">
+      <div class="hero-dots" role="group" aria-label="Кадры мастерской">
         <button class="hero-dot active" type="button" data-hero-slide="0" aria-label="Кадр 1"></button>
         <button class="hero-dot" type="button" data-hero-slide="1" aria-label="Кадр 2"></button>
         <button class="hero-dot" type="button" data-hero-slide="2" aria-label="Кадр 3"></button>
@@ -3281,7 +3345,7 @@
       <span class="flagship-hatch flagship-hatch-tr"></span>
       <div class="flagship-grid">
         <div class="flagship-visual">
-          <img class="fslide active" src="img/v3/direction-restoration.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Евгений Деккер осматривает открытый исторический механизм через часовую лупу">
+          <img class="fslide active" src="img/optimized/direction-restoration-800.webp" width="800" height="1200" loading="lazy" decoding="async" alt="Евгений Деккер осматривает открытый исторический механизм через часовую лупу">
           <div class="fv-warm"></div>
           <div class="fv-vig"></div>
           <div class="fv-edge"></div>
@@ -3291,11 +3355,11 @@
           <div class="corner bl"></div>
           <div class="corner br"></div>
         </div>
-        <div class="flagship-proof" aria-label="Ключевые этапы реставрации">
-          <span><b>01</b>Диагностика</span>
-          <span><b>02</b>Ручная работа</span>
-          <span><b>03</b>Настройка хода</span>
-        </div>
+        <ul class="flagship-proof" aria-label="Ключевые этапы реставрации">
+          <li><b>01</b>Диагностика</li>
+          <li><b>02</b>Ручная работа</li>
+          <li><b>03</b>Настройка хода</li>
+        </ul>
 
         <div class="flagship-body">
           <div class="flagship-left">
@@ -3326,10 +3390,10 @@
     </div>
 
     <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте вправо · ещё 3 направления</span><b>→</b></div>
-    <div class="dir-grid reveal" role="region" aria-label="Дополнительные направления мастерской" tabindex="0">
+    <section class="dir-grid reveal" aria-label="Дополнительные направления мастерской" tabindex="0">
       <div class="dir-cell">
         <div class="dir-num">II</div>
-        <div class="dir-cell-media"><img src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок в мастерской"><span>Корпус · ручная подгонка</span></div>
+        <div class="dir-cell-media"><img src="img/optimized/workshop-lathe-640.webp" width="640" height="480" loading="lazy" decoding="async" alt="Часовой токарный станок в мастерской"><span>Корпус · ручная подгонка</span></div>
         <h3>Изготовление корпусов</h3>
         <div class="dir-lead">Ювелирная работа · золото, серебро, платина</div>
         <p><span class="desktop-copy">Создание корпусов из благородных металлов для исторических механизмов, марьяжа или авторских проектов. Полный цикл: от эскиза до финальной полировки и гравировки. Каждый корпус изготавливается под конкретный механизм и замысел.</span><span class="mobile-copy">Корпус создаётся под конкретный механизм: от эскиза до полировки и гравировки.</span></p>
@@ -3343,7 +3407,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">III</div>
-        <div class="dir-cell-media"><img src="img/v3/master-detail.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Карманный механизм в руках мастера"><span>Историческая основа · новая форма</span></div>
+        <div class="dir-cell-media"><img src="img/optimized/master-detail-640.webp" width="640" height="960" loading="lazy" decoding="async" alt="Карманный механизм в руках мастера"><span>Историческая основа · новая форма</span></div>
         <h3>Марьяж</h3>
         <div class="dir-lead">Наручные часы из исторического механизма</div>
         <p><span class="desktop-copy">Создание наручных часов на основе старинного карманного механизма. Характер и история механизма сохраняются, но он получает новый корпус и новую жизнь на руке. Корпус, композиция и детали подбираются или изготавливаются под конкретный проект.</span><span class="mobile-copy">Исторический механизм сохраняет характер и получает новый корпус для ношения на руке.</span></p>
@@ -3357,7 +3421,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">IV</div>
-        <div class="dir-cell-media"><img src="img/v3/direction-author.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="Ручная работа над авторским часовым механизмом"><span>Авторский механизм · финальная сборка</span></div>
+        <div class="dir-cell-media"><img src="img/optimized/direction-author-640.webp" width="640" height="960" loading="lazy" decoding="async" alt="Ручная работа над авторским часовым механизмом"><span>Авторский механизм · финальная сборка</span></div>
         <h3>Авторские часы и циферблаты</h3>
         <div class="dir-lead">Проект, который начинается с идеи</div>
         <p><span class="desktop-copy">Создание часов с нуля или на основе выбранного механизма: тематические и персональные проекты, авторское оформление и художественная работа с циферблатом. Можно прийти не с готовыми часами, а с идеей — дальше обсуждаются образ и техническая реализуемость.</span><span class="mobile-copy">Персональные часы создаются с нуля или вокруг выбранного механизма и вашей идеи.</span></p>
@@ -3371,7 +3435,7 @@
       </div>
       <div class="dir-cell">
         <div class="dir-num">V</div>
-        <div class="dir-cell-media"><img src="img/v3/direction-leather-full.webp" width="1220" height="849" loading="lazy" decoding="async" alt="Кожаный напульсник ручной работы целиком, с пряжкой, тиснением и посадкой под карманные часы"><span>Кожа · посадка под конкретные часы</span></div>
+        <div class="dir-cell-media"><img src="img/optimized/direction-leather-640.webp" width="640" height="430" loading="lazy" decoding="async" alt="Кожаный напульсник ручной работы целиком, с пряжкой, тиснением и посадкой под карманные часы"><span>Кожа · посадка под конкретные часы</span></div>
         <h3>Кожаный ремешок и чехлы</h3>
         <div class="dir-lead">Карманные часы остаются собой — и переезжают на руку</div>
         <p><span class="desktop-copy">Карманные часы не разбираются и не переделываются: сохраняются в аутентичном виде, а на руку выходят на ремешке, сшитом под конкретный экземпляр — по обмерам, с посадкой и вырезом под циферблат.</span><span class="mobile-copy">Ремешок шьётся по размерам конкретных часов, сохраняя их в исходном виде.</span></p>
@@ -3383,7 +3447,7 @@
         </ul>
         <div class="dir-foot">Ручная работа &middot; сопутствует реставрации и марьяжу</div>
       </div>
-    </div>
+    </section>
 
     <div class="dir-note reveal">Направления часто соединяются в одной работе: механизм, корпус, циферблат и кожа делаются под один замысел.</div>
   </div>
@@ -3397,11 +3461,11 @@
     <div class="about-grid">
       <div class="about-photo-stage reveal">
         <div class="photo velvet-photo about-photo">
-          <img class="real-photo" src="img/v3/master-closeup.webp" width="1200" height="1800" loading="lazy" decoding="async" alt="Евгений Деккер за точной работой с часовым механизмом">
-          <div class="grain"></div><div class="warmlight" style="background:radial-gradient(ellipse 60% 70% at 70% 30%, rgba(232,180,120,0.16), transparent 58%)"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Евгений Деккер · мастер и основатель</div>
+          <img class="real-photo" src="img/optimized/master-closeup-800.webp" width="800" height="1200" loading="lazy" decoding="async" alt="Евгений Деккер за точной работой с часовым механизмом">
+          <div class="grain"></div><div class="warmlight about-warm-light"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="photo-label">Евгений Деккер · мастер и основатель</div>
         </div>
         <div class="about-inset" aria-hidden="true">
-          <img src="img/v3/master-detail.webp" width="1334" height="2000" loading="lazy" decoding="async" alt="">
+          <img src="img/optimized/master-detail-640.webp" width="640" height="960" loading="lazy" decoding="async" alt="">
         </div>
       </div>
 
@@ -3430,23 +3494,23 @@
 <div class="whyus-strip reveal">
   <div class="container">
     <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Листайте вправо · ещё 2 принципа</span><b>→</b></div>
-    <div class="whyus-grid" role="region" aria-label="Принципы мастерской" tabindex="0">
+    <section class="whyus-grid" aria-label="Принципы мастерской" tabindex="0">
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
-        <h4>Каждая деталь изготавливается</h4>
+        <h3>Каждая деталь изготавливается</h3>
         <p><span class="desktop-copy">Когда нужная деталь не существует — она появляется в мастерской. Токарный станок, ювелирная работа, ручная подгонка под конкретный механизм.</span><span class="mobile-copy">Утраченные детали изготавливаются и подгоняются вручную.</span></p>
       </div>
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
-        <h4>Вещи сохраняют характер</h4>
+        <h3>Вещи сохраняют характер</h3>
         <p><span class="desktop-copy">Механизм не переделывается, история не стирается. Реставрация — это возвращение достоинства, а не стирание следов времени.</span><span class="mobile-copy">Реставрация возвращает достоинство, не стирая следы времени.</span></p>
       </div>
       <div class="whyus-item">
         <span class="whyus-ico">◆ ◆ ◆</span>
-        <h4>Диалог напрямую с мастером</h4>
+        <h3>Диалог напрямую с мастером</h3>
         <p><span class="desktop-copy">Никаких менеджеров, форм и «мы вам перезвоним». Вопрос — ответ. Оценка — по существу. Решение — вместе.</span><span class="mobile-copy">Вопросы, оценка и решения обсуждаются напрямую с Евгением.</span></p>
       </div>
-    </div>
+    </section>
   </div>
 </div>
 
@@ -3463,7 +3527,7 @@
 
     <div class="proj-grid reveal" id="projectsGrid">
       <!-- 1 — Циферблат из серебряного рубля 1833 года -->
-      <article class="proj-card" onclick="openProject('coin1833')">
+      <article class="proj-card" data-project="coin1833">
         <div class="photo proj-photo">
           <img src="img/projects/coin1833-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3479,7 +3543,7 @@
       </article>
 
       <!-- 2 — Monnard, 1883 -->
-      <article class="proj-card" onclick="openProject('monnard1883')">
+      <article class="proj-card" data-project="monnard1883">
         <div class="photo proj-photo">
           <img src="img/projects/monnard1883-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Открытый механизм карманных часов Monnard на кожаном напульснике, рядом заводной ключ и цепочка">
           <div class="grain"></div><div class="vignette"></div>
@@ -3495,7 +3559,7 @@
       </article>
 
       <!-- 3 — Георгъ Фавръ Жако, 1887 -->
-      <article class="proj-card" onclick="openProject('zhako1887')">
+      <article class="proj-card" data-project="zhako1887">
         <div class="photo proj-photo">
           <img src="img/projects/zhako1887-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы «Георгъ Фавръ Жако» 1887 года на чёрном кожаном напульснике с заводным ключом">
           <div class="grain"></div><div class="vignette"></div>
@@ -3511,7 +3575,7 @@
       </article>
 
       <!-- 4 — Павелъ Буре, 1905 -->
-      <article class="proj-card" onclick="openProject('bure1905')">
+      <article class="proj-card" data-project="bure1905">
         <div class="photo proj-photo">
           <img src="img/projects/bure1905-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Павелъ Буре на бархатной подушке рядом с историческим рекламным листом фабрики">
           <div class="grain"></div><div class="vignette"></div>
@@ -3527,7 +3591,7 @@
       </article>
 
       <!-- 5 — Longines, 1911 -->
-      <article class="proj-card" onclick="openProject('longines1911')">
+      <article class="proj-card" data-project="longines1911">
         <div class="photo proj-photo">
           <img src="img/projects/longines1911-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Longines 1911 года на кожаном напульснике в фирменной коробке">
           <div class="grain"></div><div class="vignette"></div>
@@ -3543,7 +3607,7 @@
       </article>
 
       <!-- 6 — longines1917 -->
-      <article class="proj-card" onclick="openProject('longines1917')">
+      <article class="proj-card" data-project="longines1917">
         <div class="photo proj-photo">
           <img src="img/projects/longines1917-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Longines 1917 года на тёмном кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3559,7 +3623,7 @@
       </article>
 
       <!-- 7 — hebdomas8 -->
-      <article class="proj-card" onclick="openProject('hebdomas8')">
+      <article class="proj-card" data-project="hebdomas8">
         <div class="photo proj-photo">
           <img src="img/projects/hebdomas8-05.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Hebdomas с восьмидневным заводом: белый циферблат с синими эмалевыми цифрами и открытым балансом">
           <div class="grain"></div><div class="vignette"></div>
@@ -3575,7 +3639,7 @@
       </article>
 
       <!-- 8 — orion1919 -->
-      <article class="proj-card" onclick="openProject('orion1919')">
+      <article class="proj-card" data-project="orion1919">
         <div class="photo proj-photo">
           <img src="img/projects/orion1919-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Orion 1919 года на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3591,7 +3655,7 @@
       </article>
 
       <!-- 9 — doxa1928 -->
-      <article class="proj-card" onclick="openProject('doxa1928')">
+      <article class="proj-card" data-project="doxa1928">
         <div class="photo proj-photo">
           <img src="img/projects/doxa1928-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы Doxa 1928 года на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3607,7 +3671,7 @@
       </article>
 
       <!-- 10 — dualtime1910 -->
-      <article class="proj-card" onclick="openProject('dualtime1910')">
+      <article class="proj-card" data-project="dualtime1910">
         <div class="photo proj-photo">
           <img src="img/projects/dualtime1910-05.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Карманные часы 1910 года с двумя циферблатами для разных часовых поясов на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3623,7 +3687,7 @@
       </article>
 
       <!-- 11 — buregold1917 -->
-      <article class="proj-card" onclick="openProject('buregold1917')">
+      <article class="proj-card" data-project="buregold1917">
         <div class="photo proj-photo">
           <img src="img/projects/buregold1917-07.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Золотые часы Павелъ Буре 1917 года в корпусе-бочонке на бордовом кожаном ремне">
           <div class="grain"></div><div class="vignette"></div>
@@ -3639,7 +3703,7 @@
       </article>
 
       <!-- 12 — omega1912 -->
-      <article class="proj-card" onclick="openProject('omega1912')">
+      <article class="proj-card" data-project="omega1912">
         <div class="photo proj-photo">
           <img src="img/projects/omega1912-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Omega 1912 года с откидной глухой крышкой на кожаном напульснике в фирменной коробке">
           <div class="grain"></div><div class="vignette"></div>
@@ -3655,7 +3719,7 @@
       </article>
 
       <!-- 13 — molnia1982 -->
-      <article class="proj-card" onclick="openProject('molnia1982')">
+      <article class="proj-card" data-project="molnia1982">
         <div class="photo proj-photo">
           <img src="img/projects/molnia1982-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния 1982 года на кожаном напульснике среди коллекции механических часов">
           <div class="grain"></div><div class="vignette"></div>
@@ -3671,7 +3735,7 @@
       </article>
 
       <!-- 14 — molnia-cifermeh -->
-      <article class="proj-card" onclick="openProject('molnia-cifermeh')">
+      <article class="proj-card" data-project="molnia-cifermeh">
         <div class="photo proj-photo">
           <img src="img/projects/molnia-cifermeh-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с авторским золотистым циферблатом и гравированным механизмом на коричневом ремне">
           <div class="grain"></div><div class="vignette"></div>
@@ -3687,7 +3751,7 @@
       </article>
 
       <!-- 15 — molnia-ruchn -->
-      <article class="proj-card" onclick="openProject('molnia-ruchn')">
+      <article class="proj-card" data-project="molnia-ruchn">
         <div class="photo proj-photo">
           <img src="img/projects/molnia-ruchn-04.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с гравированным мотоциклом на золотистом циферблате">
           <div class="grain"></div><div class="vignette"></div>
@@ -3703,7 +3767,7 @@
       </article>
 
       <!-- 16 — molnia-shiva -->
-      <article class="proj-card" onclick="openProject('molnia-shiva')">
+      <article class="proj-card" data-project="molnia-shiva">
         <div class="photo proj-photo">
           <img src="img/projects/molnia-shiva-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с ручной гравировкой механизма на кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3719,7 +3783,7 @@
       </article>
 
       <!-- 17 — molnia-tsoy -->
-      <article class="proj-card" onclick="openProject('molnia-tsoy')">
+      <article class="proj-card" data-project="molnia-tsoy">
         <div class="photo proj-photo">
           <img src="img/projects/molnia-tsoy-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с портретом Виктора Цоя и логотипом группы Кино на чёрном циферблате">
           <div class="grain"></div><div class="vignette"></div>
@@ -3735,7 +3799,7 @@
       </article>
 
       <!-- 18 — molnia-olymp80 -->
-      <article class="proj-card" onclick="openProject('molnia-olymp80')">
+      <article class="proj-card" data-project="molnia-olymp80">
         <div class="photo proj-photo">
           <img src="img/projects/molnia-olymp80-02.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Молния с олимпийской эмблемой Москва-80 на чёрном циферблате">
           <div class="grain"></div><div class="vignette"></div>
@@ -3751,7 +3815,7 @@
       </article>
 
       <!-- 19 — vostok-amfibia -->
-      <article class="proj-card" onclick="openProject('vostok-amfibia')">
+      <article class="proj-card" data-project="vostok-amfibia">
         <div class="photo proj-photo">
           <img src="img/projects/vostok-amfibia-10.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Кастомные часы Восток Амфибия с поворотным безелем на чёрном кожаном напульснике">
           <div class="grain"></div><div class="vignette"></div>
@@ -3767,7 +3831,7 @@
       </article>
 
       <!-- 20 — cyma1932 -->
-      <article class="proj-card" onclick="openProject('cyma1932')">
+      <article class="proj-card" data-project="cyma1932">
         <div class="photo proj-photo">
           <img src="img/projects/cyma1932-01.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы CYMA 1932 года с гравированным парусником на циферблате и коричневым кожаным ремнём">
           <div class="grain"></div><div class="vignette"></div>
@@ -3783,7 +3847,7 @@
       </article>
 
       <!-- 21 — ulisse1919 -->
-      <article class="proj-card" onclick="openProject('ulisse1919')">
+      <article class="proj-card" data-project="ulisse1919">
         <div class="photo proj-photo">
           <img src="img/projects/ulisse1919-03.jpg" width="1280" height="853" loading="lazy" decoding="async" alt="Часы Ulysse Nardin 1919 года со светлым циферблатом на коричневом кожаном ремне">
           <div class="grain"></div><div class="vignette"></div>
@@ -3816,14 +3880,14 @@
     </div>
 
     <div class="workshop-grid reveal">
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: общий план мастерской" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-wide.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Общий план мастерской антикварных часов"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">01 · Общий план мастерской</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: токарная работа" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">02 · Токарная работа</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: диагностика под микроскопом" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-microscope.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Бинокулярный микроскоп на рабочем столе"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">03 · Диагностика под микроскопом</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: архив механизмов" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-mechanisms.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Разобранные карманные часы и механизмы"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">04 · Архив механизмов</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: изготовление деталей" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-mill.webp" width="853" height="1280" loading="lazy" decoding="async" alt="Сверлильно-фрезерный станок в мастерской"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">05 · Изготовление деталей</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: чистая зона сборки" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-white-bench.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светлая рабочая зона часовщика"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">06 · Чистая зона сборки</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: коллекция и рабочий архив" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-archive-wall.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Стена с часами и рабочий стол мастера"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">07 · Коллекция и рабочий архив</figcaption></figure>
-      <figure class="photo velvet-photo" tabindex="0" role="button" aria-label="Открыть фотографию: вывеска мастерской" onclick="openWorkshopPhoto(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWorkshopPhoto(this)}"><img class="real-photo" src="img/v3/workshop-sign.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светящаяся вывеска мастерской «Твоё Время»"><div class="grain"></div><div class="vignette"></div><figcaption class="photo-label">08 · «Твоё Время» · Сургут</figcaption></figure>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: общий план мастерской" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-wide.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Общий план мастерской антикварных часов"><span class="grain"></span><span class="vignette"></span><span class="photo-label">01 · Общий план мастерской</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: токарная работа" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-lathe.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Часовой токарный станок"><span class="grain"></span><span class="vignette"></span><span class="photo-label">02 · Токарная работа</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: диагностика под микроскопом" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-microscope.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Бинокулярный микроскоп на рабочем столе"><span class="grain"></span><span class="vignette"></span><span class="photo-label">03 · Диагностика под микроскопом</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: архив механизмов" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-mechanisms.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Разобранные карманные часы и механизмы"><span class="grain"></span><span class="vignette"></span><span class="photo-label">04 · Архив механизмов</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: изготовление деталей" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-mill.webp" width="853" height="1280" loading="lazy" decoding="async" alt="Сверлильно-фрезерный станок в мастерской"><span class="grain"></span><span class="vignette"></span><span class="photo-label">05 · Изготовление деталей</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: чистая зона сборки" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-white-bench.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светлая рабочая зона часовщика"><span class="grain"></span><span class="vignette"></span><span class="photo-label">06 · Чистая зона сборки</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: коллекция и рабочий архив" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-archive-wall.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Стена с часами и рабочий стол мастера"><span class="grain"></span><span class="vignette"></span><span class="photo-label">07 · Коллекция и рабочий архив</span></button>
+      <button class="photo velvet-photo" type="button" aria-label="Открыть фотографию: вывеска мастерской" onclick="openWorkshopPhoto(this)"><img class="real-photo" src="img/v3/workshop-sign.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Светящаяся вывеска мастерской «Твоё Время»"><span class="grain"></span><span class="vignette"></span><span class="photo-label">08 · «Твоё Время» · Сургут</span></button>
     </div>
   </div>
 </section>
@@ -3854,7 +3918,7 @@
 
       <div class="trust-reviews-wrap">
         <div class="mobile-swipe-hint mobile-swipe-hint-compact" aria-hidden="true"><span>Листайте вправо · ещё 2 отзыва</span><b>→</b></div>
-        <div class="trust-reviews" role="region" aria-label="Отзывы клиентов" tabindex="0">
+        <section class="trust-reviews" aria-label="Отзывы клиентов" tabindex="0">
         <div class="trust-review">
           <div class="quote-mark">&#8220;</div>
           <div class="qt"><span class="desktop-copy">Принёс старинные карманные часы деда — механизм не ходил лет двадцать. Евгений не только запустил, но и показал каждый этап работы с фотографиями.</span><span class="mobile-copy">Вернул ход старинным часам деда и показал каждый этап работы.</span></div>
@@ -3870,7 +3934,7 @@
           <div class="qt"><span class="desktop-copy">Это живой диалог с мастером. Видишь, как он думает, как подходит к каждой детали. Часы стали намного ближе.</span><span class="mobile-copy">Живой диалог с мастером и внимательное отношение к каждой детали.</span></div>
           <div class="auth">— Марина, Москва —</div>
         </div>
-        </div>
+        </section>
       </div>
     </div>
 
@@ -3907,9 +3971,9 @@
     </div>
 
     <div class="mobile-swipe-hint" aria-hidden="true"><span>Листайте вправо · ещё один сценарий</span><b>→</b></div>
-    <div class="paths reveal" role="region" aria-label="Два сценария обращения в мастерскую" tabindex="0">
+    <section class="paths reveal" aria-label="Два сценария обращения в мастерскую" tabindex="0">
       <div class="path">
-        <svg class='flourish-corner tr' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
+        <svg class="flourish-corner tr" viewBox="0 0 58 58" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M10 52 C 10 30 30 10 52 10"/><path d="M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19"/><circle cx="10" cy="52" r="1.6" fill="currentColor" stroke="none"/></svg>
         <div class="path-badge">А</div>
         <div class="path-tag">Формат 1 · работа с существующей вещью</div>
         <h3>Уже есть часы или механизм</h3>
@@ -3925,7 +3989,7 @@
         <div class="path-foot"><span class="desktop-copy"><b>Подходит, если</b> часы остановились, требуют ухода, потеряли деталь — или хочется дать старому механизму новую форму.</span><span class="mobile-copy"><b>Подходит:</b> ремонт, уход или новая форма старого механизма.</span></div>
       </div>
       <div class="path">
-        <svg class='flourish-corner tr' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
+        <svg class="flourish-corner tr" viewBox="0 0 58 58" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M10 52 C 10 30 30 10 52 10"/><path d="M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19"/><circle cx="10" cy="52" r="1.6" fill="currentColor" stroke="none"/></svg>
         <div class="path-badge">Б</div>
         <div class="path-tag">Формат 2 · создание с нуля</div>
         <h3>Пока есть только идея</h3>
@@ -3940,7 +4004,7 @@
         </ul>
         <div class="path-foot"><span class="desktop-copy"><b>Подходит, если</b> нужен подарочный или именной проект, авторский циферблат или часы вокруг конкретной истории.</span><span class="mobile-copy"><b>Подходит:</b> подарок, именной проект или личная история.</span></div>
       </div>
-    </div>
+    </section>
 
     <div class="route-head">
       <div class="flourish-mid"></div>
@@ -3998,19 +4062,19 @@
   <div class="container">
     <div class="contact-grid">
       <div class="contact-info reveal">
-        <div class="hero-eyebrow" style="margin-bottom:16px">— Связь напрямую —</div>
+        <div class="hero-eyebrow contact-eyebrow">— Связь напрямую —</div>
         <h2>Начать <em>разговор</em></h2>
         <p class="lead">Если у вас уже есть часы — пришлите несколько фотографий и коротко расскажите о задаче. Если есть только идея будущего проекта — опишите её своими словами.</p>
 
         <div class="contact-actions">
-          <a class="btn-gold btn-wide" href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Написать в Telegram <span class="arrow">&#8594;</span></a>
+          <a class="btn-gold btn-wide" href="https://t.me/tvoe_vremya_sgt" target="_blank" rel="noopener">Написать в Telegram <span class="arrow">&#8594;</span></a>
           <a class="btn-outline btn-wide" href="https://wa.me/79224448586" target="_blank" rel="noopener">Написать в WhatsApp</a>
         </div>
         <div class="contact-place">Сургут · работа с проектами из разных городов</div>
       </div>
 
       <div class="contact-side reveal">
-        <svg class='flourish-corner tl' viewBox='0 0 58 58' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round'><path d='M10 52 C 10 30 30 10 52 10'/><path d='M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19'/><circle cx='10' cy='52' r='1.6' fill='currentColor' stroke='none'/></svg>
+        <svg class="flourish-corner tl" viewBox="0 0 58 58" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M10 52 C 10 30 30 10 52 10"/><path d="M10 44 C 20 44 26 40 30 33 C 33 27 31 20 37 17 C 40 15.5 44 16 46 19"/><circle cx="10" cy="52" r="1.6" fill="currentColor" stroke="none"/></svg>
         <h3>Что прислать</h3>
         <div class="send">
           <div class="row"><span class="rn">01</span><p><b>Если часы есть:</b> 2&#8211;3 фотографии — общий вид, циферблат и по возможности механизм — и пара слов о том, что беспокоит.</p></div>
@@ -4019,12 +4083,14 @@
         </div>
         <div class="social-links">
           <span class="slbl">— Площадки мастерской —</span>
-          <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram</a><a href="https://youtube.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">YouTube</a><a href="https://rutube.ru/channel/25778998" target="_blank" rel="noopener">RUTUBE</a><a href="https://www.tiktok.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">TikTok</a><a href="https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo" target="_blank" rel="noopener">MAX</a><a href="https://www.instagram.com/chasy_sssr?igsh=MTVoYTQycjg3MDVsMg==" target="_blank" rel="noopener">НЕЛЬЗЯграм</a>
+          <a href="https://vk.ru/chasy_sssr_sgt" target="_blank" rel="noopener">ВКонтакте</a><a href="https://t.me/tvoe_vremya_sgt" target="_blank" rel="noopener">Telegram</a><a href="https://youtube.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">YouTube</a><a href="https://rutube.ru/channel/25778998" target="_blank" rel="noopener">RUTUBE</a><a href="https://www.tiktok.com/@tvoe_vremya_sgt" target="_blank" rel="noopener">TikTok</a><a href="https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo" target="_blank" rel="noopener">MAX</a><a href="https://www.instagram.com/chasy_sssr?igsh=MTVoYTQycjg3MDVsMg==" target="_blank" rel="noopener">НЕЛЬЗЯграм</a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- ============================================================ -->
 <!-- ПОДВАЛ                                                        -->
@@ -4035,7 +4101,7 @@
     <div class="footer-main">
       <div class="footer-brand">
         <a href="#hero" class="logo" aria-label="На первый экран">
-          <img src="assets/Image__64_-removebg-preview.png" width="829" height="301" loading="lazy" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
+          <img src="assets/logo.webp" width="420" height="152" loading="lazy" decoding="async" alt="Твоё Время — Мастерская антикварных часов" class="logo-img">
         </a>
         <p class="footer-tagline">Мастерская антикварных часов «Твоё Время» · Сургут</p>
         <p class="footer-subdesc">Ремонт · реставрация · марьяж · авторские проекты</p>
@@ -4056,7 +4122,7 @@
       <div class="footer-contact">
         <div class="footer-heading">Связаться с мастером</div>
         <p>Сургут · проекты принимаются из разных городов после предварительного диалога.</p>
-        <a href="https://t.me/chasy_SSR" target="_blank" rel="noopener">Telegram · @chasy_SSR</a>
+        <a href="https://t.me/tvoe_vremya_sgt" target="_blank" rel="noopener">Telegram · @tvoe_vremya_sgt</a>
         <a href="https://wa.me/79224448586" target="_blank" rel="noopener">WhatsApp · +7 922 444-85-86</a>
         <a href="#contacts">Все площадки мастерской →</a>
       </div>
@@ -4073,6 +4139,26 @@
 // пометка «JS доступен» — иначе .reveal-контент виден и без скриптов
 var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Общая доступность модальных окон: скрытые диалоги исключены из обхода,
+// а фокус не может случайно уйти на страницу под открытым окном.
+function setModalA11y(modal, open){
+  if(!modal) return;
+  modal.setAttribute('aria-hidden',open ? 'false':'true');
+  if(open) modal.removeAttribute('inert');
+  else modal.setAttribute('inert','');
+}
+document.addEventListener('keydown',function(event){
+  if(event.key !== 'Tab') return;
+  var modal = document.querySelector('.pm.active,.cert-modal.active,.single-lightbox.active');
+  if(!modal) return;
+  var items = Array.prototype.slice.call(modal.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(function(item){return item.offsetParent !== null;});
+  if(!items.length) return;
+  var first = items[0], last = items[items.length - 1];
+  if(event.shiftKey && document.activeElement === first){event.preventDefault();last.focus();}
+  else if(!event.shiftKey && document.activeElement === last){event.preventDefault();first.focus();}
+});
+
 // === Загрузочный экран ===
 // Полосу и счётчик рисует короткая CSS-анимация — она идёт на композиторе
 // и не замирает, пока главный поток занят картинками.
@@ -4081,8 +4167,7 @@ var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-moti
   var pre = document.getElementById('preloader');
   if(!pre) return;
 
-  var compactScreen = window.matchMedia && window.matchMedia('(max-width:900px)').matches;
-  var SHOW = reduceMotion ? 0 : (compactScreen ? 850 : 1400);
+  var SHOW = reduceMotion ? 0 : 100;
   var done = false;
 
   function finish(){
@@ -4091,7 +4176,7 @@ var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-moti
     document.body.classList.add('loaded');
     document.body.classList.remove('loading');
     // убираем из потока, чтобы не мешал кликам
-    setTimeout(function(){ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 480);
+    setTimeout(function(){ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 300);
   }
 
   setTimeout(finish, SHOW);
@@ -4202,6 +4287,17 @@ function setPageScrollLock(owner, locked){
   var phone = window.matchMedia('(max-width:680px)');
   var batch = 6;
   var visible = batch;
+
+  cards.forEach(function(card){
+    var key = card.getAttribute('data-project');
+    var button = card.querySelector('.proj-open');
+    var heading = card.querySelector('.proj-name');
+    if(button){
+      button.setAttribute('aria-haspopup','dialog');
+      button.setAttribute('aria-label','Смотреть проект: ' + (heading ? heading.textContent.trim() : 'работа мастерской'));
+    }
+    card.addEventListener('click',function(){if(key) openProject(key);});
+  });
 
   function render(reset){
     if(reset) visible = batch;
@@ -4454,25 +4550,34 @@ if(!reduceMotion && window.matchMedia('(min-width:901px)').matches){
 }
 
 // === Модальное окно с каруселью сертификатов ===
+var certificatesReturnFocus = null;
 function openCertificatesModal() {
   slides = document.querySelectorAll('.cert-slide');
   var modal = document.getElementById('certificatesModal');
+  certificatesReturnFocus = document.activeElement;
+  setModalA11y(modal,true);
   modal.classList.add('active');
-  modal.setAttribute('aria-hidden','false');
   setPageScrollLock('certificates',true);
   document.body.classList.add('modal-open');
   currentSlide = 0;
   showSlide(0);
   var close = modal.querySelector('.cert-close');
-  if(close) close.focus();
+  // После клавиатурной активации Enter браузер завершает стандартное
+  // нажатие кнопки уже после onclick. Переносим фокус следующим тиком,
+  // чтобы он гарантированно оставался внутри открытого диалога.
+  if(close) setTimeout(function(){ close.focus(); },0);
 }
 
 function closeCertificatesModal() {
   var modal = document.getElementById('certificatesModal');
+  if(!modal || !modal.classList.contains('active')) return;
   modal.classList.remove('active');
-  modal.setAttribute('aria-hidden','true');
+  setModalA11y(modal,false);
   setPageScrollLock('certificates',false);
   document.body.classList.remove('modal-open');
+  if(certificatesReturnFocus && typeof certificatesReturnFocus.focus === 'function'){
+    try{certificatesReturnFocus.focus({preventScroll:true});}catch(error){certificatesReturnFocus.focus();}
+  }
 }
 
 let currentSlide = 0;
@@ -4998,12 +5103,13 @@ var PROJECTS = {
   }
 };
 
-var pmKey = null, pmIndex = 0;
+var pmKey = null, pmIndex = 0, projectReturnFocus = null;
 
 function openProject(key){
   var p = PROJECTS[key];
   if(!p) return;
   pmKey = key;
+  projectReturnFocus = document.activeElement;
 
   document.getElementById('pmType').textContent = p.type;
   document.getElementById('pmName').innerHTML   = p.name;
@@ -5019,13 +5125,16 @@ function openProject(key){
   }).join('');
   document.getElementById('pmThumbs').innerHTML = p.photos.map(function(src,i){
     var thumb = src.replace('img/projects/','img/projects/thumbs/').replace(/\.jpg$/i,'.webp');
-    return '<button class="pm-thumb" type="button" onclick="pmShow('+i+')"><img src="'+thumb+'" loading="lazy" decoding="async" alt=""></button>';
+    return '<button class="pm-thumb" type="button" aria-label="Показать фотографию '+(i+1)+' из '+p.photos.length+'" onclick="pmShow('+i+')"><img src="'+thumb+'" loading="lazy" decoding="async" alt=""></button>';
   }).join('');
 
-  document.getElementById('projModal').classList.add('active');
+  var modal = document.getElementById('projModal');
+  setModalA11y(modal,true);
+  modal.classList.add('active');
   setPageScrollLock('project',true);
   document.body.classList.add('modal-open');
   pmShow(0);
+  modal.querySelector('.pm-close').focus();
 }
 
 function toggleProjectDetails(){
@@ -5040,9 +5149,15 @@ function toggleProjectDetails(){
 }
 
 function closeProject(){
-  document.getElementById('projModal').classList.remove('active');
+  var modal = document.getElementById('projModal');
+  if(!modal || !modal.classList.contains('active')) return;
+  modal.classList.remove('active');
+  setModalA11y(modal,false);
   setPageScrollLock('project',false);
   document.body.classList.remove('modal-open');
+  if(projectReturnFocus && typeof projectReturnFocus.focus === 'function'){
+    try{projectReturnFocus.focus({preventScroll:true});}catch(error){projectReturnFocus.focus();}
+  }
 }
 
 function pmShow(i){
@@ -5053,6 +5168,7 @@ function pmShow(i){
 
   var img = document.getElementById('pmImg');
   var src = p.photos[pmIndex];
+  img.alt = document.getElementById('pmName').textContent.trim() + ' — фотография ' + (pmIndex + 1) + ' из ' + n;
   // подгружаем кадр заранее — тогда смена идёт плавно, без вспышки пустоты
   var pre = new Image();
   pre.onload = function(){
@@ -5096,15 +5212,15 @@ document.addEventListener('keydown', function(e){
 </script>
 
 <!-- Просмотр фотографий мастерской с листанием внутри раздела -->
-<div id="workshopLightbox" class="single-lightbox" role="dialog" aria-modal="true" aria-label="Фотография мастерской" onclick="if(event.target===this) closeWorkshopPhoto()">
+<div id="workshopLightbox" class="single-lightbox" role="dialog" aria-modal="true" aria-label="Фотография мастерской" aria-hidden="true" inert onclick="if(event.target===this) closeWorkshopPhoto()">
   <div class="single-lightbox-panel">
     <button class="single-lightbox-close" type="button" onclick="closeWorkshopPhoto()" aria-label="Закрыть фотографию">
       <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
     </button>
     <figure class="single-lightbox-figure">
-      <img id="workshopLightboxImg" alt="">
-      <figcaption id="workshopLightboxCaption"></figcaption>
+      <img id="workshopLightboxImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Фотография мастерской">
       <span class="single-lightbox-counter" id="workshopLightboxCounter"></span>
+      <figcaption id="workshopLightboxCaption"></figcaption>
     </figure>
     <button class="single-lightbox-nav single-lightbox-prev" type="button" onclick="workshopPhotoPrev()" aria-label="Предыдущая фотография">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -5116,7 +5232,7 @@ document.addEventListener('keydown', function(e){
 </div>
 
 <!-- Модальное окно с каруселью сертификатов -->
-<div id="certificatesModal" class="cert-modal" role="dialog" aria-modal="true" aria-label="Сертификаты мастерской" aria-hidden="true" onclick="if(event.target === this) closeCertificatesModal()">
+<div id="certificatesModal" class="cert-modal" role="dialog" aria-modal="true" aria-label="Сертификаты мастерской" aria-hidden="true" inert onclick="if(event.target === this) closeCertificatesModal()">
   <div class="cert-modal-content">
     <button class="cert-close" type="button" onclick="closeCertificatesModal()" aria-label="Закрыть сертификаты">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
@@ -5125,7 +5241,7 @@ document.addEventListener('keydown', function(e){
       <div class="cert-carousel-track">
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_1_2026-07-31_12-33-21.jpg" width="898" height="1280" loading="lazy" decoding="async" alt="Сертификат 1">
+            <img src="assets/certificate-1.webp" width="720" height="1026" loading="lazy" decoding="async" alt="Сертификат соответствия специалиста по ремонту и обслуживанию часов">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -5134,7 +5250,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_3_2026-07-31_12-33-21.jpg" width="1280" height="893" loading="lazy" decoding="async" alt="Сертификат 2">
+            <img src="assets/certificate-2.webp" width="1200" height="838" loading="lazy" decoding="async" alt="Сертификат о профессиональном обучении">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -5143,7 +5259,7 @@ document.addEventListener('keydown', function(e){
         </div>
         <div class="cert-slide">
           <div class="cert-figure">
-            <img src="assets/photo_2_2026-07-31_12-33-21.jpg" width="901" height="1280" loading="lazy" decoding="async" alt="Сертификат 3">
+            <img src="assets/certificate-3.webp" width="720" height="1022" loading="lazy" decoding="async" alt="Сертификат о профессиональной подготовке">
             <svg class="cert-corner cc-tl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-tr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
             <svg class="cert-corner cc-bl" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 54 C6 30 30 6 54 6"/><path d="M6 46 C16 46 22 38 26 28 C30 18 26 10 36 7"/><circle cx="6" cy="54" r="2.4" fill="currentColor" stroke="none"/><circle cx="36" cy="7" r="1.6" fill="currentColor" stroke="none" opacity="0.7"/></svg>
@@ -5174,7 +5290,7 @@ document.addEventListener('keydown', function(e){
 </div>
 
 <!-- Модальное окно проекта — содержимое подставляется из PROJECTS -->
-<div id="projModal" class="pm" role="dialog" aria-modal="true" aria-labelledby="pmName" onclick="if(event.target === this) closeProject()">
+<div id="projModal" class="pm" role="dialog" aria-modal="true" aria-label="Галерея проекта" aria-hidden="true" inert onclick="if(event.target === this) closeProject()">
   <div class="pm-inner">
     <button class="pm-close" type="button" onclick="closeProject()" aria-label="Закрыть">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
@@ -5182,7 +5298,7 @@ document.addEventListener('keydown', function(e){
 
     <div class="pm-left">
       <div class="pm-stage">
-        <img id="pmImg" alt="">
+        <img id="pmImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Фотография проекта">
         <button class="pm-nav pm-prev" type="button" onclick="pmPrev()" aria-label="Предыдущий кадр">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
@@ -5196,7 +5312,7 @@ document.addEventListener('keydown', function(e){
 
     <aside class="pm-side">
       <div class="pm-type" id="pmType"></div>
-      <h3 class="pm-name" id="pmName"></h3>
+      <h3 class="pm-name" id="pmName">Проект</h3>
       <div class="pm-lead" id="pmLead"></div>
       <div class="pm-body" id="pmBody"></div>
       <button class="pm-read-more" id="pmReadMore" type="button" aria-expanded="false" onclick="toggleProjectDetails()">Читать дальше</button>
@@ -5213,7 +5329,7 @@ var workshopPhotoFigures = [];
 function renderWorkshopPhoto(){
   var figure = workshopPhotoFigures[workshopPhotoIndex];
   var source = figure && figure.querySelector('img');
-  var caption = figure && figure.querySelector('figcaption');
+  var caption = figure && figure.querySelector('.photo-label');
   if(!source) return;
   document.getElementById('workshopLightboxImg').src = source.currentSrc || source.src;
   document.getElementById('workshopLightboxImg').alt = source.alt || 'Фотография мастерской';
@@ -5229,10 +5345,12 @@ function openWorkshopPhoto(figure){
   workshopPhotoIndex = Math.max(0,workshopPhotoFigures.indexOf(figure));
   workshopLightboxReturnFocus = figure;
   renderWorkshopPhoto();
+  setModalA11y(modal,true);
   modal.classList.add('active');
   document.body.classList.add('modal-open');
   setPageScrollLock('workshop',true);
-  modal.querySelector('.single-lightbox-close').focus();
+  var close = modal.querySelector('.single-lightbox-close');
+  if(close) setTimeout(function(){ close.focus(); },0);
 }
 
 function workshopPhotoPrev(){
@@ -5251,6 +5369,7 @@ function closeWorkshopPhoto(){
   var modal = document.getElementById('workshopLightbox');
   if(!modal || !modal.classList.contains('active')) return;
   modal.classList.remove('active');
+  setModalA11y(modal,false);
   document.body.classList.remove('modal-open');
   setPageScrollLock('workshop',false);
   if(workshopLightboxReturnFocus){
