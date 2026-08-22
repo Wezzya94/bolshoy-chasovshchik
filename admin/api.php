@@ -25,6 +25,7 @@ try {
                     'phpVersion' => PHP_VERSION,
                     'historyHours' => TV_HISTORY_RECOVERY_HOURS,
                     'historyMinimumVersions' => TV_HISTORY_MIN_KEEP,
+                    'mediaLimits' => tv_media_limits(),
                 ],
             ]);
         }

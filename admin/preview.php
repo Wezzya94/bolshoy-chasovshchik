@@ -24,7 +24,8 @@ try {
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR
     );
     $headInjection = "\n<base href=\"../\">\n<meta name=\"robots\" content=\"noindex,nofollow,noarchive\">\n"
-        . '<script>window.TV_PREVIEW_CONTENT=' . $json . ";</script>\n";
+        . '<script>window.TV_PREVIEW_CONTENT=' . $json . ";</script>\n"
+        . '<style>@media(max-width:680px){#tvDraftPreviewBanner{left:10px!important;right:10px!important;top:auto!important;bottom:10px!important;transform:none!important;max-width:none!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:2px 10px!important;padding:9px 10px!important;font-size:10px!important}#tvDraftPreviewBanner>span:first-child{grid-column:1}#tvDraftPreviewBanner>span:nth-child(2){grid-column:1;font-size:9px}#tvDraftPreviewBanner>a{grid-column:2;grid-row:1/3;display:flex;align-items:center;padding:7px 9px!important}}</style>' . "\n";
     $html = preg_replace('/<head>/i', '<head>' . $headInjection, $html, 1) ?? $html;
     $banner = '<aside id="tvDraftPreviewBanner" style="position:fixed;z-index:2147483647;left:50%;top:12px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);padding:10px 14px;border:1px solid rgba(236,212,157,.72);background:rgba(12,10,8,.96);box-shadow:0 12px 40px rgba(0,0,0,.45);color:#f0e7d5;font:600 13px/1.35 system-ui,sans-serif;backdrop-filter:blur(14px)"><span style="color:#ecd49d">ПРЕДПРОСМОТР ЧЕРНОВИКА</span><span style="font-weight:400;color:#b8afa1">Посетители пока видят старую версию.</span><a href="admin/" style="color:#17130d;background:#d2aa61;padding:7px 10px;text-decoration:none;white-space:nowrap">Вернуться в панель</a></aside>';
     $html = preg_replace('/(<body[^>]*>)/i', '$1' . $banner, $html, 1) ?? $html;

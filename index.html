@@ -21,12 +21,11 @@
 <link rel="icon" href="favicon.ico?v=2" sizes="any">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180">
 <link rel="manifest" href="site.webmanifest">
-<link rel="preload" href="img/optimized/hero-master-watch-900.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="assets/fonts/inter-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-normal-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
-<script src="assets/js/site-content.js?v=2" defer></script>
+<script src="assets/js/site-content.js?v=3" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -2237,6 +2236,13 @@
   .workshop-grid .photo:nth-child(6){grid-column:4/7;grid-row:3}
   .workshop-grid .photo:nth-child(7){grid-column:7/10;grid-row:3}
   .workshop-grid .photo:nth-child(8){grid-column:10/13;grid-row:3}
+  .workshop-grid .photo:nth-child(n+9){grid-column:span 3;grid-row:auto;min-height:156px}
+  .workshop-grid[data-photo-count="9"] .photo:nth-child(9),
+  .workshop-grid[data-photo-count="13"] .photo:nth-child(13){grid-column:1/-1}
+  .workshop-grid[data-photo-count="10"] .photo:nth-child(n+9),
+  .workshop-grid[data-photo-count="14"] .photo:nth-child(n+13){grid-column:span 6}
+  .workshop-grid[data-photo-count="11"] .photo:nth-child(n+9),
+  .workshop-grid[data-photo-count="15"] .photo:nth-child(n+13){grid-column:span 4}
   .workshop-grid .real-photo{filter:saturate(.78) contrast(1.05);transition:transform .9s cubic-bezier(.16,1,.3,1),filter .7s ease}
   .workshop-grid .photo:hover .real-photo{transform:scale(1.035);filter:saturate(.98) contrast(1.03)}
   .workshop-grid .photo::after{
@@ -2336,6 +2342,11 @@
     .workshop-grid .photo:nth-child(6){grid-column:2;grid-row:4}
     .workshop-grid .photo:nth-child(7){grid-column:1;grid-row:5}
     .workshop-grid .photo:nth-child(8){grid-column:2;grid-row:5}
+    .workshop-grid .photo:nth-child(n+9){grid-column:auto;grid-row:auto;min-height:148px}
+    .workshop-grid[data-photo-count="9"] .photo:nth-child(9),
+    .workshop-grid[data-photo-count="11"] .photo:nth-child(11),
+    .workshop-grid[data-photo-count="13"] .photo:nth-child(13),
+    .workshop-grid[data-photo-count="15"] .photo:nth-child(15){grid-column:1/-1}
 
     .trust-grid{grid-template-columns:1fr;gap:38px}
     .trust-proof{grid-template-columns:1fr 1fr}
@@ -2991,6 +3002,11 @@
     .workshop-grid .photo:nth-child(6){grid-column:2;grid-row:4}
     .workshop-grid .photo:nth-child(7){grid-column:1;grid-row:5}
     .workshop-grid .photo:nth-child(8){grid-column:2;grid-row:5}
+    .workshop-grid .photo:nth-child(n+9){grid-column:auto;grid-row:auto;min-height:142px}
+    .workshop-grid[data-photo-count="9"] .photo:nth-child(9),
+    .workshop-grid[data-photo-count="11"] .photo:nth-child(11),
+    .workshop-grid[data-photo-count="13"] .photo:nth-child(13),
+    .workshop-grid[data-photo-count="15"] .photo:nth-child(15){grid-column:1/-1}
     .workshop-grid .photo-label{left:10px;right:10px;bottom:9px;width:auto;font-size:8px;line-height:1.35}
 
     .trust-grid{gap:32px}
@@ -4595,10 +4611,12 @@ let currentSlide = 0;
 let slides = [];
 
 function showSlide(n) {
+  if (!slides || !slides.length) return;
   currentSlide = Math.max(0, Math.min(n, slides.length - 1));
 
   const offset = -currentSlide * 100;
-  document.querySelector('.cert-carousel-track').style.transform = `translateX(${offset}%)`;
+  var track = document.querySelector('.cert-carousel-track');
+  if(track) track.style.transform = `translateX(${offset}%)`;
 
   // Обновляем точки
   document.querySelectorAll('.cert-dot').forEach((dot, i) => {
@@ -4608,8 +4626,8 @@ function showSlide(n) {
 
   var prev = document.querySelector('.cert-prev');
   var next = document.querySelector('.cert-next');
-  if(prev) prev.disabled = currentSlide === 0;
-  if(next) next.disabled = currentSlide === slides.length - 1;
+  if(prev){ prev.disabled = currentSlide === 0; prev.hidden = slides.length < 2; }
+  if(next){ next.disabled = currentSlide === slides.length - 1; next.hidden = slides.length < 2; }
 }
 
 function nextSlide() {
@@ -5495,8 +5513,8 @@ document.addEventListener('keydown',function(event){
 (function(){
   var root = document.querySelector('.hero-photo');
   if(!root) return;
-  var slides = Array.prototype.slice.call(root.querySelectorAll('.hero-slide'));
-  var dots = Array.prototype.slice.call(root.querySelectorAll('.hero-dot'));
+  var slides = [];
+  var dots = [];
   var count = document.getElementById('heroPhotoCount');
   var caption = document.getElementById('heroPhotoCaption');
   var prev = root.querySelector('.hero-prev');
@@ -5513,6 +5531,7 @@ document.addEventListener('keydown',function(event){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function show(index){
+    if(!slides.length) return;
     current = (index + slides.length) % slides.length;
     var activeSlide = slides[current];
     var deferredSrc = activeSlide.getAttribute('data-src');
@@ -5525,16 +5544,25 @@ document.addEventListener('keydown',function(event){
       dot.classList.toggle('active',i === current);
       dot.setAttribute('aria-current',i === current ? 'true' : 'false');
     });
-    count.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
-    caption.textContent = activeSlide.getAttribute('data-caption') || captions[current] || activeSlide.alt;
+    if(count) count.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
+    if(caption) caption.textContent = activeSlide.getAttribute('data-caption') || captions[current] || activeSlide.alt;
   }
   function stop(){ if(timer){ clearInterval(timer);timer = null; } }
   function start(){
     stop();
-    if(!reduce && heroInView && !document.hidden) timer = setInterval(function(){ show(current + 1); },6500);
+    if(slides.length > 1 && !reduce && heroInView && !document.hidden) timer = setInterval(function(){ show(current + 1); },6500);
   }
-  dots.forEach(function(dot){
-    dot.addEventListener('click',function(){ show(Number(dot.getAttribute('data-hero-slide')));start(); });
+  function refresh(){
+    slides = Array.prototype.slice.call(root.querySelectorAll('.hero-slide'));
+    dots = Array.prototype.slice.call(root.querySelectorAll('.hero-dot'));
+    current = 0;
+    show(0);
+    start();
+  }
+  root.addEventListener('click',function(event){
+    var dot = event.target.closest('.hero-dot');
+    if(!dot || !root.contains(dot)) return;
+    show(Number(dot.getAttribute('data-hero-slide')) || 0);start();
   });
   if(prev) prev.addEventListener('click',function(){ show(current - 1);start(); });
   if(next) next.addEventListener('click',function(){ show(current + 1);start(); });
@@ -5549,7 +5577,8 @@ document.addEventListener('keydown',function(event){
       heroInView ? start() : stop();
     },{threshold:0.05}).observe(root);
   }
-  show(0);start();
+  window.addEventListener('sitecontentready',refresh);
+  refresh();
 })();
 </script>
 

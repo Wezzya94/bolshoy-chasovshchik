@@ -195,32 +195,171 @@
     if (stringValue(item.caption)) image.setAttribute('data-caption', item.caption);
   }
 
+  function renderHeroMedia(items) {
+    var slidesRoot = document.querySelector('#hero .hero-slides');
+    var dotsRoot = document.querySelector('#hero .hero-dots');
+    var list = (Array.isArray(items) ? items : []).filter(function (item) { return item && stringValue(item.src); });
+    if (!slidesRoot || !dotsRoot) return;
+    if (!list.length) {
+      slidesRoot.replaceChildren();
+      dotsRoot.replaceChildren();
+      document.querySelectorAll('#hero .hero-nav').forEach(function (button) { button.hidden = true; });
+      dotsRoot.hidden = true;
+      var emptyCaption = document.getElementById('heroPhotoCaption');
+      var emptyCount = document.getElementById('heroPhotoCount');
+      if (emptyCaption) emptyCaption.textContent = '';
+      if (emptyCount) emptyCount.textContent = '';
+      return;
+    }
+    var slideTemplate = slidesRoot.querySelector('.hero-slide');
+    var slideFragment = document.createDocumentFragment();
+    var dotFragment = document.createDocumentFragment();
+
+    list.forEach(function (item, index) {
+      var image = slideTemplate ? slideTemplate.cloneNode(false) : document.createElement('img');
+      image.className = 'hero-slide' + (index === 0 ? ' active' : '');
+      image.removeAttribute('width');
+      image.removeAttribute('height');
+      image.removeAttribute('data-src');
+      image.loading = index === 0 ? 'eager' : 'lazy';
+      image.decoding = 'async';
+      if (index === 0) image.setAttribute('fetchpriority', 'high');
+      else image.removeAttribute('fetchpriority');
+      slideFragment.appendChild(image);
+      applyMediaItem(image, item);
+      image.setAttribute('data-caption', stringValue(item.caption) || stringValue(item.alt));
+
+      var dot = document.createElement('button');
+      dot.className = 'hero-dot' + (index === 0 ? ' active' : '');
+      dot.type = 'button';
+      dot.dataset.heroSlide = String(index);
+      dot.setAttribute('aria-label', 'Кадр ' + (index + 1));
+      dot.setAttribute('aria-current', index === 0 ? 'true' : 'false');
+      dotFragment.appendChild(dot);
+    });
+
+    slidesRoot.replaceChildren(slideFragment);
+    dotsRoot.replaceChildren(dotFragment);
+    document.querySelectorAll('#hero .hero-nav').forEach(function (button) { button.hidden = list.length < 2; });
+    dotsRoot.hidden = list.length < 2;
+  }
+
+  function renderWorkshopMedia(items) {
+    var grid = document.querySelector('#workshop .workshop-grid');
+    var list = (Array.isArray(items) ? items : []).filter(function (item) { return item && stringValue(item.src); });
+    if (!grid) return;
+    if (!list.length) {
+      grid.replaceChildren();
+      grid.dataset.photoCount = '0';
+      return;
+    }
+    var template = grid.querySelector('.photo');
+    var fragment = document.createDocumentFragment();
+
+    list.forEach(function (item, index) {
+      var button = template ? template.cloneNode(true) : document.createElement('button');
+      button.className = 'photo velvet-photo';
+      button.type = 'button';
+      button.removeAttribute('onclick');
+      var image = button.querySelector('img');
+      if (!image) {
+        image = document.createElement('img');
+        image.className = 'real-photo';
+        button.prepend(image);
+      }
+      image.removeAttribute('width');
+      image.removeAttribute('height');
+      var label = button.querySelector('.photo-label');
+      if (!label) {
+        label = document.createElement('span');
+        label.className = 'photo-label';
+        button.appendChild(label);
+      }
+      fragment.appendChild(button);
+      applyMediaItem(image, item);
+      var caption = stringValue(item.caption) || (String(index + 1).padStart(2, '0') + ' · ' + stringValue(item.alt));
+      label.textContent = caption;
+      button.setAttribute('aria-label', 'Открыть фотографию: ' + (caption || stringValue(item.alt)));
+      button.addEventListener('click', function () {
+        if (typeof window.openWorkshopPhoto === 'function') window.openWorkshopPhoto(button);
+      });
+    });
+
+    grid.replaceChildren(fragment);
+    grid.dataset.photoCount = String(list.length);
+  }
+
+  function renderCertificateMedia(items) {
+    var track = document.querySelector('#certificatesModal .cert-carousel-track');
+    var dots = document.querySelector('#certificatesModal .cert-dots');
+    var openButton = document.querySelector('.btn-certificates');
+    var list = (Array.isArray(items) ? items : []).filter(function (item) { return item && stringValue(item.src); });
+    if (!track || !dots) return;
+    if (!list.length) {
+      track.replaceChildren();
+      dots.replaceChildren();
+      if (openButton) openButton.hidden = true;
+      document.querySelectorAll('#certificatesModal .cert-nav').forEach(function (button) { button.hidden = true; });
+      dots.hidden = true;
+      return;
+    }
+    var slideTemplate = track.querySelector('.cert-slide');
+    var slideFragment = document.createDocumentFragment();
+    var dotFragment = document.createDocumentFragment();
+
+    list.forEach(function (item, index) {
+      var slide = slideTemplate ? slideTemplate.cloneNode(true) : document.createElement('div');
+      slide.className = 'cert-slide';
+      var image = slide.querySelector('img');
+      if (!image) {
+        var figure = document.createElement('div');
+        figure.className = 'cert-figure';
+        image = document.createElement('img');
+        figure.appendChild(image);
+        slide.appendChild(figure);
+      }
+      image.removeAttribute('width');
+      image.removeAttribute('height');
+      slideFragment.appendChild(slide);
+      applyMediaItem(image, item);
+      image.loading = 'lazy';
+      image.decoding = 'async';
+
+      var dot = document.createElement('button');
+      dot.className = 'cert-dot' + (index === 0 ? ' active' : '');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Сертификат ' + (index + 1));
+      dot.setAttribute('aria-current', index === 0 ? 'true' : 'false');
+      dot.addEventListener('click', function () {
+        if (typeof window.goToSlide === 'function') window.goToSlide(index);
+      });
+      dotFragment.appendChild(dot);
+    });
+
+    track.replaceChildren(slideFragment);
+    dots.replaceChildren(dotFragment);
+    if (openButton) openButton.hidden = false;
+    document.querySelectorAll('#certificatesModal .cert-nav').forEach(function (button) { button.hidden = list.length < 2; });
+    dots.hidden = list.length < 2;
+  }
+
   function applyMedia(data) {
     var media = data.site && data.site.media;
     if (!media) return;
 
+    renderHeroMedia(media.hero);
+    renderWorkshopMedia(media.workshop);
+    renderCertificateMedia(media.certificates);
+
     var groups = [
-      { selector: '#hero .hero-slide', items: media.hero },
       { selector: '#directions img', items: media.directions },
-      { selector: '#master img', items: media.master },
-      { selector: '#certificatesModal .cert-slide img', items: media.certificates },
+      { selector: '#master img', items: media.master }
     ];
     groups.forEach(function (group) {
       var images = document.querySelectorAll(group.selector);
       (Array.isArray(group.items) ? group.items : []).forEach(function (item, index) {
         applyMediaItem(images[index], item);
       });
-    });
-
-    var workshopImages = document.querySelectorAll('#workshop .workshop-grid img');
-    (Array.isArray(media.workshop) ? media.workshop : []).forEach(function (item, index) {
-      var image = workshopImages[index];
-      if (!image) return;
-      applyMediaItem(image, item);
-      var button = image.closest('button');
-      var label = button && button.querySelector('.photo-label');
-      if (label && stringValue(item.caption)) label.textContent = item.caption;
-      if (button) button.setAttribute('aria-label', 'Открыть фотографию: ' + (stringValue(item.caption) || stringValue(item.alt)));
     });
 
     var activeHero = document.querySelector('#hero .hero-slide.active');

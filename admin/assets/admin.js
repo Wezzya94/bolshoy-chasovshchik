@@ -46,13 +46,46 @@
     operationActive: false
   };
 
-  var groupTitles = {
-    hero: "Первый экран",
-    directions: "Направления работы",
-    master: "О мастере",
-    workshop: "Мастерская",
-    certificates: "Сертификаты"
+  var mediaGroupSettings = {
+    hero: {
+      title: "Первый экран",
+      dynamic: true,
+      fallbackLimit: 8,
+      addLabel: "+ Добавить фотографии",
+      note: "Слайдер на первом экране. Можно добавлять, удалять и менять порядок."
+    },
+    directions: {
+      title: "Направления работы",
+      dynamic: false,
+      fallbackLimit: 8,
+      note: "Количество позиций связано с готовыми направлениями — здесь фотографии только заменяются."
+    },
+    master: {
+      title: "О мастере",
+      dynamic: false,
+      fallbackLimit: 6,
+      note: "Главное и дополнительное фото занимают заданные места — здесь фотографии только заменяются."
+    },
+    workshop: {
+      title: "Мастерская",
+      dynamic: true,
+      fallbackLimit: 16,
+      addLabel: "+ Добавить фотографии",
+      note: "Галерея мастерской. Новые снимки автоматически продолжают сетку сайта."
+    },
+    certificates: {
+      title: "Сертификаты",
+      dynamic: true,
+      fallbackLimit: 100,
+      addLabel: "+ Добавить сертификаты",
+      note: "Документы выводятся в карусели целиком и в том же порядке, что здесь."
+    }
   };
+
+  var groupTitles = {};
+  Object.keys(mediaGroupSettings).forEach(function (key) {
+    groupTitles[key] = mediaGroupSettings[key].title;
+  });
 
   var cropProfiles = {
     project: {
@@ -148,6 +181,7 @@
     restoreVersionMeta: document.getElementById("restoreVersionMeta"),
     restoreChangeList: document.getElementById("restoreChangeList"),
     confirmRestore: document.getElementById("confirmRestore")
+    ,restoreDirtyWarning: document.getElementById("restoreDirtyWarning")
     ,draftsList: document.getElementById("draftsList")
     ,draftStatus: document.getElementById("draftStatus")
     ,draftDialog: document.getElementById("draftDialog")
@@ -1154,18 +1188,161 @@
     media.caption = identity.caption;
   }
 
+  function mediaGroupLimit(groupKey) {
+    var setting = mediaGroupSettings[groupKey] || {};
+    var serverLimits = state.capabilities && state.capabilities.mediaLimits;
+    var serverLimit = serverLimits ? Number(serverLimits[groupKey]) : 0;
+    return serverLimit > 0 ? serverLimit : Number(setting.fallbackLimit || 1);
+  }
+
+  function mediaGroupIsDynamic(groupKey) {
+    return Boolean(mediaGroupSettings[groupKey] && mediaGroupSettings[groupKey].dynamic);
+  }
+
+  function nextMediaId(groupKey) {
+    var items = state.content.site.media[groupKey] || [];
+    var used = new Set(items.map(function (item) { return String(item.id || ""); }));
+    var number = 1;
+    while (used.has(groupKey + "-" + number)) number += 1;
+    return groupKey + "-" + number;
+  }
+
+  function mediaItemLabel(groupKey, index) {
+    if (groupKey === "hero") return "Первый экран · кадр " + (index + 1);
+    if (groupKey === "workshop") return "Мастерская · фото " + (index + 1);
+    if (groupKey === "certificates") return "Сертификат " + (index + 1);
+    return (groupTitles[groupKey] || "Фотография") + " · " + (index + 1);
+  }
+
+  function renumberMediaGroup(groupKey) {
+    var items = state.content.site.media[groupKey] || [];
+    if (!mediaGroupIsDynamic(groupKey)) return;
+    items.forEach(function (item, index) {
+      item.label = mediaItemLabel(groupKey, index);
+      if (groupKey === "workshop" && String(item.caption || "").trim()) {
+        var caption = String(item.caption).replace(/^(?:N°\s*)?\d{1,3}\s*·\s*/i, "").trim();
+        item.caption = String(index + 1).padStart(2, "0") + " · " + caption;
+      }
+    });
+  }
+
+  function moveMediaItem(groupKey, fromIndex, toIndex) {
+    var items = state.content.site.media[groupKey] || [];
+    if (!mediaGroupIsDynamic(groupKey) || fromIndex < 0 || toIndex < 0 || fromIndex >= items.length || toIndex >= items.length || fromIndex === toIndex) return;
+    var moved = items.splice(fromIndex, 1)[0];
+    items.splice(toIndex, 0, moved);
+    renumberMediaGroup(groupKey);
+    renderMedia();
+    markDirty();
+    toast("Порядок фотографий изменён. Проверьте раздел в предпросмотре.", "success");
+  }
+
+  function removeMediaItem(groupKey, index) {
+    var items = state.content.site.media[groupKey] || [];
+    if (!mediaGroupIsDynamic(groupKey) || !items[index]) return;
+    if (items.length <= 1) {
+      toast("В этом разделе должна остаться хотя бы одна фотография.", "error");
+      return;
+    }
+    var title = items[index].label || "эту фотографию";
+    if (!window.confirm("Убрать «" + title + "» из раздела? Файл останется на сервере, а опубликованный сайт не изменится до публикации.")) return;
+    items.splice(index, 1);
+    renumberMediaGroup(groupKey);
+    renderMedia();
+    updateMetrics();
+    markDirty();
+    toast("Фотография убрана из неопубликованных правок.", "success");
+  }
+
+  async function addMediaFiles(groupKey, fileList) {
+    if (!mediaGroupIsDynamic(groupKey)) return;
+    var files = Array.from(fileList || []);
+    if (!files.length) return;
+    var items = state.content.site.media[groupKey] || [];
+    var limit = mediaGroupLimit(groupKey);
+    var available = Math.max(0, limit - items.length);
+    if (!available) {
+      toast("Достигнут лимит раздела: " + limit + " фотографий.", "error");
+      return;
+    }
+    if (files.length > available) {
+      toast("Сейчас можно добавить ещё " + available + ". Выбрано файлов: " + files.length + ". Уменьшите выбор и повторите.", "error");
+      return;
+    }
+
+    var uploadedCount = 0;
+    try {
+      for (var index = 0; index < files.length; index += 1) {
+        var prepared = await openCropEditor(files[index], profileForMedia(groupKey, items.length), null);
+        if (!prepared) continue;
+        var media = {
+          id: nextMediaId(groupKey),
+          label: mediaItemLabel(groupKey, items.length),
+          alt: "",
+          caption: groupKey === "workshop" ? String(items.length + 1).padStart(2, "0") + " · Новая фотография" : ""
+        };
+        replaceMediaAsset(media, prepared);
+        items.push(media);
+        renumberMediaGroup(groupKey);
+        uploadedCount += 1;
+        renderMedia();
+        updateMetrics();
+      }
+      if (uploadedCount) {
+        markDirty();
+        finishOperation(uploadedCount === 1 ? "Фотография раздела готова" : "Все фотографии раздела готовы", "Заполните описания, расставьте порядок и откройте предпросмотр.");
+        toast("Добавлено фотографий: " + uploadedCount + ". Заполните описания перед публикацией.", "success");
+        var lastAlt = dom.media.querySelector('[data-media-group="' + groupKey + '"] [data-media-index]:last-child [data-media-field="alt"]');
+        if (lastAlt) lastAlt.focus();
+      }
+    } catch (error) {
+      if (uploadedCount) {
+        markDirty();
+        updateMetrics();
+      }
+      failOperation(error.message);
+      toast(error.message + (uploadedCount ? " Уже подготовленные фотографии остались в неопубликованных правках." : ""), "error");
+    }
+  }
+
   function renderMedia() {
     if (!dom.media || !state.content) return;
     dom.media.replaceChildren();
     Object.keys(groupTitles).forEach(function (groupKey) {
       var items = state.content.site.media[groupKey] || [];
+      var setting = mediaGroupSettings[groupKey] || {};
+      var limit = mediaGroupLimit(groupKey);
       var section = createElement("section", "media-group");
       section.dataset.mediaGroup = groupKey;
       var header = createElement("header", "media-group-header");
-      header.appendChild(createElement("h2", "", groupTitles[groupKey]));
-      header.appendChild(createElement("span", "", items.length + " фото"));
+      var titleBlock = createElement("div", "media-group-title");
+      titleBlock.appendChild(createElement("h2", "", groupTitles[groupKey]));
+      titleBlock.appendChild(createElement("p", "", setting.note || ""));
+      header.appendChild(titleBlock);
+      var headerActions = createElement("div", "media-group-actions");
+      headerActions.appendChild(createElement("span", "media-group-count", items.length + (setting.dynamic ? " из " + limit : "") + " фото"));
+      if (setting.dynamic) {
+        if (items.length < limit) {
+          var addLabel = createElement("label", "button button-secondary file-button media-add-button", setting.addLabel || "+ Добавить фотографии");
+          var addInput = document.createElement("input");
+          addInput.type = "file";
+          addInput.accept = "image/jpeg,image/png,image/webp";
+          addInput.multiple = true;
+          addInput.hidden = true;
+          addInput.dataset.mediaAdd = groupKey;
+          addLabel.appendChild(addInput);
+          headerActions.appendChild(addLabel);
+        } else {
+          headerActions.appendChild(createElement("span", "media-limit-reached", "Достигнут лимит " + limit));
+        }
+      }
+      header.appendChild(headerActions);
       section.appendChild(header);
       var grid = createElement("div", "media-items");
+
+      if (!items.length) {
+        grid.appendChild(createElement("div", "empty-state", "В этом разделе пока нет фотографий."));
+      }
 
       items.forEach(function (item, index) {
         var mediaProfile = profileForMedia(groupKey, index);
@@ -1193,7 +1370,10 @@
         card.appendChild(previewWrap);
 
         var fields = createElement("div", "media-fields");
-        fields.appendChild(createElement("h3", "", item.label));
+        var itemTitle = createElement("div", "media-item-title");
+        itemTitle.appendChild(createElement("h3", "", item.label));
+        itemTitle.appendChild(createElement("span", "media-position", "Позиция " + (index + 1)));
+        fields.appendChild(itemTitle);
         fields.appendChild(createElement("p", "media-profile-note", mediaProfile.explanation));
         fields.appendChild(createElement("p", "media-adaptive-status", Array.isArray(item.variants) && item.variants.length > 1
           ? (item.mobile ? "✓ Готовы отдельные кадры и размеры для компьютера и телефона" : "✓ Готово несколько размеров")
@@ -1214,6 +1394,21 @@
         caption.dataset.mediaField = "caption";
         captionLabel.appendChild(caption);
         fields.appendChild(captionLabel);
+        if (setting.dynamic) {
+          var actions = createElement("div", "media-item-actions");
+          var up = createButton("↑ Выше", "button button-ghost", "media-up", "Поднять фотографию выше");
+          var down = createButton("↓ Ниже", "button button-ghost", "media-down", "Опустить фотографию ниже");
+          var remove = createButton("Удалить", "button button-danger", "media-remove", "Убрать фотографию из раздела");
+          up.dataset.mediaAction = "up";
+          down.dataset.mediaAction = "down";
+          remove.dataset.mediaAction = "remove";
+          up.disabled = index === 0;
+          down.disabled = index === items.length - 1;
+          remove.disabled = items.length <= 1;
+          if (remove.disabled) remove.title = "В разделе должна остаться хотя бы одна фотография";
+          actions.append(up, down, remove);
+          fields.appendChild(actions);
+        }
         card.appendChild(fields);
         grid.appendChild(card);
       });
@@ -1561,12 +1756,12 @@
 
       var footer = createElement("div", "history-card-footer");
       var hint = state.dirty
-        ? "Сначала опубликуйте или отмените текущие правки."
+        ? "Есть неопубликованные правки. При восстановлении панель отдельно предложит их отменить."
         : ((entry.changes || {}).hasChanges ? "Текущая версия сохранится автоматически." : "Эта версия совпадает с текущей.");
       footer.appendChild(createElement("small", "", hint));
-      var restore = createButton("Посмотреть и восстановить", "button button-secondary", "history-restore");
+      var restore = createButton(state.dirty ? "Проверить и восстановить" : "Посмотреть и восстановить", "button button-secondary", "history-restore");
       restore.dataset.historyId = entry.id;
-      restore.disabled = state.dirty || !(entry.changes || {}).hasChanges;
+      restore.disabled = !(entry.changes || {}).hasChanges;
       footer.appendChild(restore);
       card.appendChild(footer);
       dom.historyList.appendChild(card);
@@ -1599,19 +1794,19 @@
 
   function closeRestoreDialog() {
     state.selectedHistory = null;
+    if (dom.restoreDirtyWarning) dom.restoreDirtyWarning.hidden = true;
+    if (dom.confirmRestore) dom.confirmRestore.textContent = "Восстановить и опубликовать";
     if (!dom.restoreDialog) return;
     if (typeof dom.restoreDialog.close === "function" && dom.restoreDialog.open) dom.restoreDialog.close();
     else dom.restoreDialog.removeAttribute("open");
   }
 
   function openRestoreDialog(historyId) {
-    if (state.dirty) {
-      toast("Сначала опубликуйте текущие правки или нажмите «Отменить правки».", "error");
-      return;
-    }
     var entry = state.history.find(function (item) { return item.id === historyId; });
     if (!entry || !(entry.changes || {}).hasChanges) return;
     state.selectedHistory = entry;
+    if (dom.restoreDirtyWarning) dom.restoreDirtyWarning.hidden = !state.dirty;
+    if (dom.confirmRestore) dom.confirmRestore.textContent = state.dirty ? "Отменить правки и восстановить" : "Восстановить и опубликовать";
     dom.restoreVersionMeta.textContent = formatHistoryDate(entry.capturedAt) + " · версия № " + String(entry.revision || 0) + " · " + historyStatsText(entry);
     dom.restoreChangeList.replaceChildren();
     (entry.changes.details || []).forEach(function (detail) {
@@ -1855,6 +2050,18 @@
         markDirty();
         toast("Кадры обновлены. Проверьте предпросмотр; сайт ещё не опубликован.", "success");
       }).catch(function (error) { toast(error.message, "error"); });
+      return;
+    }
+
+    if (target.dataset.mediaAction) {
+      var actionGroup = target.closest("[data-media-group]");
+      var actionCard = target.closest("[data-media-index]");
+      if (!actionGroup || !actionCard) return;
+      var actionKey = actionGroup.dataset.mediaGroup;
+      var actionIndex = Number(actionCard.dataset.mediaIndex);
+      if (target.dataset.mediaAction === "up") moveMediaItem(actionKey, actionIndex, actionIndex - 1);
+      if (target.dataset.mediaAction === "down") moveMediaItem(actionKey, actionIndex, actionIndex + 1);
+      if (target.dataset.mediaAction === "remove") removeMediaItem(actionKey, actionIndex);
       return;
     }
 
@@ -2201,6 +2408,14 @@
   });
 
   dom.media.addEventListener("change", async function (event) {
+    var addInput = event.target.closest("[data-media-add]");
+    if (addInput) {
+      var addFiles = Array.from(addInput.files || []);
+      var addGroup = addInput.dataset.mediaAdd || "";
+      addInput.value = "";
+      await addMediaFiles(addGroup, addFiles);
+      return;
+    }
     var input = event.target.closest("[data-media-upload]");
     var group = event.target.closest("[data-media-group]");
     var item = event.target.closest("[data-media-index]");

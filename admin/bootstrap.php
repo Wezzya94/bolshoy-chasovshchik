@@ -605,12 +605,23 @@ function tv_normalize_media_item(mixed $value, string $field): array
     return array_merge($item, tv_normalize_image_extras($value, $field));
 }
 
+function tv_media_limits(): array
+{
+    return [
+        'hero' => 8,
+        'directions' => 8,
+        'master' => 6,
+        'workshop' => 16,
+        'certificates' => 100,
+    ];
+}
+
 function tv_normalize_media(mixed $value): array
 {
     if (!is_array($value)) {
         throw new TvValidationException('Раздел фотографий имеет неверный формат.');
     }
-    $limits = ['hero' => 8, 'directions' => 8, 'master' => 6, 'workshop' => 16, 'certificates' => 12];
+    $limits = tv_media_limits();
     $result = [];
     foreach ($limits as $group => $limit) {
         $items = $value[$group] ?? [];
@@ -618,8 +629,14 @@ function tv_normalize_media(mixed $value): array
             throw new TvValidationException("Группа фотографий «{$group}» имеет неверный размер.");
         }
         $result[$group] = [];
+        $seenIds = [];
         foreach ($items as $index => $item) {
-            $result[$group][] = tv_normalize_media_item($item, $group . ' ' . ((int) $index + 1));
+            $normalized = tv_normalize_media_item($item, $group . ' ' . ((int) $index + 1));
+            if (isset($seenIds[$normalized['id']])) {
+                throw new TvValidationException("В группе фотографий «{$group}» дважды указан ID «{$normalized['id']}».");
+            }
+            $seenIds[$normalized['id']] = true;
+            $result[$group][] = $normalized;
         }
     }
     return $result;
