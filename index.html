@@ -26,6 +26,7 @@
 <link rel="preload" href="assets/fonts/playfair-normal-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<script src="assets/js/site-content.js?v=1" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -4283,29 +4284,27 @@ function setPageScrollLock(owner, locked){
   var grid = document.getElementById('projectsGrid');
   var more = document.querySelector('.projects-more');
   if(!grid || !more) return;
-  var cards = Array.prototype.slice.call(grid.querySelectorAll('.proj-card'));
   var phone = window.matchMedia('(max-width:680px)');
   var batch = 6;
   var visible = batch;
+  var cards = [];
 
-  cards.forEach(function(card){
+  grid.addEventListener('click',function(event){
+    var card = event.target.closest('.proj-card');
+    if(!card || !grid.contains(card)) return;
     var key = card.getAttribute('data-project');
-    var button = card.querySelector('.proj-open');
-    var heading = card.querySelector('.proj-name');
-    if(button){
-      button.setAttribute('aria-haspopup','dialog');
-      button.setAttribute('aria-label','Смотреть проект: ' + (heading ? heading.textContent.trim() : 'работа мастерской'));
-    }
-    card.addEventListener('click',function(){if(key) openProject(key);});
+    if(key) openProject(key);
   });
 
   function render(reset){
     if(reset) visible = batch;
     if(!phone.matches){
       cards.forEach(function(card){ card.hidden = false; });
+      more.hidden = true;
       more.setAttribute('aria-expanded','false');
       return;
     }
+    more.hidden = cards.length <= batch;
     cards.forEach(function(card,index){ card.hidden = index >= visible; });
     var remaining = cards.length - visible;
     more.setAttribute('aria-expanded', visible > batch ? 'true':'false');
@@ -4327,8 +4326,20 @@ function setPageScrollLock(owner, locked){
       visible = Math.min(cards.length, visible + batch);render(false);
     }
   });
+  window.refreshProjectGrid = function(reset){
+    cards = Array.prototype.slice.call(grid.querySelectorAll('.proj-card'));
+    cards.forEach(function(card){
+      var button = card.querySelector('.proj-open');
+      var heading = card.querySelector('.proj-name');
+      if(button){
+        button.setAttribute('aria-haspopup','dialog');
+        button.setAttribute('aria-label','Смотреть проект: ' + (heading ? heading.textContent.trim() : 'работа мастерской'));
+      }
+    });
+    render(reset !== false);
+  };
   if(phone.addEventListener) phone.addEventListener('change', function(){ render(true); });
-  render(true);
+  window.refreshProjectGrid(true);
 })();
 
 // Живые стрелки часов в hero
@@ -5105,28 +5116,94 @@ var PROJECTS = {
 
 var pmKey = null, pmIndex = 0, projectReturnFocus = null;
 
+function projectTitleParts(project){
+  if(project && (project.title || project.accent)){
+    return {title:String(project.title || ''),accent:String(project.accent || '')};
+  }
+  var legacy = String(project && project.name || '');
+  var match = legacy.match(/^([\s\S]*?)<em>([\s\S]*?)<\/em>\s*$/i);
+  function clean(value){ return String(value || '').replace(/<[^>]+>/g,'').trim(); }
+  return match ? {title:clean(match[1]),accent:clean(match[2])} : {title:clean(legacy),accent:''};
+}
+
+function renderProjectTitle(element,project){
+  var parts = projectTitleParts(project);
+  element.textContent = parts.title;
+  if(parts.accent){
+    element.appendChild(document.createTextNode(' '));
+    var emphasis = document.createElement('em');
+    emphasis.textContent = parts.accent;
+    element.appendChild(emphasis);
+  }
+}
+
+function projectPhoto(photo){
+  if(typeof photo === 'string'){
+    return {
+      src:photo,
+      thumb:photo.replace('img/projects/','img/projects/thumbs/').replace(/\.jpe?g$/i,'.webp'),
+      alt:''
+    };
+  }
+  return {
+    src:String(photo && photo.src || ''),
+    thumb:String(photo && (photo.thumb || photo.src) || ''),
+    alt:String(photo && photo.alt || '')
+  };
+}
+
 function openProject(key){
   var p = PROJECTS[key];
-  if(!p) return;
+  if(!p || !Array.isArray(p.photos) || !p.photos.length) return;
   pmKey = key;
   projectReturnFocus = document.activeElement;
 
   document.getElementById('pmType').textContent = p.type;
-  document.getElementById('pmName').innerHTML   = p.name;
+  renderProjectTitle(document.getElementById('pmName'),p);
   document.getElementById('pmLead').textContent = p.lead;
-  document.getElementById('pmBody').innerHTML   = p.body.map(function(t){ return '<p>'+t+'</p>'; }).join('');
-  document.getElementById('pmBody').classList.remove('expanded');
+  var body = document.getElementById('pmBody');
+  body.textContent = '';
+  (Array.isArray(p.body) ? p.body : []).forEach(function(text){
+    var paragraph = document.createElement('p');
+    paragraph.textContent = String(text || '');
+    body.appendChild(paragraph);
+  });
+  body.classList.remove('expanded');
   document.querySelector('.pm-side').classList.remove('details-expanded');
   var readMore = document.getElementById('pmReadMore');
   readMore.setAttribute('aria-expanded','false');
   readMore.textContent = 'Читать дальше';
-  document.getElementById('pmSpecs').innerHTML  = p.specs.map(function(s){
-    return '<div class="pm-spec"><span class="k">'+s[0]+'</span><span class="v">'+s[1]+'</span></div>';
-  }).join('');
-  document.getElementById('pmThumbs').innerHTML = p.photos.map(function(src,i){
-    var thumb = src.replace('img/projects/','img/projects/thumbs/').replace(/\.jpg$/i,'.webp');
-    return '<button class="pm-thumb" type="button" aria-label="Показать фотографию '+(i+1)+' из '+p.photos.length+'" onclick="pmShow('+i+')"><img src="'+thumb+'" loading="lazy" decoding="async" alt=""></button>';
-  }).join('');
+  var specs = document.getElementById('pmSpecs');
+  specs.textContent = '';
+  (Array.isArray(p.specs) ? p.specs : []).forEach(function(spec){
+    var row = document.createElement('div');
+    row.className = 'pm-spec';
+    var label = document.createElement('span');
+    label.className = 'k';
+    label.textContent = String(spec && spec[0] || '');
+    var value = document.createElement('span');
+    value.className = 'v';
+    value.textContent = String(spec && spec[1] || '');
+    row.append(label,value);
+    specs.appendChild(row);
+  });
+  var thumbs = document.getElementById('pmThumbs');
+  thumbs.textContent = '';
+  p.photos.forEach(function(source,index){
+    var photo = projectPhoto(source);
+    var button = document.createElement('button');
+    button.className = 'pm-thumb';
+    button.type = 'button';
+    button.setAttribute('aria-label','Показать фотографию '+(index+1)+' из '+p.photos.length);
+    button.addEventListener('click',function(){ pmShow(index); });
+    var image = document.createElement('img');
+    image.src = photo.thumb;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.alt = '';
+    button.appendChild(image);
+    thumbs.appendChild(button);
+  });
 
   var modal = document.getElementById('projModal');
   setModalA11y(modal,true);
@@ -5164,16 +5241,19 @@ function pmShow(i){
   var p = PROJECTS[pmKey];
   if(!p) return;
   var n = p.photos.length;
+  if(!n) return;
   pmIndex = (i + n) % n;
 
   var img = document.getElementById('pmImg');
-  var src = p.photos[pmIndex];
-  img.alt = document.getElementById('pmName').textContent.trim() + ' — фотография ' + (pmIndex + 1) + ' из ' + n;
+  var photo = projectPhoto(p.photos[pmIndex]);
+  var src = photo.src;
+  img.alt = photo.alt || document.getElementById('pmName').textContent.trim() + ' — фотография ' + (pmIndex + 1) + ' из ' + n;
   // подгружаем кадр заранее — тогда смена идёт плавно, без вспышки пустоты
   var pre = new Image();
   pre.onload = function(){
     setTimeout(function(){ img.src = src; img.classList.add('on'); }, 120);
   };
+  pre.onerror = function(){ img.src = src; img.classList.add('on'); };
   img.classList.remove('on');
   pre.src = src;
 
@@ -5432,7 +5512,7 @@ document.addEventListener('keydown',function(event){
       dot.setAttribute('aria-current',i === current ? 'true' : 'false');
     });
     count.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
-    caption.textContent = captions[current];
+    caption.textContent = activeSlide.getAttribute('data-caption') || captions[current] || activeSlide.alt;
   }
   function stop(){ if(timer){ clearInterval(timer);timer = null; } }
   function start(){

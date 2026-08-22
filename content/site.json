@@ -1,0 +1,2442 @@
+{
+    "schemaVersion": 1,
+    "revision": 4,
+    "updatedAt": "2026-08-22T10:02:48+00:00",
+    "site": {
+        "contacts": {
+            "city": "Сургут",
+            "serviceArea": "работа с проектами из разных городов",
+            "phoneDisplay": "+7 922 444-85-86",
+            "phoneE164": "+79224448586",
+            "telegramLabel": "@tvoe_vremya_sgt",
+            "telegramUrl": "https://t.me/tvoe_vremya_sgt",
+            "whatsappUrl": "https://wa.me/79224448586",
+            "socials": [
+                {
+                    "id": "vk",
+                    "label": "ВКонтакте",
+                    "url": "https://vk.ru/chasy_sssr_sgt",
+                    "visible": true
+                },
+                {
+                    "id": "telegram",
+                    "label": "Telegram",
+                    "url": "https://t.me/tvoe_vremya_sgt",
+                    "visible": true
+                },
+                {
+                    "id": "youtube",
+                    "label": "YouTube",
+                    "url": "https://youtube.com/@tvoe_vremya_sgt",
+                    "visible": true
+                },
+                {
+                    "id": "rutube",
+                    "label": "RUTUBE",
+                    "url": "https://rutube.ru/channel/25778998",
+                    "visible": true
+                },
+                {
+                    "id": "tiktok",
+                    "label": "TikTok",
+                    "url": "https://www.tiktok.com/@tvoe_vremya_sgt",
+                    "visible": true
+                },
+                {
+                    "id": "max",
+                    "label": "MAX",
+                    "url": "https://max.ru/join/oqNS7SnYBooYwLj84wDc1edhQfAakf3eOBt-ApY6PWo",
+                    "visible": true
+                },
+                {
+                    "id": "instagram",
+                    "label": "НЕЛЬЗЯграм",
+                    "url": "https://www.instagram.com/chasy_sssr?igsh=MTVoYTQycjg3MDVsMg==",
+                    "visible": true
+                }
+            ]
+        },
+        "media": {
+            "hero": [
+                {
+                    "id": "hero-1",
+                    "label": "Первый экран · кадр 1",
+                    "src": "img/optimized/hero-master-watch-900.webp",
+                    "alt": "Евгений Деккер показывает открытый исторический механизм",
+                    "caption": "Исторический механизм в руках мастера",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "hero-2",
+                    "label": "Первый экран · кадр 2",
+                    "src": "img/optimized/hero-restoration-light-900.webp",
+                    "alt": "Часовой мастер изучает механизм под ярким рабочим светом",
+                    "caption": "Диагностика и точная работа под лупой",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "hero-3",
+                    "label": "Первый экран · кадр 3",
+                    "src": "img/optimized/hero-lathe-900.webp",
+                    "alt": "Евгений Деккер изготавливает деталь на часовом токарном станке",
+                    "caption": "Изготовление детали на часовом станке",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "hero-4",
+                    "label": "Первый экран · кадр 4",
+                    "src": "img/optimized/master-portrait-900.webp",
+                    "alt": "Портрет Евгения Деккера в мастерской «Твоё Время»",
+                    "caption": "Евгений Деккер · мастерская «Твоё Время»",
+                    "width": 0,
+                    "height": 0
+                }
+            ],
+            "directions": [
+                {
+                    "id": "direction-restoration",
+                    "label": "Направления · реставрация",
+                    "src": "img/optimized/direction-restoration-800.webp",
+                    "alt": "Евгений Деккер осматривает открытый исторический механизм через часовую лупу",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "direction-cases",
+                    "label": "Направления · корпуса",
+                    "src": "img/optimized/workshop-lathe-640.webp",
+                    "alt": "Часовой токарный станок в мастерской",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "direction-marriage",
+                    "label": "Направления · марьяж",
+                    "src": "img/optimized/master-detail-640.webp",
+                    "alt": "Карманный механизм в руках мастера",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "direction-author",
+                    "label": "Направления · авторские часы",
+                    "src": "img/optimized/direction-author-640.webp",
+                    "alt": "Ручная работа над авторским часовым механизмом",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "direction-leather",
+                    "label": "Направления · кожа",
+                    "src": "img/optimized/direction-leather-640.webp",
+                    "alt": "Кожаный напульсник ручной работы целиком, с пряжкой, тиснением и посадкой под карманные часы",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                }
+            ],
+            "master": [
+                {
+                    "id": "master-main",
+                    "label": "О мастере · главное фото",
+                    "src": "img/optimized/master-closeup-800.webp",
+                    "alt": "Евгений Деккер за точной работой с часовым механизмом",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "master-detail",
+                    "label": "О мастере · деталь",
+                    "src": "img/optimized/master-detail-640.webp",
+                    "alt": "Деталь исторического часового механизма",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                }
+            ],
+            "workshop": [
+                {
+                    "id": "workshop-1",
+                    "label": "Мастерская · фото 1",
+                    "src": "img/v3/workshop-wide.webp",
+                    "alt": "Общий план мастерской антикварных часов",
+                    "caption": "01 · Общий план мастерской",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-2",
+                    "label": "Мастерская · фото 2",
+                    "src": "img/v3/workshop-lathe.webp",
+                    "alt": "Часовой токарный станок",
+                    "caption": "02 · Токарная работа",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-3",
+                    "label": "Мастерская · фото 3",
+                    "src": "img/v3/workshop-microscope.webp",
+                    "alt": "Бинокулярный микроскоп на рабочем столе",
+                    "caption": "03 · Диагностика под микроскопом",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-4",
+                    "label": "Мастерская · фото 4",
+                    "src": "img/v3/workshop-mechanisms.webp",
+                    "alt": "Разобранные карманные часы и механизмы",
+                    "caption": "04 · Архив механизмов",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-5",
+                    "label": "Мастерская · фото 5",
+                    "src": "img/v3/workshop-mill.webp",
+                    "alt": "Сверлильно-фрезерный станок в мастерской",
+                    "caption": "05 · Изготовление деталей",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-6",
+                    "label": "Мастерская · фото 6",
+                    "src": "img/v3/workshop-white-bench.webp",
+                    "alt": "Светлая рабочая зона часовщика",
+                    "caption": "06 · Чистая зона сборки",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-7",
+                    "label": "Мастерская · фото 7",
+                    "src": "img/v3/workshop-archive-wall.webp",
+                    "alt": "Стена с часами и рабочий стол мастера",
+                    "caption": "07 · Коллекция и рабочий архив",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "workshop-8",
+                    "label": "Мастерская · фото 8",
+                    "src": "img/v3/workshop-sign.webp",
+                    "alt": "Светящаяся вывеска мастерской «Твоё Время»",
+                    "caption": "08 · «Твоё Время» · Сургут",
+                    "width": 0,
+                    "height": 0
+                }
+            ],
+            "certificates": [
+                {
+                    "id": "certificate-1",
+                    "label": "Сертификат 1",
+                    "src": "assets/certificate-1.webp",
+                    "alt": "Сертификат соответствия специалиста по ремонту и обслуживанию часов",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "certificate-2",
+                    "label": "Сертификат 2",
+                    "src": "assets/certificate-2.webp",
+                    "alt": "Сертификат о профессиональном обучении",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "id": "certificate-3",
+                    "label": "Сертификат 3",
+                    "src": "assets/certificate-3.webp",
+                    "alt": "Сертификат о профессиональной подготовке",
+                    "caption": "",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        }
+    },
+    "projects": [
+        {
+            "id": "coin1833",
+            "slug": "coin1833",
+            "visible": true,
+            "order": 1,
+            "type": "Авторская работа · циферблат из монеты",
+            "modalType": "Авторская работа · циферблат из монеты",
+            "title": "Циферблат из серебряного рубля",
+            "accent": "1833 года",
+            "cardLead": "Подлинная монета времён Николая I — в роли циферблата",
+            "lead": "Подлинная монета времён Николая I — в роли циферблата наручных часов",
+            "body": [
+                "В основе — настоящий серебряный рубль 1833 года. Монета не копируется и не имитируется: в работу идёт оригинал, с сохранением чеканки, рельефа и патины, которые за без малого два столетия стали частью характера вещи.",
+                "Монета готовится под посадку в корпус и работает как циферблат. Стрелки и разметка подчиняются рисунку чеканки, а не наоборот: надпись, год и обрамление остаются читаемыми — часы показывают время, не теряя монету.",
+                "Вещь собирается на широком кожаном напульснике ручного пошива. Раскрой, седельный шов и обработка краёв — вручную, под конкретный корпус и запястье, чтобы посадка была своей, а не универсальной."
+            ],
+            "specs": [
+                {
+                    "label": "Циферблат",
+                    "value": "Серебряный рубль 1833 года, оригинал"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Ремень",
+                    "value": "Кожаный напульсник ручного пошива"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Посадка монеты, сборка и отделка — вручную"
+                }
+            ],
+            "cover": "img/projects/coin1833-01.jpg",
+            "coverAlt": "Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/coin1833-01.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-01.webp",
+                    "alt": "Наручные часы с циферблатом из серебряного рубля 1833 года на кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-02.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-02.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-03.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-03.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-04.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-04.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-05.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-05.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-06.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-06.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-07.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-07.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-08.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-08.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/coin1833-09.jpg",
+                    "thumb": "img/projects/thumbs/coin1833-09.webp",
+                    "alt": "Циферблат из серебряного рубля 1833 года — фотография 9",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "monnard1883",
+            "slug": "monnard1883",
+            "visible": true,
+            "order": 2,
+            "type": "Марьяж · историческая механика",
+            "modalType": "Реставрация · историческая механика",
+            "title": "Monnard,",
+            "accent": "1883 год",
+            "cardLead": "Завод и перевод стрелок ключиком",
+            "lead": "Карманные часы конца XIX века с ключевым заводом — на кожаном напульснике вместо цепочки",
+            "body": [
+                "Швейцарский Monnard Genève, 1883 год. Завод пружины и перевод стрелок — ключиком, без единой заводной головки на корпусе: в те годы это был единственный способ обращения с часами, и здесь он сохранён таким, каким был задуман.",
+                "Механизм разобран, вычищен от старой загустевшей смазки, проверен по узлам и собран заново — с восстановлением точного хода. Родные заводной ключ и цепочка сохранены и идут вместе с часами как часть комплекта.",
+                "Корпус переведён с карманного ношения на запястье: часы закреплены на широком кожаном напульснике ручного пошива, раскроенном и прошитом под конкретный корпус."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Ключевой завод, оригинальный"
+                },
+                {
+                    "label": "Год",
+                    "value": "1883"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/monnard1883-01.jpg",
+            "coverAlt": "Открытый механизм карманных часов Monnard на кожаном напульснике, рядом заводной ключ и цепочка",
+            "photos": [
+                {
+                    "src": "img/projects/monnard1883-01.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-01.webp",
+                    "alt": "Открытый механизм карманных часов Monnard на кожаном напульснике, рядом заводной ключ и цепочка",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-02.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-02.webp",
+                    "alt": "Monnard, 1883 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-03.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-03.webp",
+                    "alt": "Monnard, 1883 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-04.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-04.webp",
+                    "alt": "Monnard, 1883 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-05.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-05.webp",
+                    "alt": "Monnard, 1883 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-06.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-06.webp",
+                    "alt": "Monnard, 1883 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-07.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-07.webp",
+                    "alt": "Monnard, 1883 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/monnard1883-08.jpg",
+                    "thumb": "img/projects/thumbs/monnard1883-08.webp",
+                    "alt": "Monnard, 1883 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "zhako1887",
+            "slug": "zhako1887",
+            "visible": true,
+            "order": 3,
+            "type": "Марьяж · историческая механика",
+            "modalType": "Реставрация · историческая механика",
+            "title": "Георгъ Фавръ Жако,",
+            "accent": "1887 год",
+            "cardLead": "Тоже завод ключиком",
+            "lead": "Мастерская Ле-Локля, из которой позже вырастет Zenith — тоже на ключевом заводе",
+            "body": [
+                "На циферблате — «Георгъ Фавръ Жако, Локль», 1887 год. Тем же именем — Georges Favre-Jacot — позже назовут одну из самых известных швейцарских мануфактур: на задней крышке корпуса рядом с фабричной гравировкой уже видно клеймо Zenith.",
+                "Завод и перевод стрелок — ключиком, как и полагалось часам той эпохи. Механизм полностью разобран, вычищен, смазан заново и отрегулирован по ходу; родной ключ и цепочка сохранены.",
+                "Часы собраны на чёрном кожаном напульснике ручной работы — плотная прошивка, состаренная фурнитура, посадка под конкретный корпус."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Ключевой завод, оригинальный"
+                },
+                {
+                    "label": "Год",
+                    "value": "1887"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/zhako1887-01.jpg",
+            "coverAlt": "Карманные часы «Георгъ Фавръ Жако» 1887 года на чёрном кожаном напульснике с заводным ключом",
+            "photos": [
+                {
+                    "src": "img/projects/zhako1887-01.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-01.webp",
+                    "alt": "Карманные часы «Георгъ Фавръ Жако» 1887 года на чёрном кожаном напульснике с заводным ключом",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-02.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-02.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-03.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-03.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-04.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-04.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-05.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-05.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-06.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-06.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-07.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-07.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-08.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-08.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-09.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-09.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/zhako1887-10.jpg",
+                    "thumb": "img/projects/thumbs/zhako1887-10.webp",
+                    "alt": "Георгъ Фавръ Жако, 1887 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "bure1905",
+            "slug": "bure1905",
+            "visible": true,
+            "order": 4,
+            "type": "Реставрация · русская школа",
+            "modalType": "Реставрация · русская школа",
+            "title": "Павелъ Буре,",
+            "accent": "1905 год",
+            "cardLead": "Один из самых узнаваемых русских часовых домов",
+            "lead": "Часы 1905 года в корпусе из оружейной стали",
+            "body": [
+                "Павелъ Буре — один из самых узнаваемых часовых домов дореволюционной России, поставщик Высочайшего двора. Часы 1905 года собраны в корпусе из оружейной стали — без верхней откидной крышки.",
+                "Механизм извлечён, вычищен и смазан заново, ход отрегулирован. Заводная головка сохранена без замены.",
+                "Часы собраны на кожаном напульснике ручной работы с тиснением по мотивам фирменной рекламы фабрики — двуглавый орёл и название дома читаются на коже так же чётко, как на бумаге."
+            ],
+            "specs": [
+                {
+                    "label": "Корпус",
+                    "value": "Оружейная сталь, без откидной крышки"
+                },
+                {
+                    "label": "Год",
+                    "value": "1905"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/bure1905-01.jpg",
+            "coverAlt": "Карманные часы Павелъ Буре на бархатной подушке рядом с историческим рекламным листом фабрики",
+            "photos": [
+                {
+                    "src": "img/projects/bure1905-01.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-01.webp",
+                    "alt": "Карманные часы Павелъ Буре на бархатной подушке рядом с историческим рекламным листом фабрики",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-02.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-02.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-03.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-03.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-04.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-04.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-05.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-05.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-06.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-06.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-07.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-07.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-08.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-08.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-09.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-09.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/bure1905-10.jpg",
+                    "thumb": "img/projects/thumbs/bure1905-10.webp",
+                    "alt": "Павелъ Буре, 1905 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "longines1911",
+            "slug": "longines1911",
+            "visible": true,
+            "order": 5,
+            "type": "Реставрация · швейцарская механика",
+            "modalType": "Реставрация · швейцарская механика",
+            "title": "Longines,",
+            "accent": "1911 год",
+            "cardLead": "Механизм начала прошлого века",
+            "lead": "Начало прошлого века, фирменная коробка и клеймёная кожа ремня",
+            "body": [
+                "Швейцарский Longines 1911 года — серебряный корпус, эмалевый циферблат с фирменной надписью и отдельным счётчиком секунд.",
+                "Механизм вычищен, смазан заново, ход отрегулирован; заводная головка и стекло — родные.",
+                "Ремень — кожаный напульсник ручного пошива с тиснёным клеймом Longines на пряжке и шлевках, под стать оригинальной коробке часов."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Швейцарский, серебряный корпус"
+                },
+                {
+                    "label": "Год",
+                    "value": "1911"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/longines1911-01.jpg",
+            "coverAlt": "Карманные часы Longines 1911 года на кожаном напульснике в фирменной коробке",
+            "photos": [
+                {
+                    "src": "img/projects/longines1911-01.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-01.webp",
+                    "alt": "Карманные часы Longines 1911 года на кожаном напульснике в фирменной коробке",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-02.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-02.webp",
+                    "alt": "Longines, 1911 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-03.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-03.webp",
+                    "alt": "Longines, 1911 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-04.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-04.webp",
+                    "alt": "Longines, 1911 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-05.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-05.webp",
+                    "alt": "Longines, 1911 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-06.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-06.webp",
+                    "alt": "Longines, 1911 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1911-07.jpg",
+                    "thumb": "img/projects/thumbs/longines1911-07.webp",
+                    "alt": "Longines, 1911 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "longines1917",
+            "slug": "longines1917",
+            "visible": true,
+            "order": 6,
+            "type": "Реставрация · швейцарская механика",
+            "modalType": "Реставрация · швейцарская механика",
+            "title": "Longines,",
+            "accent": "1917 год",
+            "cardLead": "Ещё один экземпляр той же марки, шестью годами позже",
+            "lead": "Ещё один экземпляр той же марки, шестью годами позже",
+            "body": [
+                "Longines 1917 года — второй экземпляр марки в собрании мастерской, на шесть лет моложе предыдущего. Стальной корпус, эмалевый циферблат и отдельный секундный сектор.",
+                "Механизм разобран, вычищен от старой смазки и собран заново, ход отрегулирован. Установлено минеральное стекло.",
+                "Ремень — кожаный напульсник ручного пошива с тиснёным клеймом марки; на съёмке часы сняты рядом со скрипкой и кларнетом, под стать возрасту вещи."
+            ],
+            "specs": [
+                {
+                    "label": "Корпус",
+                    "value": "Сталь, минеральное стекло"
+                },
+                {
+                    "label": "Год",
+                    "value": "1917"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/longines1917-02.jpg",
+            "coverAlt": "Карманные часы Longines 1917 года на тёмном кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/longines1917-01.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-01.webp",
+                    "alt": "Longines, 1917 год — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-02.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-02.webp",
+                    "alt": "Карманные часы Longines 1917 года на тёмном кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-03.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-03.webp",
+                    "alt": "Longines, 1917 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-04.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-04.webp",
+                    "alt": "Longines, 1917 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-05.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-05.webp",
+                    "alt": "Longines, 1917 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-06.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-06.webp",
+                    "alt": "Longines, 1917 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-07.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-07.webp",
+                    "alt": "Longines, 1917 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-08.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-08.webp",
+                    "alt": "Longines, 1917 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-09.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-09.webp",
+                    "alt": "Longines, 1917 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/longines1917-10.jpg",
+                    "thumb": "img/projects/thumbs/longines1917-10.webp",
+                    "alt": "Longines, 1917 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "hebdomas8",
+            "slug": "hebdomas8",
+            "visible": true,
+            "order": 7,
+            "type": "Редкая механика · восьмидневный завод",
+            "modalType": "Редкая механика · восьмидневный завод",
+            "title": "Hebdomas,",
+            "accent": "8 дней хода",
+            "cardLead": "Неделя автономности от одного завода — и открытый баланс прямо на циферблате",
+            "lead": "Неделя автономности от одного завода — и открытый баланс прямо на циферблате",
+            "body": [
+                "Hebdomas — «восьмидневные» часы: одного завода пружины хватает на неделю с лишним хода, тогда как обычному механизму нужен ежедневный завод. Надписи «8 JOURS» и «HEBDOMAS» стоят прямо на циферблате.",
+                "Главная особенность — открытый баланс: в циферблате сделано окно, через которое видно, как работает сердце механизма. Цифры набраны синей эмалью по белому полю, между ними — россыпь звёзд.",
+                "Механизм вычищен и отрегулирован, крышка с фабричной гравировкой сохранена. Часы собраны на широком кожаном напульснике ручной работы с тиснением."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Восьмидневный завод, открытый баланс"
+                },
+                {
+                    "label": "Клеймо",
+                    "value": "8 JOURS · HEBDOMAS"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, пошив напульсника"
+                }
+            ],
+            "cover": "img/projects/hebdomas8-05.jpg",
+            "coverAlt": "Часы Hebdomas с восьмидневным заводом: белый циферблат с синими эмалевыми цифрами и открытым балансом",
+            "photos": [
+                {
+                    "src": "img/projects/hebdomas8-01.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-01.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-02.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-02.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-03.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-03.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-04.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-04.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-05.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-05.webp",
+                    "alt": "Часы Hebdomas с восьмидневным заводом: белый циферблат с синими эмалевыми цифрами и открытым балансом",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-06.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-06.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-07.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-07.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-08.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-08.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-09.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-09.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/hebdomas8-10.jpg",
+                    "thumb": "img/projects/thumbs/hebdomas8-10.webp",
+                    "alt": "Hebdomas, 8 дней хода — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "orion1919",
+            "slug": "orion1919",
+            "visible": true,
+            "order": 8,
+            "type": "Реставрация · историческая механика",
+            "modalType": "Марьяж · историческая механика",
+            "title": "Orion,",
+            "accent": "1919 год",
+            "cardLead": "Механизм 1919 года в новом корпусе из стали 316",
+            "lead": "Механизм 1919 года в новом корпусе из стали 316",
+            "body": [
+                "Orion 1919 года — механизм рубежа эпох, собранный сразу после Первой мировой. Эмалевый циферблат с арабскими цифрами и отдельным секундным сектором.",
+                "Механизм полностью разобран, вычищен, смазан заново и отрегулирован по ходу.",
+                "Для марьяжа использован новый корпус из стали 316: корпус проточен и точно подогнан под исторический механизм. Кожаный напульсник сшит вручную под готовые часы."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Orion, 1919 год, обслужен"
+                },
+                {
+                    "label": "Корпус",
+                    "value": "Новый, сталь 316"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы · марьяж"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Проточка корпуса под механизм, сборка, регулировка, пошив напульсника"
+                }
+            ],
+            "cover": "img/projects/orion1919-01.jpg",
+            "coverAlt": "Карманные часы Orion 1919 года на кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/orion1919-01.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-01.webp",
+                    "alt": "Карманные часы Orion 1919 года на кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-02.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-02.webp",
+                    "alt": "Orion, 1919 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-03.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-03.webp",
+                    "alt": "Orion, 1919 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-04.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-04.webp",
+                    "alt": "Orion, 1919 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-05.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-05.webp",
+                    "alt": "Orion, 1919 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-06.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-06.webp",
+                    "alt": "Orion, 1919 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-07.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-07.webp",
+                    "alt": "Orion, 1919 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-08.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-08.webp",
+                    "alt": "Orion, 1919 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-09.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-09.webp",
+                    "alt": "Orion, 1919 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/orion1919-10.jpg",
+                    "thumb": "img/projects/thumbs/orion1919-10.webp",
+                    "alt": "Orion, 1919 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "doxa1928",
+            "slug": "doxa1928",
+            "visible": true,
+            "order": 9,
+            "type": "Марьяж · швейцарская механика",
+            "modalType": "Марьяж · швейцарская механика",
+            "title": "Doxa,",
+            "accent": "1928 год",
+            "cardLead": "Механизм 1928 года в новом корпусе из стали 316",
+            "lead": "Механизм 1928 года в новом корпусе из стали 316",
+            "body": [
+                "Швейцарская Doxa 1928 года — светлый циферблат с арабскими цифрами, отдельный секундный сектор и спокойная геометрия конца двадцатых.",
+                "Механизм вычищен, смазан заново, ход отрегулирован.",
+                "Для марьяжа использован новый корпус из стали 316: корпус проточен под старый механизм. Ремень — кожаный напульсник ручного пошива с прорезной отделкой по краю."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Doxa, 1928 год, обслужен"
+                },
+                {
+                    "label": "Корпус",
+                    "value": "Новый, сталь 316"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы · марьяж"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Проточка корпуса под механизм, сборка, регулировка, пошив напульсника"
+                }
+            ],
+            "cover": "img/projects/doxa1928-01.jpg",
+            "coverAlt": "Карманные часы Doxa 1928 года на кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/doxa1928-01.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-01.webp",
+                    "alt": "Карманные часы Doxa 1928 года на кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/doxa1928-02.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-02.webp",
+                    "alt": "Doxa, 1928 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/doxa1928-03.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-03.webp",
+                    "alt": "Doxa, 1928 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/doxa1928-04.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-04.webp",
+                    "alt": "Doxa, 1928 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/doxa1928-05.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-05.webp",
+                    "alt": "Doxa, 1928 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/doxa1928-06.jpg",
+                    "thumb": "img/projects/thumbs/doxa1928-06.webp",
+                    "alt": "Doxa, 1928 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "dualtime1910",
+            "slug": "dualtime1910",
+            "visible": true,
+            "order": 10,
+            "type": "Редкая механика · усложнение",
+            "modalType": "Редкая механика · усложнение",
+            "title": "Карманные часы с",
+            "accent": "двойным временем",
+            "cardLead": "Два часовых пояса на одном циферблате, 1910 год",
+            "lead": "Два часовых пояса на одном циферблате, 1910 год",
+            "body": [
+                "Редкое усложнение: на одном циферблате уживаются два независимых указателя времени — можно держать перед глазами сразу два часовых пояса. Для 1910 года это была вещь для тех, кто много ездил.",
+                "Механизм вычищен и отрегулирован, оба узла идут синхронно и держат ход.",
+                "Часы собраны на кожаном напульснике ручной работы с тиснением и глубокой посадкой корпуса; съёмка — на развороте старинной книги."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Два независимых указателя времени"
+                },
+                {
+                    "label": "Год",
+                    "value": "1910"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Карманные часы на кожаном напульснике"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, пошив напульсника"
+                }
+            ],
+            "cover": "img/projects/dualtime1910-05.jpg",
+            "coverAlt": "Карманные часы 1910 года с двумя циферблатами для разных часовых поясов на кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/dualtime1910-01.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-01.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-02.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-02.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-03.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-03.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-04.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-04.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-05.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-05.webp",
+                    "alt": "Карманные часы 1910 года с двумя циферблатами для разных часовых поясов на кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-06.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-06.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-07.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-07.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-08.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-08.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/dualtime1910-09.jpg",
+                    "thumb": "img/projects/thumbs/dualtime1910-09.webp",
+                    "alt": "Карманные часы с двойным временем — фотография 9",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "buregold1917",
+            "slug": "buregold1917",
+            "visible": true,
+            "order": 11,
+            "type": "Реставрация · русская школа",
+            "modalType": "Реставрация · русская школа",
+            "title": "Павелъ Буре,",
+            "accent": "золото 1917 года",
+            "cardLead": "Золотой корпус-бочонок последнего года империи",
+            "lead": "Золотой корпус-бочонок последнего года империи",
+            "body": [
+                "Павелъ Буре, 1917 год — золотой корпус формы «бочонок» (tonneau), редкий для русского часового дома силуэт. Год выпуска — последний год существования империи, при которой фабрика была поставщиком двора.",
+                "Механизм вычищен, смазан заново, ход отрегулирован; корпус и циферблат сохранены без замен.",
+                "Ремень — бордовая кожа ручного пошива под цвет корпуса, с латунной пряжкой."
+            ],
+            "specs": [
+                {
+                    "label": "Корпус",
+                    "value": "Золото, форма «бочонок»"
+                },
+                {
+                    "label": "Год",
+                    "value": "1917"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/buregold1917-07.jpg",
+            "coverAlt": "Золотые часы Павелъ Буре 1917 года в корпусе-бочонке на бордовом кожаном ремне",
+            "photos": [
+                {
+                    "src": "img/projects/buregold1917-01.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-01.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-02.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-02.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-03.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-03.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-04.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-04.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-05.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-05.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-06.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-06.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-07.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-07.webp",
+                    "alt": "Золотые часы Павелъ Буре 1917 года в корпусе-бочонке на бордовом кожаном ремне",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-08.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-08.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-09.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-09.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/buregold1917-10.jpg",
+                    "thumb": "img/projects/thumbs/buregold1917-10.webp",
+                    "alt": "Павелъ Буре, золото 1917 года — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "omega1912",
+            "slug": "omega1912",
+            "visible": true,
+            "order": 12,
+            "type": "Реставрация · швейцарская механика",
+            "modalType": "Реставрация · швейцарская механика",
+            "title": "Omega,",
+            "accent": "1912 год",
+            "cardLead": "Глухая крышка с гравировкой марки и года",
+            "lead": "Глухая крышка с гравировкой марки и года",
+            "body": [
+                "Omega 1912 года — карманный механизм в корпусе с глухой откидной крышкой: на ней выгравированы логотип марки и год выпуска, циферблат открывается движением пальца.",
+                "Механизм разобран, вычищен, смазан заново и отрегулирован. Крышка, петля и заводная головка — родные.",
+                "Часы собраны на кожаном напульснике ручного пошива; хранятся в фирменной коробке."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Швейцарский, отреставрирован"
+                },
+                {
+                    "label": "Год",
+                    "value": "1912"
+                },
+                {
+                    "label": "Корпус",
+                    "value": "С откидной глухой крышкой"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, перевод на напульсник"
+                }
+            ],
+            "cover": "img/projects/omega1912-01.jpg",
+            "coverAlt": "Часы Omega 1912 года с откидной глухой крышкой на кожаном напульснике в фирменной коробке",
+            "photos": [
+                {
+                    "src": "img/projects/omega1912-01.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-01.webp",
+                    "alt": "Часы Omega 1912 года с откидной глухой крышкой на кожаном напульснике в фирменной коробке",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-02.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-02.webp",
+                    "alt": "Omega, 1912 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-03.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-03.webp",
+                    "alt": "Omega, 1912 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-04.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-04.webp",
+                    "alt": "Omega, 1912 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-05.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-05.webp",
+                    "alt": "Omega, 1912 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-06.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-06.webp",
+                    "alt": "Omega, 1912 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-07.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-07.webp",
+                    "alt": "Omega, 1912 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-08.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-08.webp",
+                    "alt": "Omega, 1912 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-09.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-09.webp",
+                    "alt": "Omega, 1912 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/omega1912-10.jpg",
+                    "thumb": "img/projects/thumbs/omega1912-10.webp",
+                    "alt": "Omega, 1912 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia1982",
+            "slug": "molnia1982",
+            "visible": true,
+            "order": 13,
+            "type": "Марьяж · советская механика",
+            "modalType": "Марьяж · советская механика",
+            "title": "Молния,",
+            "accent": "1982 год",
+            "cardLead": "Советский механизм в новом корпусе из стали 316",
+            "lead": "Советский механизм в новом корпусе из стали 316",
+            "body": [
+                "Молния — карманный калибр Челябинского часового завода, один из самых живучих советских механизмов: крупный, ремонтопригодный, с большим запасом хода.",
+                "Циферблат не заводской: Евгений разработал его сам, после чего циферблат изготовили по авторскому макету. Механизм вычищен, смазан заново и отрегулирован.",
+                "Для марьяжа использован новый редкий корпус из стали 316 с минеральным стеклом. Широкий кожаный напульсник с клеймом мастерской сшит вручную."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Молния, 1982 год, обслужен"
+                },
+                {
+                    "label": "Циферблат",
+                    "value": "Авторский, изготовлен по макету мастера"
+                },
+                {
+                    "label": "Корпус",
+                    "value": "Новый, сталь 316, минеральное стекло"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Марьяж, сборка, регулировка, пошив напульсника"
+                }
+            ],
+            "cover": "img/projects/molnia1982-03.jpg",
+            "coverAlt": "Часы Молния 1982 года на кожаном напульснике среди коллекции механических часов",
+            "photos": [
+                {
+                    "src": "img/projects/molnia1982-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-01.webp",
+                    "alt": "Молния, 1982 год — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-02.webp",
+                    "alt": "Молния, 1982 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-03.webp",
+                    "alt": "Часы Молния 1982 года на кожаном напульснике среди коллекции механических часов",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-04.webp",
+                    "alt": "Молния, 1982 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-05.webp",
+                    "alt": "Молния, 1982 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-06.webp",
+                    "alt": "Молния, 1982 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-07.webp",
+                    "alt": "Молния, 1982 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-08.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-08.webp",
+                    "alt": "Молния, 1982 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-09.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-09.webp",
+                    "alt": "Молния, 1982 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia1982-10.jpg",
+                    "thumb": "img/projects/thumbs/molnia1982-10.webp",
+                    "alt": "Молния, 1982 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia-cifermeh",
+            "slug": "molnia-cifermeh",
+            "visible": true,
+            "order": 14,
+            "type": "Авторская работа · циферблат и механизм",
+            "modalType": "Авторская работа · циферблат и механизм",
+            "title": "Молния,",
+            "accent": "ручная работа",
+            "cardLead": "Авторский циферблат и гравированный механизм — обе стороны сделаны вручную",
+            "lead": "Авторский циферблат и гравированный механизм — обе стороны сделаны вручную",
+            "body": [
+                "Работа, в которой переделаны обе стороны часов. Со стороны циферблата — авторская отделка в тёплом золотистом тоне с эмблемой «Молния · СССР»; со стороны задней крышки — раскрытый механизм под прозрачным окном.",
+                "Мосты и платины механизма обработаны вручную: снят заводской штамп, нанесён рисунок, детали отполированы и собраны заново с регулировкой хода.",
+                "Ремень — коричневая кожа ручного пошива с клеймом-звездой, подобранная под цвет корпуса."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Молния, ручная обработка мостов"
+                },
+                {
+                    "label": "Циферблат",
+                    "value": "Авторская отделка"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Гравировка, полировка, сборка, регулировка, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/molnia-cifermeh-03.jpg",
+            "coverAlt": "Часы Молния с авторским золотистым циферблатом и гравированным механизмом на коричневом ремне",
+            "photos": [
+                {
+                    "src": "img/projects/molnia-cifermeh-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-01.webp",
+                    "alt": "Молния, ручная работа — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-02.webp",
+                    "alt": "Молния, ручная работа — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-03.webp",
+                    "alt": "Часы Молния с авторским золотистым циферблатом и гравированным механизмом на коричневом ремне",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-04.webp",
+                    "alt": "Молния, ручная работа — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-05.webp",
+                    "alt": "Молния, ручная работа — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-06.webp",
+                    "alt": "Молния, ручная работа — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-07.webp",
+                    "alt": "Молния, ручная работа — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-08.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-08.webp",
+                    "alt": "Молния, ручная работа — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-09.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-09.webp",
+                    "alt": "Молния, ручная работа — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-cifermeh-10.jpg",
+                    "thumb": "img/projects/thumbs/molnia-cifermeh-10.webp",
+                    "alt": "Молния, ручная работа — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia-ruchn",
+            "slug": "molnia-ruchn",
+            "visible": true,
+            "order": 15,
+            "type": "Авторская работа · гравировка циферблата",
+            "modalType": "Авторская работа · гравировка циферблата",
+            "title": "Молния,",
+            "accent": "мотоциклетный циферблат",
+            "cardLead": "Рисунок нанесён вручную по латунному циферблату",
+            "lead": "Рисунок нанесён вручную по латунному циферблату",
+            "body": [
+                "Циферблат сделан с нуля: по латунной основе вручную нанесён рисунок мотоцикла и фирменная эмблема, поле затонировано в тёплый золотистый цвет.",
+                "Механизм Молния вычищен, смазан и отрегулирован; задняя сторона оставлена открытой — видно работу баланса и колёсной системы.",
+                "Ремень — рыжая кожа ручного пошива с тиснением, под цвет циферблата."
+            ],
+            "specs": [
+                {
+                    "label": "Циферблат",
+                    "value": "Латунь, ручная гравировка"
+                },
+                {
+                    "label": "Механизм",
+                    "value": "Молния, отреставрирован"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Изготовление циферблата, сборка, регулировка, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/molnia-ruchn-04.jpg",
+            "coverAlt": "Часы Молния с гравированным мотоциклом на золотистом циферблате",
+            "photos": [
+                {
+                    "src": "img/projects/molnia-ruchn-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-01.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-02.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-03.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-04.webp",
+                    "alt": "Часы Молния с гравированным мотоциклом на золотистом циферблате",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-05.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-06.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-07.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-08.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-08.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-ruchn-09.jpg",
+                    "thumb": "img/projects/thumbs/molnia-ruchn-09.webp",
+                    "alt": "Молния, мотоциклетный циферблат — фотография 9",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia-shiva",
+            "slug": "molnia-shiva",
+            "visible": true,
+            "order": 16,
+            "type": "Авторская работа · ручная гравировка",
+            "modalType": "Авторская работа · ручная гравировка",
+            "title": "Молния, проект",
+            "accent": "«Шива»",
+            "cardLead": "Гравировка механизма выполнена вручную по замыслу заказчика",
+            "lead": "Гравировка механизма выполнена вручную по замыслу заказчика",
+            "body": [
+                "Это не скелетон: механизм не прорезан и не просматривается насквозь. Чёрное поле подчёркивает ручную гравировку, выполненную в точности по замыслу заказчика.",
+                "В основе — механизм Молния 3603 с противоударным узлом баланса. Механизм выпущен в 1992 году и до этой работы ни разу не использовался: более тридцати лет он хранился в заводской коробке вместе с документами.",
+                "Механизм обслужен и собран в марьяж; часы дополнены кожаным напульсником ручного пошива."
+            ],
+            "specs": [
+                {
+                    "label": "Тип",
+                    "value": "Ручная гравировка, не скелетон"
+                },
+                {
+                    "label": "Механизм",
+                    "value": "Молния 3603, противоударный узел баланса"
+                },
+                {
+                    "label": "Состояние",
+                    "value": "Новый с документами, 1992 год"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Гравировка, обслуживание, марьяж, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/molnia-shiva-01.jpg",
+            "coverAlt": "Часы Молния с ручной гравировкой механизма на кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/molnia-shiva-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-01.webp",
+                    "alt": "Часы Молния с ручной гравировкой механизма на кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-02.webp",
+                    "alt": "Молния, проект «Шива» — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-03.webp",
+                    "alt": "Молния, проект «Шива» — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-04.webp",
+                    "alt": "Молния, проект «Шива» — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-05.webp",
+                    "alt": "Молния, проект «Шива» — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-06.webp",
+                    "alt": "Молния, проект «Шива» — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-shiva-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia-shiva-07.webp",
+                    "alt": "Молния, проект «Шива» — фотография 7",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia-tsoy",
+            "slug": "molnia-tsoy",
+            "visible": true,
+            "order": 17,
+            "type": "Авторская работа · памятная серия",
+            "modalType": "Авторская работа · памятная серия",
+            "title": "Молния,",
+            "accent": "«Кино»",
+            "cardLead": "Портрет и автограф из латуни по чёрному циферблату",
+            "lead": "Портрет и автограф из латуни по чёрному циферблату",
+            "body": [
+                "Памятная работа по мотивам группы «Кино»: на чёрном матовом циферблате — портрет, автограф и логотип группы, выполненные из латуни. Цифры накладные, объёмные.",
+                "Механизм Молния вычищен и отрегулирован, стрелки подобраны под латунную отделку циферблата.",
+                "Ремень — чёрная кожа ручного пошива с фурнитурой в тон латунным элементам; на съёмке рядом стоит парная модель меньшего размера."
+            ],
+            "specs": [
+                {
+                    "label": "Циферблат",
+                    "value": "Чёрное поле, латунные элементы, накладные цифры"
+                },
+                {
+                    "label": "Механизм",
+                    "value": "Молния, отреставрирован"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Изготовление циферблата, сборка, регулировка, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/molnia-tsoy-02.jpg",
+            "coverAlt": "Часы Молния с портретом Виктора Цоя и логотипом группы Кино на чёрном циферблате",
+            "photos": [
+                {
+                    "src": "img/projects/molnia-tsoy-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-01.webp",
+                    "alt": "Молния, «Кино» — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-02.webp",
+                    "alt": "Часы Молния с портретом Виктора Цоя и логотипом группы Кино на чёрном циферблате",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-03.webp",
+                    "alt": "Молния, «Кино» — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-04.webp",
+                    "alt": "Молния, «Кино» — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-05.webp",
+                    "alt": "Молния, «Кино» — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-06.webp",
+                    "alt": "Молния, «Кино» — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-07.webp",
+                    "alt": "Молния, «Кино» — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-08.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-08.webp",
+                    "alt": "Молния, «Кино» — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-09.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-09.webp",
+                    "alt": "Молния, «Кино» — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-tsoy-10.jpg",
+                    "thumb": "img/projects/thumbs/molnia-tsoy-10.webp",
+                    "alt": "Молния, «Кино» — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "molnia-olymp80",
+            "slug": "molnia-olymp80",
+            "visible": true,
+            "order": 18,
+            "type": "Авторская работа · памятная серия",
+            "modalType": "Авторская работа · памятная серия",
+            "title": "Молния,",
+            "accent": "«Олимпиада-80»",
+            "cardLead": "Латунная эмблема московских Игр по чёрному циферблату",
+            "lead": "Латунная эмблема московских Игр по чёрному циферблату",
+            "body": [
+                "Работа по мотивам московской Олимпиады 1980 года: на чёрном циферблате — латунная эмблема Игр с кольцами и надписью «Москва», цифры и стрелки выдержаны в том же тоне.",
+                "В основе — новый механизм Молния 3603 с противоударным узлом баланса, выпущенный в 1992 году. До этой работы механизм более тридцати лет хранился в заводской коробке вместе с документами и ни разу не использовался.",
+                "Корпус выполнен в чёрном покрытии. Ремень — чёрная кожа ручного пошива с контрастной строчкой в тон латунной эмблеме."
+            ],
+            "specs": [
+                {
+                    "label": "Циферблат",
+                    "value": "Чёрное поле, латунная олимпийская эмблема"
+                },
+                {
+                    "label": "Механизм",
+                    "value": "Молния 3603, новый с документами, 1992 год"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Изготовление циферблата, покрытие корпуса, сборка, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/molnia-olymp80-02.jpg",
+            "coverAlt": "Часы Молния с олимпийской эмблемой Москва-80 на чёрном циферблате",
+            "photos": [
+                {
+                    "src": "img/projects/molnia-olymp80-01.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-01.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-02.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-02.webp",
+                    "alt": "Часы Молния с олимпийской эмблемой Москва-80 на чёрном циферблате",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-03.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-03.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-04.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-04.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-05.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-05.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-06.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-06.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-07.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-07.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-08.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-08.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/molnia-olymp80-09.jpg",
+                    "thumb": "img/projects/thumbs/molnia-olymp80-09.webp",
+                    "alt": "Молния, «Олимпиада-80» — фотография 9",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "vostok-amfibia",
+            "slug": "vostok-amfibia",
+            "visible": true,
+            "order": 19,
+            "type": "Кастом · советская механика",
+            "modalType": "Кастом · советская механика",
+            "title": "Восток Амфибия,",
+            "accent": "кастом",
+            "cardLead": "Дайверская классика, пересобранная под свой характер",
+            "lead": "Дайверская классика, пересобранная под свой характер",
+            "body": [
+                "Восток Амфибия — советские дайверские часы с поворотным безелем и завинчивающейся головкой. В этой работе они пересобраны: заменены безель, головка и стрелки, корпус доведён вручную.",
+                "Механизм вычищен, смазан и отрегулирован; сохранена водозащита, ради которой Амфибию и делали.",
+                "Ремень — чёрная кожа ручного пошива с белой прошивкой и стальными заклёпками."
+            ],
+            "specs": [
+                {
+                    "label": "Основа",
+                    "value": "Восток Амфибия, советский калибр"
+                },
+                {
+                    "label": "Доработки",
+                    "value": "Безель, заводная головка, стрелки, отделка корпуса"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Пересборка, чистка, регулировка, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/vostok-amfibia-10.jpg",
+            "coverAlt": "Кастомные часы Восток Амфибия с поворотным безелем на чёрном кожаном напульснике",
+            "photos": [
+                {
+                    "src": "img/projects/vostok-amfibia-01.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-01.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-02.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-02.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-03.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-03.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-04.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-04.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-05.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-05.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-06.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-06.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-07.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-07.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-08.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-08.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-09.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-09.webp",
+                    "alt": "Восток Амфибия, кастом — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/vostok-amfibia-10.jpg",
+                    "thumb": "img/projects/thumbs/vostok-amfibia-10.webp",
+                    "alt": "Кастомные часы Восток Амфибия с поворотным безелем на чёрном кожаном напульснике",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "cyma1932",
+            "slug": "cyma1932",
+            "visible": true,
+            "order": 20,
+            "type": "Реставрация · швейцарская механика",
+            "modalType": "Реставрация · швейцарская механика",
+            "title": "CYMA,",
+            "accent": "1932 год",
+            "cardLead": "Парусник, гравированный по циферблату",
+            "lead": "Парусник, гравированный по циферблату",
+            "body": [
+                "Швейцарская CYMA 1932 года. Циферблат украшен гравированным парусником — рисунок нанесён по металлу и затонирован, цифры остались читаемыми.",
+                "Механизм вычищен, смазан заново, ход отрегулирован; задняя крышка снята под прозрачное окно, чтобы видеть работу колёсной системы.",
+                "Ремень — коричневая кожа ручного пошива с фигурными накладками у корпуса."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "CYMA, швейцарский"
+                },
+                {
+                    "label": "Год",
+                    "value": "1932"
+                },
+                {
+                    "label": "Циферблат",
+                    "value": "Ручная гравировка, парусник"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/cyma1932-01.jpg",
+            "coverAlt": "Часы CYMA 1932 года с гравированным парусником на циферблате и коричневым кожаным ремнём",
+            "photos": [
+                {
+                    "src": "img/projects/cyma1932-01.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-01.webp",
+                    "alt": "Часы CYMA 1932 года с гравированным парусником на циферблате и коричневым кожаным ремнём",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-02.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-02.webp",
+                    "alt": "CYMA, 1932 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-03.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-03.webp",
+                    "alt": "CYMA, 1932 год — фотография 3",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-04.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-04.webp",
+                    "alt": "CYMA, 1932 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-05.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-05.webp",
+                    "alt": "CYMA, 1932 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-06.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-06.webp",
+                    "alt": "CYMA, 1932 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-07.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-07.webp",
+                    "alt": "CYMA, 1932 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-08.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-08.webp",
+                    "alt": "CYMA, 1932 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/cyma1932-09.jpg",
+                    "thumb": "img/projects/thumbs/cyma1932-09.webp",
+                    "alt": "CYMA, 1932 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        },
+        {
+            "id": "ulisse1919",
+            "slug": "ulisse1919",
+            "visible": true,
+            "order": 21,
+            "type": "Реставрация · швейцарская механика",
+            "modalType": "Реставрация · швейцарская механика",
+            "title": "Ulysse Nardin,",
+            "accent": "1919 год",
+            "cardLead": "Марка морских хронометров — в наручном формате",
+            "lead": "Марка морских хронометров — в наручном формате",
+            "body": [
+                "Ulysse Nardin — марка, известная прежде всего морскими хронометрами: её приборами пользовались флоты десятков стран. Этот экземпляр 1919 года — со светлым эмалевым циферблатом и отдельным секундным сектором.",
+                "Механизм разобран, вычищен, смазан заново и отрегулирован по ходу.",
+                "Ремень — коричневая кожа ручного пошива с тиснёным названием марки на шлевках."
+            ],
+            "specs": [
+                {
+                    "label": "Механизм",
+                    "value": "Ulysse Nardin, швейцарский"
+                },
+                {
+                    "label": "Год",
+                    "value": "1919"
+                },
+                {
+                    "label": "Формат",
+                    "value": "Наручные часы"
+                },
+                {
+                    "label": "Работа",
+                    "value": "Чистка, смазка, регулировка хода, пошив ремня"
+                }
+            ],
+            "cover": "img/projects/ulisse1919-03.jpg",
+            "coverAlt": "Часы Ulysse Nardin 1919 года со светлым циферблатом на коричневом кожаном ремне",
+            "photos": [
+                {
+                    "src": "img/projects/ulisse1919-01.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-01.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 1",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-02.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-02.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 2",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-03.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-03.webp",
+                    "alt": "Часы Ulysse Nardin 1919 года со светлым циферблатом на коричневом кожаном ремне",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-04.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-04.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 4",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-05.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-05.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 5",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-06.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-06.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 6",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-07.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-07.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 7",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-08.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-08.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 8",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-09.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-09.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 9",
+                    "width": 0,
+                    "height": 0
+                },
+                {
+                    "src": "img/projects/ulisse1919-10.jpg",
+                    "thumb": "img/projects/thumbs/ulisse1919-10.webp",
+                    "alt": "Ulysse Nardin, 1919 год — фотография 10",
+                    "width": 0,
+                    "height": 0
+                }
+            ]
+        }
+    ]
+}

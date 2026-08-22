@@ -5,6 +5,22 @@ node_modules/
 *-backup-*.html
 screenshots/
 
+# локальные резервные копии и черновые версии страниц
+/backups/
+/index-v3.html
+/index-v4.html
+
 # служебные скрипты проверки — на сайте не нужны
 check-*.js
 screenshot*.js
+
+# локальные секреты и рабочее состояние админ-панели
+storage/admin-config.php
+storage/login-attempts.json
+storage/login-attempts.lock
+storage/content.lock
+storage/history/*.json
+
+# фотографии, загруженные владельцем через админ-панель
+/uploads/*
+!/uploads/.htaccess

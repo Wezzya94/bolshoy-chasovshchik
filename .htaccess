@@ -1,12 +1,18 @@
-DirectoryIndex index.html
+DirectoryIndex index.php index.html
 Options -Indexes
 AddDefaultCharset UTF-8
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L]
+  RewriteRule ^(?:backups|screenshots|node_modules)(?:/|$) - [F,L,NC]
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L,NE]
 </IfModule>
+
+<FilesMatch "(?i)(^\.|\.bak$|\.backup$|\.log$|\.md$|\.docx$|^package(?:-lock)?\.json$)">
+  Require all denied
+</FilesMatch>
 
 ErrorDocument 404 /404.html
 
@@ -23,6 +29,7 @@ ErrorDocument 404 /404.html
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
   ExpiresByType text/css "access plus 7 days"
   ExpiresByType application/javascript "access plus 7 days"
   ExpiresByType image/jpeg "access plus 1 year"
@@ -42,6 +49,9 @@ ErrorDocument 404 /404.html
   <FilesMatch "\.(?:html?|webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
+  <FilesMatch "\.(?:json|php)$">
+    Header set Cache-Control "no-store, max-age=0"
+  </FilesMatch>
 
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
@@ -49,6 +59,6 @@ ErrorDocument 404 /404.html
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
   Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Cross-Origin-Resource-Policy "same-origin"
-  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
   Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
 </IfModule>
