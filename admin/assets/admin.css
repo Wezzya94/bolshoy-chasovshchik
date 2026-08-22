@@ -186,6 +186,13 @@ p {
   font-weight: 750;
 }
 
+.button-primary:disabled {
+  border-color: var(--line);
+  background: #2a2722;
+  color: #797168;
+  opacity: 1;
+}
+
 .button-primary:not(:disabled):hover {
   background: var(--gold-light);
 }
@@ -485,6 +492,10 @@ small {
   border-right: 1px solid var(--line);
   background: rgba(12, 11, 9, 0.96);
   padding: 30px 17px 24px;
+}
+
+.sidebar-backdrop {
+  display: none;
 }
 
 .sidebar nav {
@@ -1665,6 +1676,21 @@ small {
     box-shadow: 20px 0 70px rgba(0, 0, 0, 0.55);
   }
 
+  body.admin-menu-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: var(--topbar-height) 0 0;
+    z-index: 34;
+    display: block;
+    border: 0;
+    background: rgba(0, 0, 0, 0.62);
+    cursor: default;
+  }
+
   .admin-main {
     margin-left: 0;
     padding: calc(var(--topbar-height) + 32px) 17px 130px;
@@ -1809,6 +1835,22 @@ small {
   .projects-found,
   .toolbar-note {
     grid-column: auto;
+  }
+
+  .project-card-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .project-card-actions .mini-button {
+    width: 100%;
+    height: 44px;
+  }
+
+  .project-card-actions .button {
+    min-height: 44px;
+    padding: 7px 5px;
+    font-size: 11px;
   }
 
   .history-badges {

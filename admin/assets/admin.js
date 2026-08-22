@@ -58,6 +58,7 @@
     toastRegion: document.getElementById("toastRegion"),
     sidebar: document.getElementById("adminSidebar"),
     sidebarToggle: document.querySelector(".sidebar-toggle"),
+    sidebarBackdrop: document.getElementById("sidebarBackdrop"),
     projectDialog: document.getElementById("projectDialog"),
     projectForm: document.getElementById("projectForm"),
     projectDialogTitle: document.getElementById("projectDialogTitle"),
@@ -939,10 +940,20 @@
       button.classList.toggle("active", button.dataset.sectionTarget === name);
     });
     if (updateHash && window.location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
-    if (dom.sidebar) dom.sidebar.classList.remove("open");
-    if (dom.sidebarToggle) dom.sidebarToggle.setAttribute("aria-expanded", "false");
+    setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (name === "history") loadHistory(false);
+  }
+
+  function setSidebarOpen(open) {
+    open = Boolean(open && dom.sidebar);
+    if (dom.sidebar) dom.sidebar.classList.toggle("open", open);
+    if (dom.sidebarToggle) {
+      dom.sidebarToggle.setAttribute("aria-expanded", String(open));
+      dom.sidebarToggle.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+    }
+    if (dom.sidebarBackdrop) dom.sidebarBackdrop.hidden = !open;
+    document.body.classList.toggle("admin-menu-open", open);
   }
 
   async function publishChanges() {
@@ -1344,11 +1355,28 @@
 
   if (dom.sidebarToggle) {
     dom.sidebarToggle.addEventListener("click", function () {
-      var open = !dom.sidebar.classList.contains("open");
-      dom.sidebar.classList.toggle("open", open);
-      dom.sidebarToggle.setAttribute("aria-expanded", String(open));
+      setSidebarOpen(!dom.sidebar.classList.contains("open"));
     });
   }
+
+  if (dom.sidebarBackdrop) {
+    dom.sidebarBackdrop.addEventListener("click", function () {
+      setSidebarOpen(false);
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && dom.sidebar && dom.sidebar.classList.contains("open")) {
+      setSidebarOpen(false);
+      if (dom.sidebarToggle) dom.sidebarToggle.focus();
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 780 && dom.sidebar && dom.sidebar.classList.contains("open")) {
+      setSidebarOpen(false);
+    }
+  });
 
   window.addEventListener("hashchange", function () {
     switchSection(window.location.hash.replace(/^#/, "") || "dashboard", false);

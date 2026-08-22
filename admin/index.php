@@ -60,7 +60,7 @@ $authenticated = tv_is_authenticated();
   <meta name="csrf-token" content="<?= tv_h(tv_csrf_token()) ?>">
   <title><?= $authenticated ? 'Управление сайтом' : 'Вход' ?> · Твоё Время</title>
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon-mark.svg?v=2">
-  <link rel="stylesheet" href="assets/admin.css?v=4">
+  <link rel="stylesheet" href="assets/admin.css?v=5">
 </head>
 <body class="<?= $authenticated ? 'admin-app-page' : 'login-page' ?>">
 <?php if (!$authenticated): ?>
@@ -91,7 +91,7 @@ $authenticated = tv_is_authenticated();
       <a class="back-link" href="../">← Вернуться на сайт</a>
     </section>
   </main>
-  <script src="assets/admin.js?v=4"></script>
+  <script src="assets/admin.js?v=5"></script>
 <?php else: ?>
   <div class="app-shell" id="adminApp">
     <header class="topbar">
@@ -123,6 +123,8 @@ $authenticated = tv_is_authenticated();
       </nav>
       <div class="sidebar-note"><strong>Важно:</strong> ввод и загрузка ещё ничего не меняют на сайте. Посетители увидят правки только после кнопки «Опубликовать».</div>
     </aside>
+
+    <button class="sidebar-backdrop" id="sidebarBackdrop" type="button" aria-label="Закрыть меню" tabindex="-1" hidden></button>
 
     <main class="admin-main" aria-live="polite">
       <div class="loading-panel" id="loadingPanel">
@@ -310,7 +312,7 @@ $authenticated = tv_is_authenticated();
   </dialog>
 
   <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
-  <script src="assets/admin.js?v=4"></script>
+  <script src="assets/admin.js?v=5"></script>
 <?php endif; ?>
 </body>
 </html>
