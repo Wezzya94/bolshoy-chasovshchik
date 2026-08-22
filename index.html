@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/fonts/playfair-normal-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-italic-cyr.woff2" as="font" type="font/woff2" crossorigin>
-<script src="assets/js/site-content.js?v=1" defer></script>
+<script src="assets/js/site-content.js?v=2" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -5148,8 +5148,15 @@ function projectPhoto(photo){
   return {
     src:String(photo && photo.src || ''),
     thumb:String(photo && (photo.thumb || photo.src) || ''),
-    alt:String(photo && photo.alt || '')
+    alt:String(photo && photo.alt || ''),
+    variants:Array.isArray(photo && photo.variants) ? photo.variants : []
   };
+}
+
+function projectPhotoSrcset(photo){
+  return (Array.isArray(photo && photo.variants) ? photo.variants : []).filter(function(item){
+    return item && item.src && Number(item.width)>0;
+  }).map(function(item){ return String(item.src)+' '+Number(item.width)+'w'; }).join(', ');
 }
 
 function openProject(key){
@@ -5247,14 +5254,21 @@ function pmShow(i){
   var img = document.getElementById('pmImg');
   var photo = projectPhoto(p.photos[pmIndex]);
   var src = photo.src;
+  var srcset = projectPhotoSrcset(photo);
   img.alt = photo.alt || document.getElementById('pmName').textContent.trim() + ' — фотография ' + (pmIndex + 1) + ' из ' + n;
   // подгружаем кадр заранее — тогда смена идёт плавно, без вспышки пустоты
   var pre = new Image();
   pre.onload = function(){
-    setTimeout(function(){ img.src = src; img.classList.add('on'); }, 120);
+    setTimeout(function(){
+      img.src = src;
+      if(srcset){ img.srcset = srcset; img.sizes = '(max-width:900px) 100vw, 72vw'; }
+      else{ img.removeAttribute('srcset'); img.removeAttribute('sizes'); }
+      img.classList.add('on');
+    }, 120);
   };
   pre.onerror = function(){ img.src = src; img.classList.add('on'); };
   img.classList.remove('on');
+  if(srcset){ pre.srcset = srcset; pre.sizes = '(max-width:900px) 100vw, 72vw'; }
   pre.src = src;
 
   document.getElementById('pmCounter').textContent = (pmIndex + 1) + ' / ' + n;

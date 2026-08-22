@@ -20,6 +20,8 @@ try {
                 'capabilities' => [
                     'gd' => extension_loaded('gd') && function_exists('imagewebp'),
                     'maxUploadBytes' => TV_MAX_UPLOAD_BYTES,
+                    'maxPreparedFileBytes' => tv_effective_prepared_file_limit(),
+                    'maxUploadSetBytes' => tv_effective_upload_set_limit(),
                     'phpVersion' => PHP_VERSION,
                     'historyHours' => TV_HISTORY_RECOVERY_HOURS,
                     'historyMinimumVersions' => TV_HISTORY_MIN_KEEP,
@@ -34,6 +36,19 @@ try {
                     'recoveryHours' => TV_HISTORY_RECOVERY_HOURS,
                     'minimumVersions' => TV_HISTORY_MIN_KEEP,
                 ],
+            ]);
+        }
+        if ($action === 'drafts') {
+            tv_json_response([
+                'ok' => true,
+                'drafts' => tv_list_drafts(),
+            ]);
+        }
+        if ($action === 'draft') {
+            $draft = tv_read_draft(is_string($_GET['id'] ?? null) ? (string) $_GET['id'] : '');
+            tv_json_response([
+                'ok' => true,
+                'draft' => $draft,
             ]);
         }
         tv_json_response(['ok' => false, 'error' => 'Неизвестное действие.'], 404);
@@ -64,6 +79,52 @@ try {
         }
         $photo = tv_handle_upload($_FILES['image']);
         tv_json_response(['ok' => true, 'photo' => $photo, 'message' => 'Фотография загружена.']);
+    }
+
+    if ($action === 'upload-set') {
+        $manifestRaw = is_string($_POST['manifest'] ?? null) ? (string) $_POST['manifest'] : '';
+        if ($manifestRaw === '') {
+            throw new TvValidationException('Не получены параметры подготовки фотографии.');
+        }
+        $manifest = json_decode($manifestRaw, true, 128, JSON_THROW_ON_ERROR);
+        $photo = tv_handle_upload_set($_FILES, $manifest);
+        tv_json_response([
+            'ok' => true,
+            'photo' => $photo,
+            'message' => 'Фотография обрезана, подготовлена для телефона и компьютера и загружена.',
+        ]);
+    }
+
+    if ($action === 'save-draft') {
+        $request = tv_read_json_body();
+        $draft = tv_save_draft($request['content'] ?? null, $request['name'] ?? '', $request['id'] ?? null);
+        tv_json_response([
+            'ok' => true,
+            'draft' => tv_draft_metadata($draft),
+            'drafts' => tv_list_drafts(),
+            'message' => 'Черновик сохранён отдельно. Опубликованный сайт не изменился, история публикаций не создавалась.',
+        ]);
+    }
+
+    if ($action === 'delete-draft') {
+        $request = tv_read_json_body();
+        $id = is_string($request['id'] ?? null) ? (string) $request['id'] : '';
+        tv_delete_draft($id);
+        tv_json_response([
+            'ok' => true,
+            'drafts' => tv_list_drafts(),
+            'message' => 'Черновик удалён. Опубликованный сайт не менялся.',
+        ]);
+    }
+
+    if ($action === 'prepare-preview') {
+        $request = tv_read_json_body();
+        $token = tv_prepare_preview($request['content'] ?? null);
+        tv_json_response([
+            'ok' => true,
+            'url' => 'preview.php?token=' . rawurlencode($token),
+            'message' => 'Предпросмотр подготовлен. Эти правки не опубликованы.',
+        ]);
     }
 
     if ($action === 'restore') {

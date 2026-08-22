@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var CONTENT_URL = 'content/site.json';
+  var CONTENT_URL = window.TV_CONTENT_URL || 'content/site.json';
 
   function stringValue(value) {
     return typeof value === 'string' ? value.trim() : '';
@@ -20,6 +20,52 @@
   function photoThumb(photo) {
     if (typeof photo === 'object' && photo) return stringValue(photo.thumb) || photoSource(photo);
     return photoSource(photo).replace('img/projects/', 'img/projects/thumbs/').replace(/\.jpe?g$/i, '.webp');
+  }
+
+  function variantsOf(asset) {
+    return asset && Array.isArray(asset.variants) ? asset.variants.filter(function (variant) {
+      return variant && stringValue(variant.src) && Number(variant.width) > 0;
+    }) : [];
+  }
+
+  function variantSrcset(asset) {
+    return variantsOf(asset).map(function (variant) {
+      return stringValue(variant.src) + ' ' + Number(variant.width) + 'w';
+    }).join(', ');
+  }
+
+  function ensurePicture(image) {
+    if (!image || !image.parentNode) return null;
+    if (image.parentElement && image.parentElement.tagName === 'PICTURE') return image.parentElement;
+    var picture = document.createElement('picture');
+    picture.className = 'tv-responsive-picture';
+    picture.style.display = 'contents';
+    image.parentNode.insertBefore(picture, image);
+    picture.appendChild(image);
+    return picture;
+  }
+
+  function applyResponsiveImage(image, desktopAsset, mobileAsset, sizes) {
+    if (!image || !desktopAsset || !stringValue(desktopAsset.src)) return;
+    var desktopSet = variantSrcset(desktopAsset);
+    image.src = stringValue(desktopAsset.src);
+    if (desktopSet) image.srcset = desktopSet;
+    else image.removeAttribute('srcset');
+    image.sizes = sizes || '100vw';
+    if (Number(desktopAsset.width) > 0) image.width = Number(desktopAsset.width);
+    if (Number(desktopAsset.height) > 0) image.height = Number(desktopAsset.height);
+
+    var picture = ensurePicture(image);
+    if (!picture) return;
+    picture.querySelectorAll('source[data-tv-responsive]').forEach(function (source) { source.remove(); });
+    if (mobileAsset && stringValue(mobileAsset.src)) {
+      var source = document.createElement('source');
+      source.dataset.tvResponsive = 'mobile';
+      source.media = '(max-width: 680px)';
+      source.srcset = variantSrcset(mobileAsset) || stringValue(mobileAsset.src);
+      source.sizes = sizes || '100vw';
+      picture.insertBefore(source, image);
+    }
   }
 
   function appendProjectTitle(element, project) {
@@ -52,6 +98,11 @@
     image.decoding = 'async';
     image.alt = stringValue(project.coverAlt) || stringValue(coverPhoto && coverPhoto.alt) || [project.title, project.accent].filter(Boolean).join(' ');
     photo.appendChild(image);
+    var cardAsset = coverPhoto && coverPhoto.card ? coverPhoto.card : coverPhoto;
+    var mobileAsset = coverPhoto && coverPhoto.mobile ? coverPhoto.mobile : null;
+    if (cardAsset && stringValue(cardAsset.src)) {
+      applyResponsiveImage(image, cardAsset, mobileAsset, '(max-width: 680px) calc(100vw - 32px), (max-width: 1180px) 50vw, 560px');
+    }
     ['grain', 'vignette'].forEach(function (className) {
       var decoration = document.createElement('div');
       decoration.className = className;
@@ -118,6 +169,11 @@
             src: photoSource(photo),
             thumb: photoThumb(photo),
             alt: stringValue(photo && photo.alt),
+            width: Number(photo && photo.width) || 0,
+            height: Number(photo && photo.height) || 0,
+            variants: variantsOf(photo),
+            card: photo && photo.card ? photo.card : null,
+            mobile: photo && photo.mobile ? photo.mobile : null,
           };
         }),
       };
@@ -131,7 +187,7 @@
 
   function applyMediaItem(image, item) {
     if (!image || !item || !stringValue(item.src)) return;
-    image.src = item.src;
+    applyResponsiveImage(image, item, item.mobile || null, '100vw');
     image.removeAttribute('data-src');
     image.alt = stringValue(item.alt);
     if (Number(item.width) > 0) image.width = Number(item.width);
@@ -246,11 +302,14 @@
     return data;
   }
 
-  window.siteContentReady = fetch(CONTENT_URL, { cache: 'no-store', credentials: 'same-origin' })
-    .then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    })
+  var contentPromise = window.TV_PREVIEW_CONTENT
+    ? Promise.resolve(window.TV_PREVIEW_CONTENT)
+    : fetch(CONTENT_URL, { cache: 'no-store', credentials: 'same-origin' }).then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      });
+
+  window.siteContentReady = contentPromise
     .then(applyContent)
     .catch(function (error) {
       console.warn('Динамический контент недоступен — показана встроенная резервная версия.', error);

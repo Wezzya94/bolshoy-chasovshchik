@@ -7,16 +7,55 @@ define('TV_STORAGE_DIR', TV_ROOT . DIRECTORY_SEPARATOR . 'storage');
 define('TV_CONFIG_FILE', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'admin-config.php');
 define('TV_ATTEMPTS_FILE', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'login-attempts.json');
 define('TV_HISTORY_DIR', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'history');
+define('TV_DRAFTS_DIR', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'drafts');
+define('TV_PREVIEWS_DIR', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'previews');
 define('TV_HISTORY_RECOVERY_HOURS', 72);
 define('TV_HISTORY_MIN_KEEP', 100);
 define('TV_HISTORY_HARD_LIMIT', 200);
 define('TV_UPLOAD_DIR', TV_ROOT . DIRECTORY_SEPARATOR . 'uploads');
-define('TV_MAX_UPLOAD_BYTES', 15 * 1024 * 1024);
+define('TV_MAX_UPLOAD_BYTES', 9 * 1024 * 1024);
+define('TV_MAX_UPLOAD_SET_BYTES', 18 * 1024 * 1024);
 define('TV_IDLE_TIMEOUT', 30 * 60);
 define('TV_ABSOLUTE_TIMEOUT', 8 * 60 * 60);
 
 final class TvValidationException extends RuntimeException {}
 final class TvConflictException extends RuntimeException {}
+
+function tv_php_size_to_bytes(mixed $value): int
+{
+    $text = is_string($value) ? strtolower(trim($value)) : '';
+    if ($text === '' || $text === '-1') {
+        return 0;
+    }
+    if (preg_match('/^([0-9]+(?:\.[0-9]+)?)\s*([kmgt]?)b?$/', $text, $matches) !== 1) {
+        return 0;
+    }
+    $number = (float) $matches[1];
+    $power = match ($matches[2]) {
+        'k' => 1,
+        'm' => 2,
+        'g' => 3,
+        't' => 4,
+        default => 0,
+    };
+    return max(0, (int) floor($number * (1024 ** $power)));
+}
+
+function tv_effective_prepared_file_limit(): int
+{
+    $phpLimit = tv_php_size_to_bytes(ini_get('upload_max_filesize'));
+    return $phpLimit > 0 ? min(TV_MAX_UPLOAD_BYTES, $phpLimit) : TV_MAX_UPLOAD_BYTES;
+}
+
+function tv_effective_upload_set_limit(): int
+{
+    $postLimit = tv_php_size_to_bytes(ini_get('post_max_size'));
+    if ($postLimit < 1) {
+        return TV_MAX_UPLOAD_SET_BYTES;
+    }
+    $safePostLimit = max(512 * 1024, (int) floor($postLimit * 0.88));
+    return min(TV_MAX_UPLOAD_SET_BYTES, $safePostLimit);
+}
 
 function tv_is_https(): bool
 {
@@ -38,6 +77,20 @@ function tv_security_headers(): void
     header('Referrer-Policy: no-referrer');
     header('X-Robots-Tag: noindex, nofollow, noarchive');
     header("Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; manifest-src 'none'");
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+    header('Cross-Origin-Opener-Policy: same-origin');
+    header('Cross-Origin-Resource-Policy: same-origin');
+}
+
+function tv_preview_security_headers(): void
+{
+    header('Cache-Control: no-store, max-age=0');
+    header('Pragma: no-cache');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: no-referrer');
+    header('X-Robots-Tag: noindex, nofollow, noarchive');
+    header("Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'");
     header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()');
     header('Cross-Origin-Opener-Policy: same-origin');
     header('Cross-Origin-Resource-Policy: same-origin');
@@ -166,7 +219,7 @@ function tv_json_response(array $payload, int $status = 200): never
 
 function tv_ensure_storage(): void
 {
-    foreach ([TV_STORAGE_DIR, TV_HISTORY_DIR, TV_UPLOAD_DIR] as $directory) {
+    foreach ([TV_STORAGE_DIR, TV_HISTORY_DIR, TV_DRAFTS_DIR, TV_PREVIEWS_DIR, TV_UPLOAD_DIR] as $directory) {
         if (!is_dir($directory) && !mkdir($directory, 0750, true) && !is_dir($directory)) {
             throw new RuntimeException('Не удалось создать служебную директорию.');
         }
@@ -406,18 +459,133 @@ function tv_clean_dimension(mixed $value): int
     return ($dimension > 0 && $dimension <= 20000) ? $dimension : 0;
 }
 
+function tv_clean_crop_number(mixed $value, float $minimum, float $maximum, float $fallback): float
+{
+    if (!is_numeric($value)) {
+        return $fallback;
+    }
+    $number = (float) $value;
+    if (!is_finite($number)) {
+        return $fallback;
+    }
+    return max($minimum, min($maximum, $number));
+}
+
+function tv_normalize_crop(mixed $value): ?array
+{
+    if (!is_array($value)) {
+        return null;
+    }
+    $rotation = (int) ($value['rotation'] ?? 0);
+    $rotation = (($rotation % 360) + 360) % 360;
+    if (!in_array($rotation, [0, 90, 180, 270], true)) {
+        $rotation = 0;
+    }
+    return [
+        'zoom' => tv_clean_crop_number($value['zoom'] ?? 1, 1, 8, 1),
+        'offsetX' => tv_clean_crop_number($value['offsetX'] ?? 0, -4, 4, 0),
+        'offsetY' => tv_clean_crop_number($value['offsetY'] ?? 0, -4, 4, 0),
+        'rotation' => $rotation,
+    ];
+}
+
+function tv_normalize_variant(mixed $value, string $field): array
+{
+    if (!is_array($value)) {
+        throw new TvValidationException("Вариант «{$field}» имеет неверный формат.");
+    }
+    return [
+        'src' => tv_clean_image_path($value['src'] ?? '', $field . ' · файл'),
+        'width' => tv_clean_dimension($value['width'] ?? 0),
+        'height' => tv_clean_dimension($value['height'] ?? 0),
+    ];
+}
+
+function tv_normalize_variants(mixed $value, string $field): array
+{
+    if ($value === null || $value === '') {
+        return [];
+    }
+    if (!is_array($value) || count($value) > 10) {
+        throw new TvValidationException("Набор размеров «{$field}» имеет неверный формат.");
+    }
+    $variants = [];
+    $seen = [];
+    foreach ($value as $index => $variant) {
+        $normalized = tv_normalize_variant($variant, $field . ' ' . ((int) $index + 1));
+        if (isset($seen[$normalized['src']])) {
+            continue;
+        }
+        $seen[$normalized['src']] = true;
+        $variants[] = $normalized;
+    }
+    usort($variants, static fn(array $left, array $right): int => $left['width'] <=> $right['width']);
+    return $variants;
+}
+
+function tv_normalize_rendition(mixed $value, string $field): ?array
+{
+    if ($value === null || $value === '' || $value === []) {
+        return null;
+    }
+    if (!is_array($value)) {
+        throw new TvValidationException("Кадр «{$field}» имеет неверный формат.");
+    }
+    $result = [
+        'src' => tv_clean_image_path($value['src'] ?? '', $field . ' · файл'),
+        'width' => tv_clean_dimension($value['width'] ?? 0),
+        'height' => tv_clean_dimension($value['height'] ?? 0),
+        'variants' => tv_normalize_variants($value['variants'] ?? [], $field . ' · размеры'),
+    ];
+    $crop = tv_normalize_crop($value['crop'] ?? null);
+    if ($crop !== null) {
+        $result['crop'] = $crop;
+    }
+    return $result;
+}
+
+function tv_normalize_image_extras(array $value, string $field): array
+{
+    $extras = [];
+    $profile = isset($value['cropProfile'])
+        ? strtolower(tv_clean_string($value['cropProfile'], $field . ' · профиль кадра', 40))
+        : '';
+    if ($profile !== '') {
+        if (preg_match('/^[a-z0-9][a-z0-9-]{0,39}$/', $profile) !== 1) {
+            throw new TvValidationException("Профиль кадра «{$field}» имеет неверный формат.");
+        }
+        $extras['cropProfile'] = $profile;
+    }
+    $variants = tv_normalize_variants($value['variants'] ?? [], $field . ' · размеры');
+    if ($variants !== []) {
+        $extras['variants'] = $variants;
+    }
+    foreach (['master', 'card', 'mobile'] as $key) {
+        $rendition = tv_normalize_rendition($value[$key] ?? null, $field . ' · ' . $key);
+        if ($rendition !== null) {
+            $extras[$key] = $rendition;
+        }
+    }
+    $crop = tv_normalize_crop($value['crop'] ?? null);
+    if ($crop !== null) {
+        $extras['crop'] = $crop;
+    }
+    return $extras;
+}
+
 function tv_normalize_photo(mixed $value, string $field): array
 {
     if (!is_array($value)) {
         throw new TvValidationException("Элемент «{$field}» имеет неверный формат.");
     }
-    return [
+    $photo = [
         'src' => tv_clean_image_path($value['src'] ?? '', $field . ' · файл'),
         'thumb' => tv_clean_image_path($value['thumb'] ?? ($value['src'] ?? ''), $field . ' · миниатюра'),
         'alt' => tv_clean_string($value['alt'] ?? '', $field . ' · описание', 300),
         'width' => tv_clean_dimension($value['width'] ?? 0),
         'height' => tv_clean_dimension($value['height'] ?? 0),
     ];
+    return array_merge($photo, tv_normalize_image_extras($value, $field));
 }
 
 function tv_normalize_media_item(mixed $value, string $field): array
@@ -425,7 +593,7 @@ function tv_normalize_media_item(mixed $value, string $field): array
     if (!is_array($value)) {
         throw new TvValidationException("Медиаслот «{$field}» имеет неверный формат.");
     }
-    return [
+    $item = [
         'id' => tv_clean_id($value['id'] ?? '', $field . ' · ID'),
         'label' => tv_clean_string($value['label'] ?? '', $field . ' · название', 120, true),
         'src' => tv_clean_image_path($value['src'] ?? '', $field . ' · файл'),
@@ -434,6 +602,7 @@ function tv_normalize_media_item(mixed $value, string $field): array
         'width' => tv_clean_dimension($value['width'] ?? 0),
         'height' => tv_clean_dimension($value['height'] ?? 0),
     ];
+    return array_merge($item, tv_normalize_image_extras($value, $field));
 }
 
 function tv_normalize_media(mixed $value): array
@@ -615,6 +784,174 @@ function tv_atomic_write(string $path, string $contents, int $permissions = 0640
         @unlink($temporary);
         throw new RuntimeException('Не удалось завершить атомарную запись.');
     }
+}
+
+function tv_normalized_working_content(mixed $candidate): array
+{
+    $normalized = tv_normalize_content($candidate);
+    $revision = is_array($candidate) && is_numeric($candidate['revision'] ?? null)
+        ? max(0, (int) $candidate['revision'])
+        : 0;
+    $updatedAt = is_array($candidate) && is_string($candidate['updatedAt'] ?? null)
+        ? trim((string) $candidate['updatedAt'])
+        : '';
+    $normalized['revision'] = $revision;
+    $normalized['updatedAt'] = $updatedAt;
+    return $normalized;
+}
+
+function tv_clean_draft_id(mixed $value): string
+{
+    $id = is_string($value) ? strtolower(trim($value)) : '';
+    if ($id === '' || preg_match('/^[a-f0-9]{32}$/', $id) !== 1) {
+        throw new TvValidationException('Черновик не найден или его адрес повреждён.');
+    }
+    return $id;
+}
+
+function tv_draft_path(string $id): string
+{
+    return TV_DRAFTS_DIR . DIRECTORY_SEPARATOR . 'draft-' . tv_clean_draft_id($id) . '.json';
+}
+
+function tv_read_draft(string $id): array
+{
+    $path = tv_draft_path($id);
+    if (!is_file($path)) {
+        throw new TvValidationException('Этот черновик уже удалён или не существует.');
+    }
+    $raw = file_get_contents($path);
+    if ($raw === false) {
+        throw new RuntimeException('Не удалось прочитать черновик.');
+    }
+    $record = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($record) || (int) ($record['schemaVersion'] ?? 0) !== 1 || !is_array($record['content'] ?? null)) {
+        throw new RuntimeException('Файл черновика повреждён.');
+    }
+    $record['id'] = tv_clean_draft_id($record['id'] ?? $id);
+    $record['name'] = tv_clean_string($record['name'] ?? '', 'Название черновика', 120, true);
+    $record['content'] = tv_normalized_working_content($record['content']);
+    return $record;
+}
+
+function tv_draft_metadata(array $record): array
+{
+    return [
+        'id' => (string) $record['id'],
+        'name' => (string) $record['name'],
+        'createdAt' => (string) ($record['createdAt'] ?? ''),
+        'updatedAt' => (string) ($record['updatedAt'] ?? ''),
+        'baseRevision' => (int) ($record['baseRevision'] ?? ($record['content']['revision'] ?? 0)),
+        'stats' => tv_content_stats($record['content']),
+    ];
+}
+
+function tv_list_drafts(): array
+{
+    tv_ensure_storage();
+    $files = glob(TV_DRAFTS_DIR . DIRECTORY_SEPARATOR . 'draft-*.json') ?: [];
+    $drafts = [];
+    foreach ($files as $file) {
+        try {
+            $id = preg_replace('/^draft-|\.json$/', '', basename($file));
+            $drafts[] = tv_draft_metadata(tv_read_draft((string) $id));
+        } catch (Throwable $error) {
+            error_log('TV admin skipped draft ' . basename($file) . ': ' . $error->getMessage());
+        }
+    }
+    usort($drafts, static fn(array $left, array $right): int => strcmp((string) $right['updatedAt'], (string) $left['updatedAt']));
+    return array_slice($drafts, 0, 50);
+}
+
+function tv_save_draft(mixed $candidate, mixed $nameValue, mixed $idValue = null): array
+{
+    tv_ensure_storage();
+    $name = tv_clean_string($nameValue, 'Название черновика', 120, true);
+    $content = tv_normalized_working_content($candidate);
+    $now = gmdate('c');
+    $id = is_string($idValue) && trim($idValue) !== '' ? tv_clean_draft_id($idValue) : bin2hex(random_bytes(16));
+    $path = tv_draft_path($id);
+    $createdAt = $now;
+    if (is_file($path)) {
+        $existing = tv_read_draft($id);
+        $createdAt = (string) ($existing['createdAt'] ?? $now);
+    } elseif (count(tv_list_drafts()) >= 50) {
+        throw new TvValidationException('Сохранено уже 50 черновиков. Удалите ненужный и повторите сохранение.');
+    }
+    $record = [
+        'schemaVersion' => 1,
+        'id' => $id,
+        'name' => $name,
+        'createdAt' => $createdAt,
+        'updatedAt' => $now,
+        'baseRevision' => (int) ($content['revision'] ?? 0),
+        'content' => $content,
+    ];
+    tv_atomic_write(
+        $path,
+        json_encode($record, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . PHP_EOL
+    );
+    return $record;
+}
+
+function tv_delete_draft(string $id): void
+{
+    $path = tv_draft_path($id);
+    if (!is_file($path)) {
+        throw new TvValidationException('Этот черновик уже удалён.');
+    }
+    if (!unlink($path)) {
+        throw new RuntimeException('Не удалось удалить черновик.');
+    }
+}
+
+function tv_cleanup_previews(): void
+{
+    $files = glob(TV_PREVIEWS_DIR . DIRECTORY_SEPARATOR . 'preview-*.json') ?: [];
+    $cutoff = time() - 2 * 60 * 60;
+    foreach ($files as $file) {
+        $modified = @filemtime($file);
+        if (is_int($modified) && $modified < $cutoff) {
+            @unlink($file);
+        }
+    }
+}
+
+function tv_prepare_preview(mixed $candidate): string
+{
+    tv_ensure_storage();
+    tv_cleanup_previews();
+    $token = bin2hex(random_bytes(24));
+    $record = [
+        'schemaVersion' => 1,
+        'createdAt' => gmdate('c'),
+        'content' => tv_normalized_working_content($candidate),
+    ];
+    tv_atomic_write(
+        TV_PREVIEWS_DIR . DIRECTORY_SEPARATOR . 'preview-' . $token . '.json',
+        json_encode($record, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)
+    );
+    $_SESSION['preview_token'] = $token;
+    return $token;
+}
+
+function tv_read_preview(string $token): array
+{
+    $token = strtolower(trim($token));
+    $sessionToken = is_string($_SESSION['preview_token'] ?? null) ? (string) $_SESSION['preview_token'] : '';
+    if (preg_match('/^[a-f0-9]{48}$/', $token) !== 1 || $sessionToken === '' || !hash_equals($sessionToken, $token)) {
+        throw new TvValidationException('Ссылка предпросмотра устарела. Создайте её заново в панели.');
+    }
+    $path = TV_PREVIEWS_DIR . DIRECTORY_SEPARATOR . 'preview-' . $token . '.json';
+    if (!is_file($path) || (int) @filemtime($path) < time() - 2 * 60 * 60) {
+        throw new TvValidationException('Предпросмотр истёк. Откройте его заново из панели.');
+    }
+    $raw = file_get_contents($path);
+    $record = $raw !== false ? json_decode($raw, true, 512, JSON_THROW_ON_ERROR) : null;
+    if (!is_array($record) || !is_array($record['content'] ?? null)) {
+        throw new RuntimeException('Файл предпросмотра повреждён.');
+    }
+    return tv_normalized_working_content($record['content']);
 }
 
 function tv_history_files(): array
@@ -944,6 +1281,32 @@ function tv_image_extension(string $mime): string
     };
 }
 
+function tv_image_mime_from_info(array $imageInfo): string
+{
+    return match ((int) ($imageInfo[2] ?? 0)) {
+        IMAGETYPE_JPEG => 'image/jpeg',
+        IMAGETYPE_PNG => 'image/png',
+        IMAGETYPE_WEBP => 'image/webp',
+        default => throw new TvValidationException('Разрешены только JPEG, PNG и WebP.'),
+    };
+}
+
+function tv_verified_image_info(string $temporary): array
+{
+    $imageInfo = @getimagesize($temporary);
+    if (!is_array($imageInfo) || (int) ($imageInfo[0] ?? 0) < 1 || (int) ($imageInfo[1] ?? 0) < 1) {
+        throw new TvValidationException('Файл не распознан как корректное изображение.');
+    }
+    $mime = tv_image_mime_from_info($imageInfo);
+    if (class_exists('finfo')) {
+        $detected = (string) (new finfo(FILEINFO_MIME_TYPE))->file($temporary);
+        if ($detected !== '' && $detected !== 'application/octet-stream' && $detected !== $mime) {
+            throw new TvValidationException('Содержимое файла не соответствует его типу.');
+        }
+    }
+    return ['info' => $imageInfo, 'mime' => $mime];
+}
+
 function tv_scaled_image(GdImage $source, int $maxSide): GdImage
 {
     $width = imagesx($source);
@@ -969,23 +1332,13 @@ function tv_handle_upload(array $file): array
     }
     $temporary = (string) ($file['tmp_name'] ?? '');
     $size = (int) ($file['size'] ?? 0);
-    if ($size < 1 || $size > TV_MAX_UPLOAD_BYTES || !is_uploaded_file($temporary)) {
-        throw new TvValidationException('Файл должен быть изображением размером не более 15 МБ.');
+    if ($size < 1 || $size > tv_effective_prepared_file_limit() || !is_uploaded_file($temporary)) {
+        throw new TvValidationException('Файл должен быть изображением и укладываться в лимит сервера.');
     }
-    if (!class_exists('finfo')) {
-        throw new RuntimeException('На хостинге не включено расширение PHP Fileinfo.');
-    }
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime = (string) $finfo->file($temporary);
+    $verified = tv_verified_image_info($temporary);
+    $imageInfo = $verified['info'];
+    $mime = $verified['mime'];
     $extension = tv_image_extension($mime);
-    $imageInfo = @getimagesize($temporary);
-    if (!is_array($imageInfo) || (int) $imageInfo[0] < 1 || (int) $imageInfo[1] < 1) {
-        throw new TvValidationException('Файл не распознан как корректное изображение.');
-    }
-    $expectedTypes = ['image/jpeg' => IMAGETYPE_JPEG, 'image/png' => IMAGETYPE_PNG, 'image/webp' => IMAGETYPE_WEBP];
-    if (($expectedTypes[$mime] ?? 0) !== (int) ($imageInfo[2] ?? 0)) {
-        throw new TvValidationException('Содержимое файла не соответствует его типу.');
-    }
     $width = (int) $imageInfo[0];
     $height = (int) $imageInfo[1];
     $pixels = $width * $height;
@@ -1042,4 +1395,172 @@ function tv_handle_upload(array $file): array
         'width' => $width,
         'height' => $height,
     ];
+}
+
+function tv_upload_file_info(array $file): array
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        throw new TvValidationException('Один из подготовленных размеров не загрузился. Повторите попытку.');
+    }
+    $temporary = (string) ($file['tmp_name'] ?? '');
+    $size = (int) ($file['size'] ?? 0);
+    if ($size < 1 || $size > tv_effective_prepared_file_limit() || !is_uploaded_file($temporary)) {
+        throw new TvValidationException('Подготовленное изображение превышает лимит сервера или не загрузилось.');
+    }
+    $verified = tv_verified_image_info($temporary);
+    $imageInfo = $verified['info'];
+    $mime = $verified['mime'];
+    $extension = tv_image_extension($mime);
+    $width = (int) ($imageInfo[0] ?? 0);
+    $height = (int) ($imageInfo[1] ?? 0);
+    if ($width < 1 || $height < 1 || $width > 5000 || $height > 5000 || $width * $height > 24000000) {
+        throw new TvValidationException('Подготовленное изображение имеет недопустимое разрешение.');
+    }
+    return [
+        'temporary' => $temporary,
+        'size' => $size,
+        'mime' => $mime,
+        'extension' => $extension,
+        'width' => $width,
+        'height' => $height,
+    ];
+}
+
+function tv_manifest_crop(mixed $value): ?array
+{
+    return tv_normalize_crop($value);
+}
+
+function tv_handle_upload_set(array $files, mixed $manifestValue): array
+{
+    if (!is_array($manifestValue)) {
+        throw new TvValidationException('Не получен план подготовки фотографии.');
+    }
+    $entries = $manifestValue['files'] ?? null;
+    if (!is_array($entries) || count($entries) < 2 || count($entries) > 16) {
+        throw new TvValidationException('Набор размеров фотографии неполный или слишком большой.');
+    }
+    $profile = strtolower(tv_clean_string($manifestValue['profile'] ?? '', 'Профиль фотографии', 40, true));
+    if (preg_match('/^[a-z0-9][a-z0-9-]{0,39}$/', $profile) !== 1) {
+        throw new TvValidationException('Профиль фотографии имеет неверный формат.');
+    }
+    $allowedRoles = ['master' => true, 'default' => true, 'card' => true, 'mobile' => true];
+    $validated = [];
+    $seenFields = [];
+    $totalBytes = 0;
+    foreach ($entries as $index => $entry) {
+        if (!is_array($entry)) {
+            throw new TvValidationException('Описание размера фотографии повреждено.');
+        }
+        $field = is_string($entry['field'] ?? null) ? (string) $entry['field'] : '';
+        $role = is_string($entry['role'] ?? null) ? strtolower((string) $entry['role']) : '';
+        if (preg_match('/^asset_[a-z0-9_]{1,40}$/', $field) !== 1 || !isset($allowedRoles[$role]) || isset($seenFields[$field])) {
+            throw new TvValidationException('Описание файлов фотографии содержит недопустимые значения.');
+        }
+        if (!isset($files[$field]) || !is_array($files[$field])) {
+            throw new TvValidationException('Не все подготовленные размеры дошли до сервера.');
+        }
+        $info = tv_upload_file_info($files[$field]);
+        $expectedWidth = tv_clean_dimension($entry['width'] ?? 0);
+        $expectedHeight = tv_clean_dimension($entry['height'] ?? 0);
+        if ($expectedWidth !== $info['width'] || $expectedHeight !== $info['height']) {
+            throw new TvValidationException('Размер подготовленного изображения не совпадает с планом загрузки.');
+        }
+        $totalBytes += (int) $info['size'];
+        if ($totalBytes > tv_effective_upload_set_limit()) {
+            throw new TvValidationException('Все версии фотографии вместе превышают лимит сервера. Уменьшите исходник и повторите.');
+        }
+        $seenFields[$field] = true;
+        $validated[] = [
+            'field' => $field,
+            'role' => $role,
+            'width' => $info['width'],
+            'height' => $info['height'],
+            'temporary' => $info['temporary'],
+            'extension' => $info['extension'],
+            'index' => (int) $index,
+        ];
+    }
+
+    $roleCounts = array_count_values(array_column($validated, 'role'));
+    if (($roleCounts['master'] ?? 0) !== 1 || ($roleCounts['default'] ?? 0) < 1) {
+        throw new TvValidationException('Нужны мастер-файл и хотя бы один размер для сайта.');
+    }
+
+    $relativeDirectory = 'uploads/' . gmdate('Y/m');
+    $directory = TV_ROOT . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relativeDirectory);
+    if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+        throw new RuntimeException('Не удалось создать папку для загрузки.');
+    }
+    $baseName = gmdate('Ymd-His') . '-' . bin2hex(random_bytes(10));
+    $storedPaths = [];
+    $grouped = ['master' => [], 'default' => [], 'card' => [], 'mobile' => []];
+    try {
+        foreach ($validated as $entry) {
+            $suffix = $entry['role'] . '-' . str_pad((string) $entry['width'], 4, '0', STR_PAD_LEFT) . '-' . $entry['index'];
+            $filename = $baseName . '-' . $suffix . '.' . $entry['extension'];
+            $destination = $directory . DIRECTORY_SEPARATOR . $filename;
+            if (!move_uploaded_file($entry['temporary'], $destination)) {
+                throw new RuntimeException('Не удалось сохранить один из размеров фотографии.');
+            }
+            @chmod($destination, 0644);
+            $storedPaths[] = $destination;
+            $grouped[$entry['role']][] = [
+                'src' => $relativeDirectory . '/' . $filename,
+                'width' => $entry['width'],
+                'height' => $entry['height'],
+            ];
+        }
+    } catch (Throwable $error) {
+        foreach ($storedPaths as $path) {
+            @unlink($path);
+        }
+        throw $error;
+    }
+    foreach ($grouped as &$variants) {
+        usort($variants, static fn(array $left, array $right): int => $left['width'] <=> $right['width']);
+    }
+    unset($variants);
+
+    $defaultSmall = $grouped['default'][0];
+    $defaultLarge = $grouped['default'][count($grouped['default']) - 1];
+    $master = $grouped['master'][0];
+    $photo = [
+        'src' => $defaultLarge['src'],
+        'thumb' => $defaultSmall['src'],
+        'alt' => '',
+        'width' => $defaultLarge['width'],
+        'height' => $defaultLarge['height'],
+        'cropProfile' => $profile,
+        'master' => [
+            'src' => $master['src'],
+            'width' => $master['width'],
+            'height' => $master['height'],
+            'variants' => [],
+        ],
+        'variants' => $grouped['default'],
+    ];
+    $crops = is_array($manifestValue['crops'] ?? null) ? $manifestValue['crops'] : [];
+    $defaultCrop = tv_manifest_crop($crops['default'] ?? null);
+    if ($defaultCrop !== null) {
+        $photo['crop'] = $defaultCrop;
+    }
+    foreach (['card', 'mobile'] as $role) {
+        if ($grouped[$role] === []) {
+            continue;
+        }
+        $large = $grouped[$role][count($grouped[$role]) - 1];
+        $rendition = [
+            'src' => $large['src'],
+            'width' => $large['width'],
+            'height' => $large['height'],
+            'variants' => $grouped[$role],
+        ];
+        $crop = tv_manifest_crop($crops[$role] ?? null);
+        if ($crop !== null) {
+            $rendition['crop'] = $crop;
+        }
+        $photo[$role] = $rendition;
+    }
+    return $photo;
 }

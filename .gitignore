@@ -20,6 +20,10 @@ storage/login-attempts.json
 storage/login-attempts.lock
 storage/content.lock
 storage/history/*.json
+storage/drafts/*.json
+storage/previews/*.json
+storage/drafts.lock
+storage/previews.lock
 
 # фотографии, загруженные владельцем через админ-панель
 /uploads/*

@@ -6,3 +6,10 @@ Options -Indexes
   Header always set X-Robots-Tag "noindex, nofollow, noarchive"
   Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; manifest-src 'none'"
 </IfModule>
+
+<IfModule mod_headers.c>
+  <Files "preview.php">
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; manifest-src 'self'"
+  </Files>
+</IfModule>

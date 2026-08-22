@@ -27,6 +27,12 @@
     historyLoading: false,
     historyError: "",
     selectedHistory: null,
+    drafts: [],
+    draftsLoaded: false,
+    draftsLoading: false,
+    draftsError: "",
+    activeDraftId: "",
+    activeDraftName: "",
     csrf: (document.querySelector('meta[name="csrf-token"]') || {}).content || "",
     dirty: false,
     saving: false,
@@ -35,7 +41,9 @@
     draggedProjectId: "",
     changeVersion: 0,
     projectQuery: "",
-    projectFilter: "all"
+    projectFilter: "all",
+    cropSession: null,
+    operationActive: false
   };
 
   var groupTitles = {
@@ -44,6 +52,66 @@
     master: "О мастере",
     workshop: "Мастерская",
     certificates: "Сертификаты"
+  };
+
+  var cropProfiles = {
+    project: {
+      id: "project",
+      explanation: "Галерея сохранится целиком. Здесь настраиваются только обложки: отдельная для компьютера и отдельная для телефона.",
+      defaultSizes: [560, 960, 1600, 2400],
+      targets: [
+        { key: "card", label: "Компьютер", ratio: 3 / 2, ratioLabel: "3:2 — карточка проекта", sizes: [480, 960, 1440], note: "Главный предмет должен хорошо читаться в горизонтальной карточке." },
+        { key: "mobile", label: "Телефон", ratio: 4 / 3, ratioLabel: "4:3 — карточка на телефоне", sizes: [480, 800, 1080], note: "На телефоне кадр выше. Проверьте края корпуса и ремешка." }
+      ]
+    },
+    hero: {
+      id: "hero",
+      explanation: "Первый экран занимает большую площадь. Оставьте немного воздуха вокруг рук, лица и часов.",
+      targets: [
+        { key: "default", label: "Компьютер", ratio: 4 / 3, ratioLabel: "4:3 — большой экран", sizes: [640, 960, 1440, 1920], note: "Текст сайта накладывается поверх кадра — важный объект держите ближе к центру." },
+        { key: "mobile", label: "Телефон", ratio: 4 / 5, ratioLabel: "4:5 — вертикальный экран", sizes: [480, 800, 1080], note: "Вертикальный кадр должен выглядеть законченным сам по себе." }
+      ]
+    },
+    directions: {
+      id: "directions",
+      explanation: "Это самый требовательный блок: на компьютере фотография очень узкая. Настройте предмет точно внутри широкой полосы, затем отдельно проверьте телефон.",
+      targets: [
+        { key: "default", label: "Компьютер — узкий кадр", ratio: 4 / 1, ratioLabel: "4:1 — широкая полоса", sizes: [640, 960, 1440], note: "Особенно важно: часы, инструмент или ремень не должны обрезаться случайно сверху и снизу." },
+        { key: "mobile", label: "Телефон", ratio: 16 / 9, ratioLabel: "16:9 — карточка на телефоне", sizes: [480, 800, 1080], note: "На телефоне помещается больше высоты — настройте композицию заново." }
+      ]
+    },
+    "master-main": {
+      id: "master-main",
+      explanation: "Главный портрет мастера. Не прижимайте лицо и руки к краям.",
+      targets: [
+        { key: "default", label: "Компьютер", ratio: 4 / 3, ratioLabel: "4:3 — блок о мастере", sizes: [640, 960, 1440, 1920], note: "Оставьте безопасные поля вокруг лица, рук и часов." },
+        { key: "mobile", label: "Телефон", ratio: 4 / 5, ratioLabel: "4:5 — вертикальный кадр", sizes: [480, 800, 1080], note: "Проверьте, что лицо и предмет работы остаются в кадре." }
+      ]
+    },
+    "master-inset": {
+      id: "master-inset",
+      explanation: "Дополнительная фотография в блоке мастера.",
+      targets: [
+        { key: "default", label: "Компьютер", ratio: 4 / 3, ratioLabel: "4:3 — дополнительный кадр", sizes: [480, 800, 1200], note: "Главная деталь должна находиться ближе к центру." },
+        { key: "mobile", label: "Телефон", ratio: 4 / 3, ratioLabel: "4:3 — телефон", sizes: [480, 800, 1080], note: "Проверьте края предмета на узком экране." }
+      ]
+    },
+    workshop: {
+      id: "workshop",
+      explanation: "Сетка мастерской меняет форму ячеек. Сделайте широкий компьютерный кадр и более высокий телефонный.",
+      targets: [
+        { key: "default", label: "Компьютер", ratio: 16 / 9, ratioLabel: "16:9 — сетка мастерской", sizes: [640, 960, 1440], note: "Важный объект лучше держать в центральной части." },
+        { key: "mobile", label: "Телефон", ratio: 4 / 3, ratioLabel: "4:3 — мобильная сетка", sizes: [480, 800, 1080], note: "Проверьте, что подпись не закрывает главный объект снизу." }
+      ]
+    },
+    certificates: {
+      id: "certificates",
+      explanation: "Сертификат сохраняется целиком — без обрезки. Здесь можно только проверить ориентацию и при необходимости повернуть документ.",
+      defaultSizes: [480, 960, 1600, 2400],
+      targets: [
+        { key: "default", label: "Документ целиком", ratio: null, ratioLabel: "Без обрезки", sizes: [480, 960, 1600, 2400], mode: "contain", note: "Все края, подписи и печати должны оставаться видны." }
+      ]
+    }
   };
 
   var dom = {
@@ -80,6 +148,34 @@
     restoreVersionMeta: document.getElementById("restoreVersionMeta"),
     restoreChangeList: document.getElementById("restoreChangeList"),
     confirmRestore: document.getElementById("confirmRestore")
+    ,draftsList: document.getElementById("draftsList")
+    ,draftStatus: document.getElementById("draftStatus")
+    ,draftDialog: document.getElementById("draftDialog")
+    ,draftForm: document.getElementById("draftForm")
+    ,draftName: document.getElementById("draftName")
+    ,draftUpdateChoice: document.getElementById("draftUpdateChoice")
+    ,updateCurrentDraft: document.getElementById("updateCurrentDraft")
+    ,workingVersion: document.getElementById("workingVersion")
+    ,cropDialog: document.getElementById("cropDialog")
+    ,cropCanvas: document.getElementById("cropCanvas")
+    ,cropStageWrap: document.getElementById("cropStageWrap")
+    ,cropTargetTabs: document.getElementById("cropTargetTabs")
+    ,cropExplanation: document.getElementById("cropExplanation")
+    ,cropFooterTitle: document.getElementById("cropFooterTitle")
+    ,cropFooterNote: document.getElementById("cropFooterNote")
+    ,cropFileName: document.getElementById("cropFileName")
+    ,cropTargetTitle: document.getElementById("cropTargetTitle")
+    ,cropTargetRatio: document.getElementById("cropTargetRatio")
+    ,cropZoom: document.getElementById("cropZoom")
+    ,cropZoomOutput: document.getElementById("cropZoomOutput")
+    ,cropFormatNote: document.getElementById("cropFormatNote")
+    ,cropConfirm: document.getElementById("cropConfirm")
+    ,operationPanel: document.getElementById("operationPanel")
+    ,operationState: document.getElementById("operationState")
+    ,operationTitle: document.getElementById("operationTitle")
+    ,operationDetail: document.getElementById("operationDetail")
+    ,operationProgress: document.getElementById("operationProgress")
+    ,operationClose: document.getElementById("operationClose")
   };
 
   function createElement(tag, className, text) {
@@ -146,11 +242,18 @@
       : "Проверьте и опубликуйте правки.";
   }
 
-  function projectNeedsAttention(project) {
+  function projectAttentionLabels(project) {
     var photos = Array.isArray(project.photos) ? project.photos : [];
-    if (!photos.length) return true;
-    if (!String(project.coverAlt || "").trim()) return true;
-    return photos.some(function (photo) { return !String(photo.alt || "").trim(); });
+    if (!photos.length) return ["Нет фотографий"];
+    var labels = [];
+    if (!String(project.coverAlt || "").trim()) labels.push("Нет описания обложки");
+    var missing = photos.filter(function (photo) { return !String(photo.alt || "").trim(); }).length;
+    if (missing) labels.push("Нет описания: " + missing + " фото");
+    return labels;
+  }
+
+  function projectNeedsAttention(project) {
+    return projectAttentionLabels(project).length > 0;
   }
 
   function renderReadiness() {
@@ -240,8 +343,10 @@
     return data;
   }
 
-  async function apiGet(action) {
-    var response = await fetch("api.php?action=" + encodeURIComponent(action || "content"), {
+  async function apiGet(action, params) {
+    var query = new URLSearchParams({ action: action || "content" });
+    Object.keys(params || {}).forEach(function (key) { query.set(key, String(params[key])); });
+    var response = await fetch("api.php?" + query.toString(), {
       credentials: "same-origin",
       cache: "no-store",
       headers: { Accept: "application/json" }
@@ -251,6 +356,63 @@
       throw new Error("Сессия завершена.");
     }
     return parseResponse(response);
+  }
+
+  function showOperation(stateLabel, title, detail, progress, kind) {
+    if (!dom.operationPanel) return;
+    state.operationActive = kind !== "success" && kind !== "error";
+    document.body.classList.toggle("operation-active", state.operationActive);
+    dom.operationPanel.hidden = false;
+    dom.operationPanel.dataset.kind = kind || "working";
+    dom.operationState.textContent = stateLabel || "Выполняется";
+    dom.operationTitle.textContent = title || "Пожалуйста, подождите…";
+    dom.operationDetail.textContent = detail || "Не закрывайте эту вкладку.";
+    dom.operationProgress.value = Math.max(0, Math.min(100, Number(progress) || 0));
+    dom.operationClose.hidden = kind !== "success" && kind !== "error";
+  }
+
+  function finishOperation(title, detail) {
+    showOperation("Готово", title, detail || "Можно продолжать работу.", 100, "success");
+  }
+
+  function failOperation(message) {
+    showOperation("Ошибка", "Операция не завершена", message, 100, "error");
+  }
+
+  function closeOperation() {
+    if (!dom.operationPanel) return;
+    dom.operationPanel.hidden = true;
+    document.body.classList.remove("operation-active");
+  }
+
+  function apiUploadSet(form, onProgress) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "api.php?action=upload-set");
+      xhr.responseType = "json";
+      xhr.withCredentials = true;
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("X-CSRF-Token", state.csrf);
+      xhr.upload.addEventListener("progress", function (event) {
+        if (event.lengthComputable && typeof onProgress === "function") onProgress(event.loaded / event.total);
+      });
+      xhr.addEventListener("load", function () {
+        var data = xhr.response;
+        if (xhr.status === 401) {
+          window.setTimeout(function () { window.location.reload(); }, 800);
+        }
+        if (xhr.status < 200 || xhr.status >= 300 || !data || !data.ok) {
+          var error = new Error(data && data.error ? data.error : "Сервер не принял подготовленную фотографию.");
+          error.status = xhr.status;
+          reject(error);
+          return;
+        }
+        resolve(data);
+      });
+      xhr.addEventListener("error", function () { reject(new Error("Соединение прервалось во время загрузки. Проверьте интернет и повторите файл.")); });
+      xhr.addEventListener("abort", function () { reject(new Error("Загрузка была отменена.")); });
+      xhr.send(form);
+    });
   }
 
   async function apiPost(action, body, isFormData) {
@@ -391,7 +553,9 @@
       copy.appendChild(createElement("h3", "", projectDisplayTitle(project) || "Без названия"));
       copy.appendChild(createElement("p", "", project.type + " · " + (project.photos || []).length + " фото · позиция " + (index + 1)));
       copy.appendChild(createElement("span", "status-badge" + (project.visible ? "" : " hidden"), project.visible ? "На сайте" : "Скрыт"));
-      if (projectNeedsAttention(project)) copy.appendChild(createElement("span", "status-badge attention", "Проверить фото"));
+      projectAttentionLabels(project).forEach(function (label) {
+        copy.appendChild(createElement("span", "status-badge attention", label));
+      });
       card.appendChild(copy);
 
       var actions = createElement("div", "project-card-actions");
@@ -498,6 +662,9 @@
       image.loading = "lazy";
       card.appendChild(image);
       if (photo.src === state.currentDraft.cover) card.appendChild(createElement("span", "photo-cover-badge", "Обложка"));
+      if (Array.isArray(photo.variants) && photo.variants.length > 1) {
+        card.appendChild(createElement("span", "photo-adaptive-badge", photo.mobile ? "Компьютер + телефон" : "Несколько размеров"));
+      }
 
       var altLabel = createElement("label", "photo-alt-label", "Описание фото");
       var altInput = document.createElement("input");
@@ -516,7 +683,8 @@
       var right = createButton("→", "", "photo-right", "Переместить вправо");
       right.disabled = index === photos.length - 1;
       var remove = createButton("×", "", "photo-delete", "Убрать фотографию из проекта");
-      [cover, left, right, remove].forEach(function (button) { actions.appendChild(button); });
+      var recrop = createButton("Изменить кадр обложки", "photo-recrop", "photo-recrop", "Заново настроить кадр для компьютера и телефона");
+      [cover, left, right, remove, recrop].forEach(function (button) { actions.appendChild(button); });
       card.appendChild(actions);
       dom.projectPhotos.appendChild(card);
     });
@@ -539,7 +707,7 @@
     }).filter(Boolean);
   }
 
-  async function saveProjectDraft() {
+  function saveProjectDraft() {
     if (!state.currentDraft || !dom.projectForm.reportValidity()) return;
     var id = String(formField("id").value || "").trim().toLowerCase();
     var duplicate = state.content.projects.some(function (project, index) {
@@ -593,7 +761,7 @@
     renderProjects();
     updateMetrics();
     markDirty();
-    await publishChanges();
+    toast("Проект сохранён в неопубликованных правках. Проверьте его в предпросмотре, затем при готовности нажмите «Опубликовать».", "success");
   }
 
   async function uploadImage(file) {
@@ -606,6 +774,384 @@
     form.append("image", file, file.name);
     var result = await apiPost("upload", form, true);
     return result.photo;
+  }
+
+  function profileForMedia(group, index) {
+    if (group === "master") return cropProfiles[index === 0 ? "master-main" : "master-inset"];
+    return cropProfiles[group] || cropProfiles.workshop;
+  }
+
+  function cropStateFrom(value) {
+    var source = value && typeof value === "object" ? value : {};
+    var rotation = Number(source.rotation) || 0;
+    rotation = ((Math.round(rotation / 90) * 90) % 360 + 360) % 360;
+    return {
+      zoom: Math.max(1, Math.min(4, Number(source.zoom) || 1)),
+      offsetX: Math.max(-4, Math.min(4, Number(source.offsetX) || 0)),
+      offsetY: Math.max(-4, Math.min(4, Number(source.offsetY) || 0)),
+      rotation: rotation,
+      visited: false
+    };
+  }
+
+  async function loadCropSource(input) {
+    var blob;
+    var name;
+    if (input instanceof File || input instanceof Blob) {
+      blob = input;
+      name = input.name || "Фотография";
+      var max = state.capabilities ? Number(state.capabilities.maxUploadBytes) : 9 * 1024 * 1024;
+      if (blob.size > max) throw new Error("Файл «" + name + "» больше " + formatBytes(max) + ". Уменьшите его и повторите.");
+    } else if (input && input.url) {
+      name = input.name || "Сохранённая фотография";
+      var response = await fetch(input.url, { credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) throw new Error("Не удалось открыть мастер-файл для повторной обрезки.");
+      blob = await response.blob();
+    } else {
+      throw new Error("Фотография не выбрана.");
+    }
+    if (!/^image\/(jpeg|png|webp)$/i.test(blob.type || "")) {
+      throw new Error("Разрешены только JPEG, PNG и WebP.");
+    }
+
+    var source;
+    if (typeof createImageBitmap === "function") {
+      try {
+        source = await createImageBitmap(blob, { imageOrientation: "from-image" });
+      } catch (_error) {
+        source = null;
+      }
+    }
+    if (!source) {
+      source = await new Promise(function (resolve, reject) {
+        var url = URL.createObjectURL(blob);
+        var image = new Image();
+        image.decoding = "async";
+        image.onload = function () { URL.revokeObjectURL(url); resolve(image); };
+        image.onerror = function () { URL.revokeObjectURL(url); reject(new Error("Браузер не смог прочитать изображение.")); };
+        image.src = url;
+      });
+    }
+    var width = Number(source.naturalWidth || source.width) || 0;
+    var height = Number(source.naturalHeight || source.height) || 0;
+    if (width < 1 || height < 1 || width > 12000 || height > 12000 || width * height > 60000000) {
+      if (source && typeof source.close === "function") source.close();
+      throw new Error("Изображение слишком большое по разрешению. Максимум — 60 мегапикселей.");
+    }
+    return { source: source, width: width, height: height, name: name };
+  }
+
+  function rotatedSize(width, height, rotation) {
+    return rotation % 180 === 0 ? { width: width, height: height } : { width: height, height: width };
+  }
+
+  function currentCropTarget() {
+    if (!state.cropSession) return null;
+    return state.cropSession.profile.targets.find(function (target) { return target.key === state.cropSession.activeKey; }) || null;
+  }
+
+  function targetRatio(target, session) {
+    if (target && Number(target.ratio) > 0) return Number(target.ratio);
+    var rotated = rotatedSize(session.width, session.height, session.rotation);
+    return rotated.width / rotated.height;
+  }
+
+  function clampCropState(target, cropState, session, outputWidth, outputHeight) {
+    if (!target || target.mode === "contain") {
+      cropState.zoom = 1;
+      cropState.offsetX = 0;
+      cropState.offsetY = 0;
+      return;
+    }
+    var rotated = rotatedSize(session.width, session.height, session.rotation);
+    var scale = Math.max(outputWidth / rotated.width, outputHeight / rotated.height) * cropState.zoom;
+    var drawnWidth = rotated.width * scale;
+    var drawnHeight = rotated.height * scale;
+    var maxX = Math.max(0, (drawnWidth - outputWidth) / 2 / outputWidth);
+    var maxY = Math.max(0, (drawnHeight - outputHeight) / 2 / outputHeight);
+    cropState.offsetX = Math.max(-maxX, Math.min(maxX, cropState.offsetX));
+    cropState.offsetY = Math.max(-maxY, Math.min(maxY, cropState.offsetY));
+  }
+
+  function drawCrop(context, source, sourceWidth, sourceHeight, cropState, rotation, width, height, mode) {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#0b0a09";
+    context.fillRect(0, 0, width, height);
+    var rotated = rotatedSize(sourceWidth, sourceHeight, rotation);
+    var baseScale = mode === "contain"
+      ? Math.min(width / rotated.width, height / rotated.height)
+      : Math.max(width / rotated.width, height / rotated.height);
+    var zoom = mode === "contain" ? 1 : cropState.zoom;
+    var scale = baseScale * zoom;
+    var offsetX = mode === "contain" ? 0 : cropState.offsetX * width;
+    var offsetY = mode === "contain" ? 0 : cropState.offsetY * height;
+    context.translate(width / 2 + offsetX, height / 2 + offsetY);
+    context.rotate(rotation * Math.PI / 180);
+    context.scale(scale, scale);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(source, -sourceWidth / 2, -sourceHeight / 2, sourceWidth, sourceHeight);
+    context.restore();
+  }
+
+  function renderCropTabs() {
+    var session = state.cropSession;
+    if (!session || !dom.cropTargetTabs) return;
+    dom.cropTargetTabs.replaceChildren();
+    session.profile.targets.forEach(function (target) {
+      var button = createButton(target.label, "crop-target-tab" + (session.states[target.key].visited ? " is-checked" : ""));
+      button.dataset.cropTarget = target.key;
+      button.setAttribute("role", "tab");
+      button.setAttribute("aria-selected", String(target.key === session.activeKey));
+      dom.cropTargetTabs.appendChild(button);
+    });
+  }
+
+  function renderCropEditor() {
+    var session = state.cropSession;
+    var target = currentCropTarget();
+    if (!session || !target || !dom.cropCanvas) return;
+    var crop = session.states[target.key];
+    crop.rotation = session.rotation;
+    var ratio = targetRatio(target, session);
+    dom.cropStageWrap.style.setProperty("--crop-ratio", String(ratio));
+    var previewWidth = 1200;
+    var previewHeight = Math.max(1, Math.round(previewWidth / ratio));
+    if (previewHeight > 1500) {
+      previewHeight = 1500;
+      previewWidth = Math.max(300, Math.round(previewHeight * ratio));
+    }
+    dom.cropCanvas.width = previewWidth;
+    dom.cropCanvas.height = previewHeight;
+    clampCropState(target, crop, session, previewWidth, previewHeight);
+    drawCrop(dom.cropCanvas.getContext("2d"), session.source, session.width, session.height, crop, session.rotation, previewWidth, previewHeight, target.mode || "cover");
+    dom.cropTargetTitle.textContent = target.label;
+    dom.cropTargetRatio.textContent = target.ratioLabel;
+    dom.cropZoom.disabled = target.mode === "contain";
+    dom.cropZoom.value = String(Math.round(crop.zoom * 100));
+    dom.cropZoomOutput.textContent = Math.round(crop.zoom * 100) + "%";
+    dom.cropFormatNote.innerHTML = "<strong>Что проверить:</strong><br>" + target.note + "<br><br>Будут созданы размеры: " + target.sizes.join(", ") + " px.";
+    renderCropTabs();
+  }
+
+  function selectCropTarget(key) {
+    var session = state.cropSession;
+    if (!session || !session.states[key]) return;
+    session.activeKey = key;
+    session.states[key].visited = true;
+    renderCropEditor();
+  }
+
+  function closeCropSource(session) {
+    if (session && session.source && typeof session.source.close === "function") {
+      try { session.source.close(); } catch (_error) {}
+    }
+  }
+
+  function cancelCropSession() {
+    var session = state.cropSession;
+    if (!session || session.processing) return;
+    state.cropSession = null;
+    closeCropSource(session);
+    if (dom.cropDialog.open) dom.cropDialog.close("cancel");
+    session.resolve(null);
+  }
+
+  async function openCropEditor(input, profile, existingAsset) {
+    if (!profile) throw new Error("Для этого места не настроен формат фотографии.");
+    showOperation("Чтение файла", "Открываю фотографию…", "Проверяю формат и разрешение.", 8);
+    var loaded;
+    try {
+      loaded = await loadCropSource(input);
+    } catch (error) {
+      failOperation(error.message);
+      throw error;
+    }
+    closeOperation();
+    return new Promise(function (resolve) {
+      var states = {};
+      profile.targets.forEach(function (target) {
+        var savedCrop = target.key === "default"
+          ? existingAsset && existingAsset.crop
+          : existingAsset && existingAsset[target.key] && existingAsset[target.key].crop;
+        states[target.key] = cropStateFrom(savedCrop);
+        if (input && input.url) states[target.key].rotation = 0;
+      });
+      var firstKey = profile.targets[0].key;
+      var firstSaved = states[firstKey];
+      var session = {
+        source: loaded.source,
+        width: loaded.width,
+        height: loaded.height,
+        name: loaded.name,
+        profile: profile,
+        states: states,
+        rotation: firstSaved.rotation,
+        activeKey: firstKey,
+        processing: false,
+        resolve: resolve
+      };
+      session.states[firstKey].visited = true;
+      state.cropSession = session;
+      dom.cropConfirm.disabled = false;
+      document.querySelectorAll(".crop-cancel, .crop-target-tab, #cropRotateLeft, #cropRotateRight, #cropReset, #cropZoom").forEach(function (control) { control.disabled = false; });
+      dom.cropFileName.textContent = loaded.name + " · " + loaded.width + " × " + loaded.height + " px";
+      dom.cropExplanation.innerHTML = "<strong>Зачем это нужно:</strong> " + profile.explanation;
+      if (dom.cropFooterTitle) {
+        dom.cropFooterTitle.textContent = profile.targets.length > 1 ? "Проверьте каждый кадр" : (profile.id === "certificates" ? "Проверьте документ целиком" : "Проверьте фотографию");
+      }
+      if (dom.cropFooterNote) {
+        dom.cropFooterNote.textContent = profile.targets.length > 1
+          ? "После проверки всех вкладок панель сама сделает нужные размеры."
+          : "Панель сама сделает нужные размеры без лишней обрезки.";
+      }
+      renderCropEditor();
+      if (typeof dom.cropDialog.showModal === "function") dom.cropDialog.showModal();
+      else dom.cropDialog.setAttribute("open", "");
+    });
+  }
+
+  function canvasBlobAtQuality(canvas, quality) {
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(function (blob) {
+        if (!blob) {
+          reject(new Error("Браузер не смог подготовить изображение."));
+          return;
+        }
+        resolve(blob);
+      }, "image/webp", quality);
+    });
+  }
+
+  async function canvasToImageBlob(canvas, quality, maxBytes) {
+    var nextQuality = quality;
+    var blob = null;
+    for (var attempt = 0; attempt < 5; attempt += 1) {
+      blob = await canvasBlobAtQuality(canvas, nextQuality);
+      if (!maxBytes || blob.size <= maxBytes) return blob;
+      nextQuality = Math.max(0.56, nextQuality - 0.08);
+    }
+    throw new Error("Фотография слишком детальная для лимита хостинга даже после сжатия. Уменьшите исходный файл и повторите.");
+  }
+
+  function makeFitCanvas(session, maxSide) {
+    var rotated = rotatedSize(session.width, session.height, session.rotation);
+    var scale = Math.min(1, maxSide / Math.max(rotated.width, rotated.height));
+    var canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(rotated.width * scale));
+    canvas.height = Math.max(1, Math.round(rotated.height * scale));
+    drawCrop(canvas.getContext("2d"), session.source, session.width, session.height, { zoom: 1, offsetX: 0, offsetY: 0 }, session.rotation, canvas.width, canvas.height, "contain");
+    return canvas;
+  }
+
+  function makeCroppedCanvas(session, target, width) {
+    var ratio = targetRatio(target, session);
+    var canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = Math.max(1, Math.round(width / ratio));
+    var crop = session.states[target.key];
+    clampCropState(target, crop, session, canvas.width, canvas.height);
+    drawCrop(canvas.getContext("2d"), session.source, session.width, session.height, crop, session.rotation, canvas.width, canvas.height, target.mode || "cover");
+    return canvas;
+  }
+
+  async function prepareAndUploadCrop() {
+    var session = state.cropSession;
+    if (!session || session.processing) return;
+    var unvisited = session.profile.targets.find(function (target) { return !session.states[target.key].visited; });
+    if (unvisited) {
+      selectCropTarget(unvisited.key);
+      toast("Сначала проверьте кадр «" + unvisited.label + "». Затем снова нажмите «Подготовить и загрузить».", "error");
+      return;
+    }
+    session.processing = true;
+    dom.cropConfirm.disabled = true;
+    document.querySelectorAll(".crop-cancel, .crop-target-tab, #cropRotateLeft, #cropRotateRight, #cropReset, #cropZoom").forEach(function (control) { control.disabled = true; });
+    showOperation("Подготовка фотографии", "Создаю мастер-файл…", "Не закрывайте вкладку. Затем начнётся передача на сервер.", 6);
+    try {
+      var form = new FormData();
+      var manifest = { profile: session.profile.id, files: [], crops: {} };
+      var fileNumber = 0;
+      var preparedBytes = 0;
+      var maxPreparedFileBytes = state.capabilities ? Number(state.capabilities.maxPreparedFileBytes) || 0 : 0;
+      var maxUploadSetBytes = state.capabilities ? Number(state.capabilities.maxUploadSetBytes) || 0 : 0;
+      async function appendCanvas(canvas, role, quality) {
+        var blob = await canvasToImageBlob(canvas, quality, maxPreparedFileBytes);
+        preparedBytes += blob.size;
+        if (maxUploadSetBytes && preparedBytes > maxUploadSetBytes) {
+          throw new Error("Все версии фотографии получились слишком тяжёлыми для одного запроса хостинга. Уменьшите исходный файл и повторите.");
+        }
+        var field = "asset_" + fileNumber;
+        fileNumber += 1;
+        var extension = blob.type === "image/webp" ? "webp" : (blob.type === "image/png" ? "png" : "jpg");
+        form.append(field, blob, session.profile.id + "-" + role + "-" + canvas.width + "." + extension);
+        manifest.files.push({ field: field, role: role, width: canvas.width, height: canvas.height });
+      }
+
+      await appendCanvas(makeFitCanvas(session, 2400), "master", 0.9);
+      showOperation("Подготовка фотографии", "Создаю размеры для сайта…", "Мастер-файл готов. Подготавливаю быстрые версии.", 18);
+
+      if (Array.isArray(session.profile.defaultSizes)) {
+        var seenFit = {};
+        for (var fitIndex = 0; fitIndex < session.profile.defaultSizes.length; fitIndex += 1) {
+          var fitCanvas = makeFitCanvas(session, session.profile.defaultSizes[fitIndex]);
+          var fitKey = fitCanvas.width + "x" + fitCanvas.height;
+          if (seenFit[fitKey]) continue;
+          seenFit[fitKey] = true;
+          await appendCanvas(fitCanvas, "default", 0.86);
+          showOperation("Подготовка фотографии", "Создаю размеры для сайта…", "Готово файлов: " + manifest.files.length, 18 + Math.min(38, manifest.files.length * 5));
+        }
+      }
+
+      for (var targetIndex = 0; targetIndex < session.profile.targets.length; targetIndex += 1) {
+        var target = session.profile.targets[targetIndex];
+        if (Array.isArray(session.profile.defaultSizes) && target.key === "default") {
+          manifest.crops.default = Object.assign({}, session.states[target.key], { rotation: session.rotation });
+          continue;
+        }
+        for (var sizeIndex = 0; sizeIndex < target.sizes.length; sizeIndex += 1) {
+          await appendCanvas(makeCroppedCanvas(session, target, target.sizes[sizeIndex]), target.key, 0.84);
+          showOperation("Подготовка фотографии", "Создаю кадры для «" + target.label + "»…", "Готово файлов: " + manifest.files.length, 28 + Math.min(36, manifest.files.length * 4));
+        }
+        manifest.crops[target.key] = Object.assign({}, session.states[target.key], { rotation: session.rotation });
+      }
+
+      form.append("manifest", JSON.stringify(manifest));
+      showOperation("Загрузка на сервер", "Передаю подготовленные размеры…", "0% передано. Вкладку можно оставить открытой.", 68);
+      var result = await apiUploadSet(form, function (fraction) {
+        var percent = Math.round(fraction * 100);
+        showOperation("Загрузка на сервер", "Передаю подготовленные размеры…", percent + "% передано. Не закрывайте вкладку.", 68 + Math.round(fraction * 29));
+      });
+      state.cropSession = null;
+      closeCropSource(session);
+      dom.cropDialog.close("uploaded");
+      finishOperation("Фотография полностью готова", "Созданы версии для компьютера, телефона и разных размеров экрана.");
+      session.resolve(result.photo);
+    } catch (error) {
+      session.processing = false;
+      dom.cropConfirm.disabled = false;
+      document.querySelectorAll(".crop-cancel, .crop-target-tab, #cropRotateLeft, #cropRotateRight, #cropReset, #cropZoom").forEach(function (control) { control.disabled = false; });
+      failOperation(error.message);
+      toast(error.message, "error");
+    }
+  }
+
+  function replaceMediaAsset(media, prepared) {
+    var identity = {
+      id: media.id,
+      label: media.label,
+      alt: media.alt,
+      caption: media.caption
+    };
+    ["src", "thumb", "width", "height", "cropProfile", "master", "variants", "card", "mobile", "crop"].forEach(function (key) {
+      delete media[key];
+    });
+    Object.keys(prepared || {}).forEach(function (key) { media[key] = prepared[key]; });
+    media.id = identity.id;
+    media.label = identity.label;
+    media.alt = identity.alt;
+    media.caption = identity.caption;
   }
 
   function renderMedia() {
@@ -622,6 +1168,7 @@
       var grid = createElement("div", "media-items");
 
       items.forEach(function (item, index) {
+        var mediaProfile = profileForMedia(groupKey, index);
         var card = createElement("article", "media-item");
         card.dataset.mediaIndex = String(index);
         var previewWrap = createElement("div", "media-preview-wrap");
@@ -629,8 +1176,10 @@
         preview.src = rootImageUrl(item.src);
         preview.alt = item.alt || item.label;
         preview.loading = "lazy";
+        var firstTarget = mediaProfile.targets[0];
+        if (firstTarget && firstTarget.ratio) preview.style.aspectRatio = String(firstTarget.ratio);
         previewWrap.appendChild(preview);
-        var uploadLabel = createElement("label", "button button-secondary file-button", "Заменить фото");
+        var uploadLabel = createElement("label", "button button-secondary file-button", "Заменить и обрезать");
         var upload = document.createElement("input");
         upload.type = "file";
         upload.accept = "image/jpeg,image/png,image/webp";
@@ -638,10 +1187,17 @@
         upload.dataset.mediaUpload = "true";
         uploadLabel.appendChild(upload);
         previewWrap.appendChild(uploadLabel);
+        var recrop = createButton("Изменить кадр", "button button-ghost", "media-recrop");
+        recrop.dataset.mediaRecrop = "true";
+        previewWrap.appendChild(recrop);
         card.appendChild(previewWrap);
 
         var fields = createElement("div", "media-fields");
         fields.appendChild(createElement("h3", "", item.label));
+        fields.appendChild(createElement("p", "media-profile-note", mediaProfile.explanation));
+        fields.appendChild(createElement("p", "media-adaptive-status", Array.isArray(item.variants) && item.variants.length > 1
+          ? (item.mobile ? "✓ Готовы отдельные кадры и размеры для компьютера и телефона" : "✓ Готово несколько размеров")
+          : "Старая фотография: при следующей замене будут автоматически созданы все размеры"));
         var altLabel = createElement("label", "", "Описание для доступности");
         var alt = document.createElement("input");
         alt.type = "text";
@@ -745,6 +1301,203 @@
       row.appendChild(actions);
       dom.socials.appendChild(row);
     });
+  }
+
+  function updateWorkingVersion() {
+    if (!dom.workingVersion) return;
+    dom.workingVersion.hidden = !state.activeDraftId;
+    dom.workingVersion.textContent = state.activeDraftId ? "Черновик: " + state.activeDraftName : "";
+    dom.workingVersion.title = state.activeDraftId ? "Сейчас открыта рабочая версия «" + state.activeDraftName + "». Она не опубликована." : "";
+  }
+
+  function draftStatsText(entry) {
+    var stats = entry.stats || {};
+    return (stats.projects || 0) + " проектов · " + (stats.projectPhotos || 0) + " фото проектов · " + (stats.sitePhotos || 0) + " фото сайта";
+  }
+
+  function renderDrafts() {
+    if (!dom.draftsList || !dom.draftStatus) return;
+    dom.draftsList.replaceChildren();
+    if (state.draftsError) {
+      dom.draftStatus.textContent = "Не удалось загрузить черновики: " + state.draftsError;
+      return;
+    }
+    if (!state.draftsLoaded) {
+      dom.draftStatus.textContent = state.draftsLoading ? "Загружаю черновики…" : "Список черновиков ещё не загружен.";
+      return;
+    }
+    if (!state.drafts.length) {
+      dom.draftStatus.textContent = "Сохранённых черновиков пока нет.";
+      dom.draftsList.appendChild(createElement("div", "empty-state", "Внесите правки и нажмите «Сохранить текущий черновик»."));
+      return;
+    }
+    dom.draftStatus.textContent = "Сохранено черновиков: " + state.drafts.length + ". Они не видны посетителям и не входят в историю публикаций.";
+    state.drafts.forEach(function (entry) {
+      var card = createElement("article", "draft-card" + (entry.id === state.activeDraftId ? " is-active" : ""));
+      card.dataset.draftId = entry.id;
+      var copy = createElement("div", "draft-card-copy");
+      copy.appendChild(createElement("h3", "", entry.name));
+      copy.appendChild(createElement("p", "", "Сохранён: " + formatDate(entry.updatedAt) + " · основа — версия сайта № " + String(entry.baseRevision || 0)));
+      copy.appendChild(createElement("p", "", draftStatsText(entry)));
+      var badges = createElement("div", "draft-card-badges");
+      badges.appendChild(createElement("span", "status-badge hidden", "Не опубликован"));
+      if (entry.id === state.activeDraftId) badges.appendChild(createElement("span", "status-badge", "Открыт сейчас"));
+      copy.appendChild(badges);
+      card.appendChild(copy);
+      var actions = createElement("div", "draft-card-actions");
+      var open = createButton("Открыть для работы", "button button-secondary", "draft-open");
+      var preview = createButton("Предпросмотр ↗", "button button-ghost", "draft-preview");
+      var remove = createButton("Удалить", "button button-danger", "draft-delete");
+      [open, preview, remove].forEach(function (button) { actions.appendChild(button); });
+      card.appendChild(actions);
+      dom.draftsList.appendChild(card);
+    });
+  }
+
+  async function loadDrafts(force) {
+    if (state.draftsLoading || (state.draftsLoaded && !force)) return;
+    state.draftsLoading = true;
+    state.draftsError = "";
+    renderDrafts();
+    try {
+      var result = await apiGet("drafts");
+      state.drafts = Array.isArray(result.drafts) ? result.drafts : [];
+      state.draftsLoaded = true;
+    } catch (error) {
+      state.draftsError = error.message;
+      toast(error.message, "error");
+    } finally {
+      state.draftsLoading = false;
+      renderDrafts();
+    }
+  }
+
+  function openDraftSaveDialog() {
+    if (!state.content || state.saving || state.operationActive) return;
+    var date = new Date().toLocaleDateString("ru-RU", { day: "2-digit", month: "long" });
+    dom.draftName.value = state.activeDraftName || ("Рабочая версия — " + date);
+    dom.draftUpdateChoice.hidden = !state.activeDraftId;
+    dom.updateCurrentDraft.checked = Boolean(state.activeDraftId);
+    if (typeof dom.draftDialog.showModal === "function") dom.draftDialog.showModal();
+    else dom.draftDialog.setAttribute("open", "");
+    window.setTimeout(function () { dom.draftName.focus(); dom.draftName.select(); }, 30);
+  }
+
+  async function saveNamedDraft() {
+    if (!state.content || !dom.draftForm.reportValidity()) return;
+    var name = String(dom.draftName.value || "").trim();
+    var updateExisting = Boolean(state.activeDraftId && dom.updateCurrentDraft.checked);
+    var submit = dom.draftForm.querySelector('button[value="save"]');
+    submit.disabled = true;
+    showOperation("Сохранение черновика", "Записываю рабочую версию…", "Опубликованный сайт не меняется.", 35);
+    try {
+      var result = await apiPost("save-draft", {
+        id: updateExisting ? state.activeDraftId : "",
+        name: name,
+        content: state.content
+      }, false);
+      state.activeDraftId = result.draft.id;
+      state.activeDraftName = result.draft.name;
+      state.drafts = Array.isArray(result.drafts) ? result.drafts : [];
+      state.draftsLoaded = true;
+      updateWorkingVersion();
+      renderDrafts();
+      dom.draftDialog.close("saved");
+      if (state.dirty) setSaveState("dirty", "Черновик сохранён; сайт не опубликован");
+      finishOperation("Черновик «" + state.activeDraftName + "» сохранён", "Посетители по-прежнему видят опубликованный сайт.");
+      toast(result.message || "Черновик сохранён отдельно.", "success");
+    } catch (error) {
+      failOperation(error.message);
+      toast(error.message, "error");
+    } finally {
+      submit.disabled = false;
+    }
+  }
+
+  async function openSavedDraft(id) {
+    if (!id || state.saving || state.operationActive) return;
+    if (state.dirty && !window.confirm("Текущие неопубликованные правки будут заменены выбранным черновиком. Если они нужны, сначала нажмите «Сохранить черновик». Продолжить?")) return;
+    showOperation("Открытие черновика", "Загружаю рабочую версию…", "Опубликованный сайт не меняется.", 35);
+    try {
+      var result = await apiGet("draft", { id: id });
+      var draft = result.draft;
+      state.content = clone(draft.content);
+      state.content.revision = Number(state.baselineContent.revision || 0);
+      state.content.updatedAt = state.baselineContent.updatedAt || "";
+      state.activeDraftId = draft.id;
+      state.activeDraftName = draft.name;
+      state.changeVersion += 1;
+      renderAll();
+      markDirty();
+      updateWorkingVersion();
+      renderDrafts();
+      switchSection("dashboard", true);
+      finishOperation("Черновик открыт", "Теперь можно править, смотреть предпросмотр или публиковать.");
+    } catch (error) {
+      failOperation(error.message);
+      toast(error.message, "error");
+    }
+  }
+
+  async function deleteSavedDraft(id) {
+    var entry = state.drafts.find(function (draft) { return draft.id === id; });
+    if (!entry || !window.confirm("Удалить черновик «" + entry.name + "»? Опубликованный сайт и история не изменятся.")) return;
+    showOperation("Удаление черновика", "Удаляю только выбранную рабочую версию…", "Публичный сайт останется без изменений.", 45);
+    try {
+      var result = await apiPost("delete-draft", { id: id }, false);
+      state.drafts = Array.isArray(result.drafts) ? result.drafts : [];
+      state.draftsLoaded = true;
+      if (state.activeDraftId === id) {
+        state.activeDraftId = "";
+        state.activeDraftName = "";
+        updateWorkingVersion();
+      }
+      renderDrafts();
+      finishOperation("Черновик удалён", "Опубликованный сайт не менялся.");
+      toast(result.message || "Черновик удалён.", "success");
+    } catch (error) {
+      failOperation(error.message);
+      toast(error.message, "error");
+    }
+  }
+
+  async function previewContent(content, label) {
+    if (!content || state.operationActive) return;
+    if (dom.projectDialog && dom.projectDialog.open) {
+      toast("Сначала нажмите «Сохранить проект в правках», затем откройте предпросмотр.", "error");
+      return;
+    }
+    var previewWindow = window.open("about:blank", "_blank");
+    if (!previewWindow) {
+      toast("Браузер заблокировал новую вкладку. Разрешите всплывающие окна для этого сайта.", "error");
+      return;
+    }
+    try {
+      previewWindow.document.title = "Подготавливаю предпросмотр…";
+      previewWindow.document.body.textContent = "Подготавливаю закрытый предпросмотр…";
+    } catch (_error) {}
+    showOperation("Предпросмотр", "Подготавливаю точную копию сайта…", (label || "Текущие правки") + ". Ничего не публикуется.", 45);
+    try {
+      var result = await apiPost("prepare-preview", { content: content }, false);
+      previewWindow.location.replace(result.url);
+      finishOperation("Предпросмотр открыт в новой вкладке", "Плашка сверху подтверждает, что это неопубликованная версия.");
+    } catch (error) {
+      previewWindow.close();
+      failOperation(error.message);
+      toast(error.message, "error");
+    }
+  }
+
+  async function previewSavedDraft(id) {
+    showOperation("Предпросмотр", "Загружаю выбранный черновик…", "Опубликованный сайт не меняется.", 25);
+    try {
+      var result = await apiGet("draft", { id: id });
+      closeOperation();
+      await previewContent(result.draft.content, "Черновик «" + result.draft.name + "»");
+    } catch (error) {
+      failOperation(error.message);
+      toast(error.message, "error");
+    }
   }
 
   function formatHistoryDate(value) {
@@ -885,6 +1638,9 @@
       state.historyLoaded = true;
       state.changeVersion += 1;
       markSaved(result.content);
+      state.activeDraftId = "";
+      state.activeDraftName = "";
+      updateWorkingVersion();
       renderAll();
       renderHistory();
       closeRestoreDialog();
@@ -921,9 +1677,12 @@
     state.content = clone(state.baselineContent);
     state.currentDraft = null;
     state.currentDraftIndex = -1;
+    state.activeDraftId = "";
+    state.activeDraftName = "";
     state.changeVersion += 1;
     renderAll();
     markSaved(state.baselineContent);
+    updateWorkingVersion();
     renderHistory();
     toast("Неопубликованные правки отменены. Сайт не менялся.", "success");
   }
@@ -943,6 +1702,7 @@
     setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (name === "history") loadHistory(false);
+    if (name === "drafts") loadDrafts(false);
   }
 
   function setSidebarOpen(open) {
@@ -967,6 +1727,7 @@
     var versionAtSave = state.changeVersion;
     var contentToSave = clone(state.content);
     setSaveState("saving", "Публикую изменения…");
+    showOperation("Публикация", "Передаю изменения на сайт…", "Не закрывайте вкладку до сообщения об успехе.", 35);
     updateSaveButtons();
     try {
       var revision = Number(contentToSave.revision || 0);
@@ -974,6 +1735,9 @@
       if (state.changeVersion === versionAtSave) {
         state.content = result.content;
         markSaved(result.content);
+        state.activeDraftId = "";
+        state.activeDraftName = "";
+        updateWorkingVersion();
       } else {
         state.content.revision = result.content.revision;
         state.content.updatedAt = result.content.updatedAt;
@@ -987,9 +1751,11 @@
       updateMetrics();
       renderProjects();
       loadHistory(true);
+      finishOperation("Изменения опубликованы", "Теперь посетители видят новую версию сайта.");
       toast(state.dirty ? "Предыдущие изменения опубликованы; новые ещё ждут публикации." : (result.message || "Изменения опубликованы."), "success");
     } catch (error) {
       setSaveState("error", "Не удалось опубликовать");
+      failOperation(error.message);
       if (error.conflict) {
         toast(error.message + " Ваши данные в этой вкладке сохранены до обновления.", "error");
       } else {
@@ -1007,6 +1773,8 @@
     renderMedia();
     populateContacts();
     renderReadiness();
+    updateWorkingVersion();
+    if (state.draftsLoaded) renderDrafts();
   }
 
   document.addEventListener("click", function (event) {
@@ -1030,6 +1798,14 @@
       openProjectEditor(null, -1);
       return;
     }
+    if (target.matches(".save-draft")) {
+      openDraftSaveDialog();
+      return;
+    }
+    if (target.matches(".preview-current")) {
+      previewContent(clone(state.content), state.activeDraftName ? "Черновик «" + state.activeDraftName + "»" : "Текущие правки");
+      return;
+    }
     if (target.matches(".save-all")) {
       publishChanges();
       return;
@@ -1048,6 +1824,37 @@
     }
     if (target.matches(".restore-close")) {
       closeRestoreDialog();
+      return;
+    }
+    if (target.dataset.cropTarget) {
+      selectCropTarget(target.dataset.cropTarget);
+      return;
+    }
+
+    var draftCard = target.closest(".draft-card");
+    if (draftCard && target.dataset.action) {
+      var draftId = draftCard.dataset.draftId || "";
+      if (target.dataset.action === "draft-open") openSavedDraft(draftId);
+      if (target.dataset.action === "draft-preview") previewSavedDraft(draftId);
+      if (target.dataset.action === "draft-delete") deleteSavedDraft(draftId);
+      return;
+    }
+
+    if (target.dataset.mediaRecrop) {
+      var mediaGroup = target.closest("[data-media-group]");
+      var mediaCard = target.closest("[data-media-index]");
+      if (!mediaGroup || !mediaCard) return;
+      var mediaKey = mediaGroup.dataset.mediaGroup;
+      var mediaIndex = Number(mediaCard.dataset.mediaIndex);
+      var mediaItem = state.content.site.media[mediaKey][mediaIndex];
+      var masterPath = mediaItem && mediaItem.master && mediaItem.master.src ? mediaItem.master.src : mediaItem.src;
+      openCropEditor({ url: rootImageUrl(masterPath), name: mediaItem.label }, profileForMedia(mediaKey, mediaIndex), mediaItem).then(function (prepared) {
+        if (!prepared) return;
+        replaceMediaAsset(mediaItem, prepared);
+        renderMedia();
+        markDirty();
+        toast("Кадры обновлены. Проверьте предпросмотр; сайт ещё не опубликован.", "success");
+      }).catch(function (error) { toast(error.message, "error"); });
       return;
     }
 
@@ -1111,6 +1918,19 @@
         var removed = photos.splice(photoIndex, 1)[0];
         if (removed && removed.src === state.currentDraft.cover) state.currentDraft.cover = photos[0] ? photos[0].src : "";
       }
+      if (target.dataset.action === "photo-recrop") {
+        var sourcePhoto = photos[photoIndex];
+        var sourcePath = sourcePhoto && sourcePhoto.master && sourcePhoto.master.src ? sourcePhoto.master.src : sourcePhoto.src;
+        openCropEditor({ url: rootImageUrl(sourcePath), name: "Фотография проекта " + (photoIndex + 1) }, cropProfiles.project, sourcePhoto).then(function (prepared) {
+          if (!prepared || !state.currentDraft) return;
+          prepared.alt = sourcePhoto.alt || projectDisplayTitle(state.currentDraft);
+          state.currentDraft.photos[photoIndex] = prepared;
+          if (state.currentDraft.cover === sourcePhoto.src) state.currentDraft.cover = prepared.src;
+          renderProjectPhotos();
+          toast("Кадры обложки обновлены. Нажмите «Сохранить проект в правках».", "success");
+        }).catch(function (error) { toast(error.message, "error"); });
+        return;
+      }
       renderProjectPhotos();
       return;
     }
@@ -1165,6 +1985,120 @@
     });
   }
 
+  if (dom.draftForm) {
+    dom.draftForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (event.submitter && event.submitter.value === "cancel") {
+        dom.draftDialog.close("cancel");
+        return;
+      }
+      saveNamedDraft();
+    });
+  }
+
+  if (dom.operationClose) dom.operationClose.addEventListener("click", closeOperation);
+
+  if (dom.cropDialog) {
+    dom.cropDialog.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      cancelCropSession();
+    });
+  }
+
+  document.querySelectorAll(".crop-cancel").forEach(function (button) {
+    button.addEventListener("click", cancelCropSession);
+  });
+
+  if (dom.cropConfirm) dom.cropConfirm.addEventListener("click", prepareAndUploadCrop);
+
+  if (dom.cropZoom) {
+    dom.cropZoom.addEventListener("input", function () {
+      var session = state.cropSession;
+      var target = currentCropTarget();
+      if (!session || !target || target.mode === "contain") return;
+      session.states[target.key].zoom = Number(dom.cropZoom.value) / 100;
+      session.states[target.key].visited = true;
+      renderCropEditor();
+    });
+  }
+
+  function rotateCrop(delta) {
+    var session = state.cropSession;
+    if (!session || session.processing) return;
+    session.rotation = ((session.rotation + delta) % 360 + 360) % 360;
+    Object.keys(session.states).forEach(function (key) {
+      session.states[key].rotation = session.rotation;
+      session.states[key].offsetX = 0;
+      session.states[key].offsetY = 0;
+    });
+    renderCropEditor();
+  }
+
+  var rotateLeft = document.getElementById("cropRotateLeft");
+  var rotateRight = document.getElementById("cropRotateRight");
+  var cropReset = document.getElementById("cropReset");
+  if (rotateLeft) rotateLeft.addEventListener("click", function () { rotateCrop(-90); });
+  if (rotateRight) rotateRight.addEventListener("click", function () { rotateCrop(90); });
+  if (cropReset) cropReset.addEventListener("click", function () {
+    var session = state.cropSession;
+    var target = currentCropTarget();
+    if (!session || !target) return;
+    var crop = session.states[target.key];
+    crop.zoom = 1;
+    crop.offsetX = 0;
+    crop.offsetY = 0;
+    crop.visited = true;
+    renderCropEditor();
+  });
+
+  if (dom.cropCanvas && dom.cropStageWrap) {
+    var dragState = null;
+    dom.cropCanvas.addEventListener("pointerdown", function (event) {
+      var session = state.cropSession;
+      var target = currentCropTarget();
+      if (!session || !target || target.mode === "contain" || session.processing) return;
+      var crop = session.states[target.key];
+      dragState = {
+        pointerId: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        offsetX: crop.offsetX,
+        offsetY: crop.offsetY
+      };
+      dom.cropCanvas.setPointerCapture(event.pointerId);
+      dom.cropStageWrap.classList.add("is-dragging");
+      event.preventDefault();
+    });
+    dom.cropCanvas.addEventListener("pointermove", function (event) {
+      if (!dragState || event.pointerId !== dragState.pointerId || !state.cropSession) return;
+      var target = currentCropTarget();
+      if (!target) return;
+      var rect = dom.cropCanvas.getBoundingClientRect();
+      var crop = state.cropSession.states[target.key];
+      crop.offsetX = dragState.offsetX + (event.clientX - dragState.x) / Math.max(1, rect.width);
+      crop.offsetY = dragState.offsetY + (event.clientY - dragState.y) / Math.max(1, rect.height);
+      crop.visited = true;
+      renderCropEditor();
+    });
+    function endCropDrag(event) {
+      if (!dragState || (event && event.pointerId !== dragState.pointerId)) return;
+      dragState = null;
+      dom.cropStageWrap.classList.remove("is-dragging");
+    }
+    dom.cropCanvas.addEventListener("pointerup", endCropDrag);
+    dom.cropCanvas.addEventListener("pointercancel", endCropDrag);
+    dom.cropCanvas.addEventListener("wheel", function (event) {
+      var session = state.cropSession;
+      var target = currentCropTarget();
+      if (!session || !target || target.mode === "contain" || session.processing) return;
+      event.preventDefault();
+      var crop = session.states[target.key];
+      crop.zoom = Math.max(1, Math.min(4, crop.zoom + (event.deltaY < 0 ? 0.08 : -0.08)));
+      crop.visited = true;
+      renderCropEditor();
+    }, { passive: false });
+  }
+
   dom.projects.addEventListener("dragstart", function (event) {
     var card = event.target.closest(".project-admin-card");
     if (!card) return;
@@ -1216,17 +2150,24 @@
       return;
     }
     dom.projectUploadProgress.hidden = false;
+    var uploadedCount = 0;
     try {
       for (var index = 0; index < files.length; index += 1) {
-        dom.projectUploadProgress.textContent = "Загружаю " + (index + 1) + " из " + files.length + ": " + files[index].name;
-        var photo = await uploadImage(files[index]);
+        dom.projectUploadProgress.textContent = "Фотография " + (index + 1) + " из " + files.length + ": настройте кадр для компьютера и телефона.";
+        var photo = await openCropEditor(files[index], cropProfiles.project, null);
+        if (!photo) continue;
         if (!photo.alt) photo.alt = projectDisplayTitle(state.currentDraft);
         state.currentDraft.photos.push(photo);
         if (!state.currentDraft.cover) state.currentDraft.cover = photo.src;
+        uploadedCount += 1;
         renderProjectPhotos();
       }
-      toast(files.length === 1 ? "Фотография загружена." : "Фотографии загружены.", "success");
+      if (uploadedCount) {
+        finishOperation(uploadedCount === 1 ? "Фотография готова" : "Все выбранные фотографии готовы", "Теперь нажмите «Сохранить проект в правках».");
+        toast(uploadedCount === 1 ? "Фотография подготовлена и загружена." : "Подготовлено и загружено фотографий: " + uploadedCount + ".", "success");
+      }
     } catch (error) {
+      failOperation(error.message);
       toast(error.message, "error");
     } finally {
       dom.projectUploadProgress.hidden = true;
@@ -1269,17 +2210,17 @@
     var key = group.dataset.mediaGroup;
     var index = Number(item.dataset.mediaIndex);
     try {
-      toast("Загружаю «" + file.name + "»…");
-      var photo = await uploadImage(file);
+      var photo = await openCropEditor(file, profileForMedia(key, index), null);
+      if (!photo) return;
       var media = state.content.site.media[key][index];
-      media.src = photo.src;
-      media.width = photo.width || 0;
-      media.height = photo.height || 0;
+      replaceMediaAsset(media, photo);
       renderMedia();
       updateMetrics();
       markDirty();
-      toast("Фотография загружена. Нажмите «Опубликовать».", "success");
+      finishOperation("Фотография раздела готова", "Откройте предпросмотр. Посетители пока видят старую версию.");
+      toast("Фотография подготовлена. Проверьте предпросмотр, затем при готовности опубликуйте.", "success");
     } catch (error) {
+      failOperation(error.message);
       toast(error.message, "error");
     }
   });
@@ -1398,9 +2339,6 @@
       if (dom.loading) dom.loading.hidden = true;
       switchSection(window.location.hash.replace(/^#/, "") || "dashboard", false);
       markSaved();
-      if (!state.capabilities.gd) {
-        toast("На сервере не включён GD: изображения будут храниться без автоматической оптимизации.");
-      }
     } catch (error) {
       showFatal(error.message);
     }

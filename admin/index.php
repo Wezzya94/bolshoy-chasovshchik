@@ -60,7 +60,7 @@ $authenticated = tv_is_authenticated();
   <meta name="csrf-token" content="<?= tv_h(tv_csrf_token()) ?>">
   <title><?= $authenticated ? 'Управление сайтом' : 'Вход' ?> · Твоё Время</title>
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon-mark.svg?v=2">
-  <link rel="stylesheet" href="assets/admin.css?v=5">
+  <link rel="stylesheet" href="assets/admin.css?v=9">
 </head>
 <body class="<?= $authenticated ? 'admin-app-page' : 'login-page' ?>">
 <?php if (!$authenticated): ?>
@@ -91,7 +91,7 @@ $authenticated = tv_is_authenticated();
       <a class="back-link" href="../">← Вернуться на сайт</a>
     </section>
   </main>
-  <script src="assets/admin.js?v=5"></script>
+  <script src="assets/admin.js?v=9"></script>
 <?php else: ?>
   <div class="app-shell" id="adminApp">
     <header class="topbar">
@@ -102,7 +102,9 @@ $authenticated = tv_is_authenticated();
       </a>
       <div class="topbar-actions">
         <span class="save-indicator" id="saveIndicator" data-state="saved">Все изменения сохранены</span>
-        <a class="button button-ghost" href="../" target="_blank" rel="noopener">Проверить сайт ↗</a>
+        <span class="working-version" id="workingVersion" hidden></span>
+        <button class="button button-secondary preview-current" type="button">Предпросмотр правок ↗</button>
+        <a class="button button-ghost published-site-link" href="../" target="_blank" rel="noopener">Открыть сайт ↗</a>
         <form method="post" id="logoutForm">
           <input type="hidden" name="action" value="logout">
           <input type="hidden" name="csrf" value="<?= tv_h(tv_csrf_token()) ?>">
@@ -117,9 +119,10 @@ $authenticated = tv_is_authenticated();
         <button class="nav-item" type="button" data-section-target="projects"><span>02</span>Проекты</button>
         <button class="nav-item" type="button" data-section-target="media"><span>03</span>Фотографии сайта</button>
         <button class="nav-item" type="button" data-section-target="contacts"><span>04</span>Контакты и соцсети</button>
-        <button class="nav-item" type="button" data-section-target="history"><span>05</span>История и откат</button>
-        <button class="nav-item" type="button" data-section-target="security"><span>06</span>Безопасность</button>
-        <button class="nav-item" type="button" data-section-target="help"><span>07</span>Как пользоваться</button>
+        <button class="nav-item" type="button" data-section-target="drafts"><span>05</span>Черновики и предпросмотр</button>
+        <button class="nav-item" type="button" data-section-target="history"><span>06</span>История и откат</button>
+        <button class="nav-item" type="button" data-section-target="security"><span>07</span>Безопасность</button>
+        <button class="nav-item" type="button" data-section-target="help"><span>08</span>Как пользоваться</button>
       </nav>
       <div class="sidebar-note"><strong>Важно:</strong> ввод и загрузка ещё ничего не меняют на сайте. Посетители увидят правки только после кнопки «Опубликовать».</div>
     </aside>
@@ -149,6 +152,8 @@ $authenticated = tv_is_authenticated();
             <button class="button button-secondary new-project" type="button">+ Новый проект</button>
             <button class="button button-secondary" type="button" data-go-section="media">Заменить фотографию</button>
             <button class="button button-secondary" type="button" data-go-section="contacts">Обновить контакты</button>
+            <button class="button button-secondary save-draft" type="button">Сохранить черновик</button>
+            <button class="button button-ghost preview-current" type="button">Предпросмотр правок ↗</button>
           </div>
         </div>
         <div class="dashboard-support-grid">
@@ -184,7 +189,7 @@ $authenticated = tv_is_authenticated();
 
       <section class="admin-section" id="section-media" data-section="media" hidden>
         <div class="section-heading">
-          <div><div class="eyebrow">Основные разделы</div><h1>Фотографии сайта</h1><p>Первый экран, направления, блок мастера, мастерская и сертификаты. Новая фотография загружается сразу, но появляется на сайте только после публикации.</p></div>
+          <div><div class="eyebrow">Основные разделы</div><h1>Фотографии сайта</h1><p>После выбора файла откроется редактор: передвиньте снимок, увеличьте и отдельно проверьте кадр для компьютера и телефона. Панель сама создаст все нужные размеры.</p></div>
           <button class="button button-primary save-all" type="button">Опубликовать</button>
         </div>
         <div id="mediaGroups" class="media-groups"></div>
@@ -208,6 +213,21 @@ $authenticated = tv_is_authenticated();
           <div class="subheading-row"><div><h2>Социальные сети</h2><p>Порядок в этом списке совпадает с порядком на сайте.</p></div><button class="button button-secondary" id="addSocial" type="button">+ Добавить ссылку</button></div>
           <div id="socialsList" class="socials-editor"></div>
         </form>
+      </section>
+
+      <section class="admin-section" id="section-drafts" data-section="drafts" hidden>
+        <div class="section-heading">
+          <div><div class="eyebrow">Рабочие версии, которые никто не видит</div><h1>Черновики и предпросмотр</h1><p>Черновик хранится на сервере отдельно, но не меняет опубликованный сайт и не попадает в историю публикаций. Предпросмотр показывает текущие правки в настоящем дизайне сайта.</p></div>
+          <div class="heading-actions"><button class="button button-secondary save-draft" type="button">Сохранить текущий черновик</button><button class="button button-primary preview-current" type="button">Открыть предпросмотр ↗</button></div>
+        </div>
+        <div class="draft-workflow panel">
+          <div class="draft-workflow-step"><span>1</span><div><strong>Внесите правки</strong><small>Текст и новые фото пока видны только в этой вкладке.</small></div></div>
+          <div class="draft-workflow-step"><span>2</span><div><strong>Сохраните под понятным именем</strong><small>Например: «Новый проект Jaeger — на согласование».</small></div></div>
+          <div class="draft-workflow-step"><span>3</span><div><strong>Откройте предпросмотр</strong><small>Проверьте компьютер и телефон. Плашка сверху напомнит, что это черновик.</small></div></div>
+          <div class="draft-workflow-step"><span>4</span><div><strong>Опубликуйте только после проверки</strong><small>Лишь золотая кнопка «Опубликовать» меняет сайт для посетителей.</small></div></div>
+        </div>
+        <div class="draft-status" id="draftStatus" role="status">Загружаю список черновиков…</div>
+        <div class="drafts-list" id="draftsList"></div>
       </section>
 
       <section class="admin-section" id="section-history" data-section="history" hidden>
@@ -235,24 +255,28 @@ $authenticated = tv_is_authenticated();
       </section>
 
       <section class="admin-section" id="section-help" data-section="help" hidden>
-        <div class="section-heading"><div><div class="eyebrow">Короткая памятка</div><h1>Как пользоваться панелью</h1><p>Панель меняет только содержимое сайта: карточки, фотографии и контакты. Дизайн и расположение разделов она не перестраивает.</p></div></div>
-        <div class="help-steps">
-          <article class="panel help-card"><span class="help-number">01</span><h2>Сделайте правку</h2><p>Откройте нужный раздел. Текст можно печатать сразу; фотография сначала загружается во временно подготовленный файл.</p></article>
-          <article class="panel help-card"><span class="help-number">02</span><h2>Проверьте подсказки</h2><p>Надпись «Есть неопубликованные изменения» означает, что посетители пока видят старый вариант. Ошибочные поля панель не даст опубликовать.</p></article>
-          <article class="panel help-card"><span class="help-number">03</span><h2>Опубликуйте</h2><p>Нажмите золотую кнопку «Опубликовать». Только после успешного сообщения изменения становятся видны на сайте.</p></article>
-          <article class="panel help-card"><span class="help-number">04</span><h2>Посмотрите глазами посетителя</h2><p>Нажмите «Проверить сайт» вверху и обновите открытую страницу. Для нового проекта проверьте карточку и все фотографии галереи.</p></article>
-          <article class="panel help-card"><span class="help-number">05</span><h2>Исправьте ошибку</h2><p>До публикации нажмите «Отменить правки». После публикации откройте «История и откат» и верните подходящую версию.</p></article>
+        <div class="section-heading"><div><div class="eyebrow">Полная инструкция</div><h1>Как пользоваться панелью</h1><p>Здесь пошагово описаны все разделы. Откройте нужный пункт и выполняйте действия сверху вниз.</p></div></div>
+        <div class="panel golden-rule"><strong>Главное правило</strong><p>Печатание текста, загрузка фотографии, сохранение проекта и сохранение черновика не меняют сайт для посетителей. Сайт меняется только после успешного сообщения «Изменения опубликованы».</p></div>
+        <div class="help-guides">
+          <details class="panel help-guide" open><summary><span>01</span>Безопасный порядок любой работы</summary><div><ol><li>Откройте нужный раздел и внесите изменения.</li><li>Если работа большая — нажмите «Сохранить черновик» и дайте ему понятное имя.</li><li>Нажмите «Предпросмотр правок». Откроется настоящий сайт с заметной плашкой «Предпросмотр черновика».</li><li>Проверьте главную страницу на компьютере и телефоне, карточку проекта и все фотографии.</li><li>Вернитесь в панель. Если всё верно — нажмите золотую кнопку «Опубликовать».</li><li>Дождитесь сообщения об успешной публикации. Не закрывайте вкладку во время загрузки или публикации.</li></ol></div></details>
+          <details class="panel help-guide"><summary><span>02</span>Создание и редактирование проекта</summary><div><ol><li>Откройте «Проекты» → «Новый проект» или «Изменить» у существующего.</li><li>ID вводится латиницей: например <code>jaeger-repeater</code>. У существующего проекта без необходимости его не меняйте.</li><li>«Показывать проект на сайте» можно включить только когда проект полностью готов.</li><li>Заполните название, категорию, короткую подпись для карточки и подробный текст для галереи.</li><li>Характеристики вводите по одной на строке: <code>Год | конец XIX века</code>.</li><li>Добавьте фотографии. Звезда выбирает обложку, стрелки меняют порядок, крестик убирает снимок из проекта.</li><li>Нажмите «Сохранить проект в правках». После этого проект ещё не опубликован.</li></ol><p><strong>Подсказки на карточке конкретны:</strong> «Нет фотографий», «Нет описания обложки» или «Нет описания: N фото». Они не блокируют черновик, но их лучше исправить до публикации.</p></div></details>
+          <details class="panel help-guide"><summary><span>03</span>Обрезка и загрузка фотографий</summary><div><ol><li>Выберите JPEG, PNG или WebP до 9 МБ. Для нескольких снимков редактор откроется по очереди.</li><li>В окне кадрирования удерживайте изображение мышью или пальцем и двигайте его внутри рамки.</li><li>Ползунок «Увеличение» приближает изображение. Кнопки поворота разворачивают его на 90°.</li><li>Обязательно откройте обе вкладки: «Компьютер» и «Телефон». Это два разных кадра.</li><li>Для «Направлений» компьютерный кадр очень широкий — убедитесь, что главный предмет полностью попал в узкую рамку.</li><li>Нажмите «Подготовить и загрузить». Панель автоматически создаст несколько размеров WebP и выберет подходящий размер для экрана посетителя.</li><li>Не закрывайте окно, пока постоянная панель загрузки не сообщит «Готово».</li></ol><p>Исходный мастер-файл сохраняется в оптимизированном виде, поэтому снимок можно открыть кнопкой «Изменить кадр» и подготовить заново без поиска оригинала.</p></div></details>
+          <details class="panel help-guide"><summary><span>04</span>Фотографии основных разделов</summary><div><p>В разделе «Фотографии сайта» каждый слот подписан так же, как на странице: первый экран, направления, мастер, мастерская, сертификаты. Нажмите «Заменить и обрезать», настройте оба кадра и затем откройте предпросмотр.</p><ul><li><strong>Первый экран и мастер:</strong> оставьте свободное место вокруг лица, рук и часов.</li><li><strong>Направления:</strong> особенно тщательно проверьте узкий компьютерный кадр.</li><li><strong>Мастерская:</strong> важный предмет держите ближе к центру — форма ячеек отличается.</li><li><strong>Сертификаты:</strong> документ сохраняется целиком без обрезки; допустим только поворот.</li></ul></div></details>
+          <details class="panel help-guide"><summary><span>05</span>Черновики и предпросмотр</summary><div><ul><li><strong>Черновик</strong> — отдельная сохранённая рабочая версия всего сайта. Она не видна посетителям и не создаёт запись в истории.</li><li><strong>Открыть черновик</strong> — заменить текущие правки содержимым выбранного черновика. Опубликованный сайт при этом не меняется.</li><li><strong>Предпросмотр</strong> — временная закрытая ссылка внутри вашей авторизованной сессии. Она не предназначена для отправки клиенту.</li><li><strong>Опубликовать</strong> — единственное действие, которое меняет публичный сайт и создаёт страховочную копию.</li></ul><p>Не называйте все версии «Черновик». Указывайте смысл и дату: «Контакты и Jaeger — 22 августа».</p></div></details>
+          <details class="panel help-guide"><summary><span>06</span>Контакты и социальные сети</summary><div><ol><li>Телефон для показа можно написать привычно, например <code>+7 900 000-00-00</code>.</li><li>Технический телефон E.164 пишется без пробелов и скобок: <code>+79000000000</code>.</li><li>Все ссылки должны быть полными и начинаться с <code>https://</code>.</li><li>Флажок «Виден» включает ссылку на сайте. Стрелки меняют порядок.</li><li>После изменения проверьте кнопки Telegram и WhatsApp в предпросмотре.</li></ol></div></details>
+          <details class="panel help-guide"><summary><span>07</span>Публикация, история и откат</summary><div><p>Перед публикацией панель проверяет обязательные поля. Во время публикации кнопки блокируются; дождитесь результата. Каждая успешная публикация сначала сохраняет прежнее состояние в «Истории и откате».</p><p>Чтобы исправить уже опубликованную ошибку: откройте историю, выберите время, внимательно прочитайте список отличий и подтвердите восстановление. Восстановление публикуется сразу, но нынешняя версия тоже останется в истории — действие обратимо.</p></div></details>
+          <details class="panel help-guide"><summary><span>08</span>Если кажется, что что-то зависло</summary><div><ol><li>Посмотрите постоянную панель операции внизу экрана: там указан текущий шаг и количество файлов.</li><li>При медленном интернете подготовка большой фотографии может занять несколько минут. Пока проценты или шаги меняются — всё работает.</li><li>Не нажимайте кнопку загрузки повторно и не закрывайте вкладку.</li><li>Если появилась красная ошибка, прочитайте её полностью, исправьте причину и повторите только этот файл.</li><li>Если сессия завершилась, войдите снова и откройте последний сохранённый черновик.</li></ol></div></details>
         </div>
         <div class="panel glossary-panel">
           <h2>Что означают надписи</h2>
-          <dl><div><dt>Скрыт</dt><dd>Проект сохранён в панели, но посетители его не видят.</dd></div><div><dt>Неопубликованные изменения</dt><dd>Правки есть только в этой вкладке браузера и ещё не попали на сайт.</dd></div><div><dt>Версия</dt><dd>Номер успешной публикации. Чем он больше, тем состояние новее.</dd></div><div><dt>Описание фото</dt><dd>Короткое описание того, что изображено; оно помогает поиску и людям, использующим экранное чтение.</dd></div></dl>
+          <dl><div><dt>Скрыт</dt><dd>Проект хранится в панели, но не выводится на публичной странице.</dd></div><div><dt>Неопубликованные изменения</dt><dd>Правки есть в текущей вкладке, однако посетители видят прежний сайт.</dd></div><div><dt>Сохранённый черновик</dt><dd>Рабочая версия записана на сервер и переживёт закрытие браузера, но не опубликована.</dd></div><div><dt>Предпросмотр</dt><dd>Точный вид текущих правок в дизайне сайта; сверху есть предупреждающая плашка.</dd></div><div><dt>Версия</dt><dd>Номер успешной публикации. Черновики этот номер не увеличивают.</dd></div><div><dt>Описание фото</dt><dd>Коротко и буквально: что изображено. Помогает поиску и людям с экранным чтением.</dd></div></dl>
         </div>
       </section>
     </main>
 
     <div class="publish-bar" id="publishBar" hidden>
       <div class="publish-copy"><strong>Есть неопубликованные изменения</strong><small id="publishSummary">Проверьте и опубликуйте их.</small></div>
-      <div class="publish-actions"><button class="button button-ghost" id="discardChanges" type="button">Отменить правки</button><button class="button button-primary save-all" type="button">Опубликовать</button></div>
+      <div class="publish-actions"><button class="button button-ghost" id="discardChanges" type="button">Отменить правки</button><button class="button button-ghost save-draft" type="button">Сохранить черновик</button><button class="button button-secondary preview-current" type="button">Предпросмотр ↗</button><button class="button button-primary save-all" type="button">Опубликовать</button></div>
     </div>
   </div>
 
@@ -280,14 +304,14 @@ $authenticated = tv_is_authenticated();
 
         <div class="project-photos-heading">
           <div><h3>Фотографии проекта</h3><p>Первая отмеченная обложка показывается в сетке. Остальные идут в галерее в указанном порядке.</p></div>
-          <label class="button button-secondary file-button">Загрузить фотографии<input id="projectPhotoUpload" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></label>
+          <label class="button button-secondary file-button">Добавить и обрезать фотографии<input id="projectPhotoUpload" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></label>
         </div>
         <div class="upload-progress" id="projectUploadProgress" hidden></div>
         <div class="project-photos-editor" id="projectPhotosEditor"></div>
       </div>
       <footer class="dialog-footer">
         <button class="button button-ghost" value="cancel" formnovalidate>Отмена</button>
-        <button class="button button-primary" id="saveProject" value="default">Сохранить и опубликовать</button>
+        <button class="button button-primary" id="saveProject" value="default">Сохранить проект в правках</button>
       </footer>
     </form>
   </dialog>
@@ -311,8 +335,67 @@ $authenticated = tv_is_authenticated();
     </div>
   </dialog>
 
+  <dialog class="draft-dialog" id="draftDialog" aria-labelledby="draftDialogTitle">
+    <form method="dialog" class="draft-dialog-shell" id="draftForm">
+      <header class="dialog-header">
+        <div><div class="eyebrow">Отдельная рабочая версия</div><h2 id="draftDialogTitle">Сохранить черновик</h2></div>
+        <button class="icon-button draft-dialog-close" value="cancel" formnovalidate aria-label="Закрыть">×</button>
+      </header>
+      <div class="dialog-body">
+        <label class="draft-name-label">Понятное название черновика<input id="draftName" name="draftName" maxlength="120" placeholder="Например: Jaeger — версия на согласование" required><small>По названию должно быть понятно, что внутри. Черновик не меняет сайт и не создаёт запись в истории.</small></label>
+        <label class="draft-update-choice" id="draftUpdateChoice" hidden><input id="updateCurrentDraft" type="checkbox" checked><span>Обновить открытый черновик, а не создавать ещё одну копию</span></label>
+        <div class="safety-note"><strong>Безопасно:</strong> после сохранения посетители продолжат видеть опубликованную версию.</div>
+      </div>
+      <footer class="dialog-footer">
+        <button class="button button-ghost" value="cancel" formnovalidate>Отмена</button>
+        <button class="button button-primary" value="save">Сохранить черновик</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="crop-dialog" id="cropDialog" aria-labelledby="cropDialogTitle">
+    <div class="crop-dialog-shell">
+      <header class="dialog-header crop-dialog-header">
+        <div><div class="eyebrow">Подготовка фотографии</div><h2 id="cropDialogTitle">Настройте кадр</h2><p id="cropFileName"></p></div>
+        <button class="icon-button crop-cancel" type="button" aria-label="Отменить загрузку">×</button>
+      </header>
+      <div class="crop-dialog-body">
+        <div class="crop-explanation" id="cropExplanation"></div>
+        <div class="crop-target-tabs" id="cropTargetTabs" role="tablist" aria-label="Варианты кадра"></div>
+        <div class="crop-workspace">
+          <div class="crop-stage-wrap" id="cropStageWrap">
+            <canvas id="cropCanvas" width="1200" height="800" aria-label="Предпросмотр обрезки фотографии"></canvas>
+            <div class="crop-grid" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <div class="crop-drag-hint" id="cropDragHint">Двигайте фотографию мышью или пальцем</div>
+          </div>
+          <aside class="crop-controls">
+            <div class="crop-current-target"><span>Сейчас настраивается</span><strong id="cropTargetTitle">Компьютер</strong><small id="cropTargetRatio"></small></div>
+            <label class="crop-zoom-label">Увеличение <output id="cropZoomOutput">100%</output><input id="cropZoom" type="range" min="100" max="400" step="1" value="100"></label>
+            <div class="crop-control-buttons">
+              <button class="button button-ghost" id="cropRotateLeft" type="button" aria-label="Повернуть влево на 90 градусов">↶ Повернуть</button>
+              <button class="button button-ghost" id="cropRotateRight" type="button" aria-label="Повернуть вправо на 90 градусов">Повернуть ↷</button>
+              <button class="button button-ghost" id="cropReset" type="button">Вернуть по центру</button>
+            </div>
+            <div class="crop-format-note" id="cropFormatNote"></div>
+          </aside>
+        </div>
+      </div>
+      <footer class="dialog-footer crop-dialog-footer">
+        <button class="button button-ghost crop-cancel" type="button">Отменить этот файл</button>
+        <div class="crop-footer-copy"><strong id="cropFooterTitle">Проверьте оба кадра</strong><small id="cropFooterNote">Панель затем сама сделает все нужные размеры.</small></div>
+        <button class="button button-primary" id="cropConfirm" type="button">Подготовить и загрузить</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <section class="operation-panel" id="operationPanel" role="status" aria-live="polite" hidden>
+    <div class="operation-copy"><span class="operation-state" id="operationState">Подготовка</span><strong id="operationTitle">Обрабатываю фотографию…</strong><small id="operationDetail">Не закрывайте эту вкладку.</small></div>
+    <progress id="operationProgress" max="100" value="0"></progress>
+    <button class="icon-button" id="operationClose" type="button" aria-label="Закрыть сообщение" hidden>×</button>
+  </section>
+
   <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
-  <script src="assets/admin.js?v=5"></script>
+  <script src="assets/admin.js?v=9"></script>
 <?php endif; ?>
 </body>
 </html>
