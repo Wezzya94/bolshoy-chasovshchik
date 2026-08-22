@@ -7,6 +7,9 @@ define('TV_STORAGE_DIR', TV_ROOT . DIRECTORY_SEPARATOR . 'storage');
 define('TV_CONFIG_FILE', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'admin-config.php');
 define('TV_ATTEMPTS_FILE', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'login-attempts.json');
 define('TV_HISTORY_DIR', TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'history');
+define('TV_HISTORY_RECOVERY_HOURS', 72);
+define('TV_HISTORY_MIN_KEEP', 100);
+define('TV_HISTORY_HARD_LIMIT', 200);
 define('TV_UPLOAD_DIR', TV_ROOT . DIRECTORY_SEPARATOR . 'uploads');
 define('TV_MAX_UPLOAD_BYTES', 15 * 1024 * 1024);
 define('TV_IDLE_TIMEOUT', 30 * 60);
@@ -138,9 +141,17 @@ function tv_require_same_origin(): void
         return;
     }
     $originParts = parse_url($origin);
+    $requestScheme = tv_is_https() ? 'https' : 'http';
+    $requestParts = parse_url($requestScheme . '://' . trim((string) ($_SERVER['HTTP_HOST'] ?? '')));
+    $originScheme = strtolower((string) ($originParts['scheme'] ?? ''));
     $originHost = strtolower((string) ($originParts['host'] ?? ''));
-    $requestHost = strtolower(preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? '')) ?? '');
-    if ($originHost === '' || $requestHost === '' || !hash_equals($requestHost, $originHost)) {
+    $requestHost = strtolower((string) ($requestParts['host'] ?? ''));
+    $originPort = (int) ($originParts['port'] ?? ($originScheme === 'https' ? 443 : 80));
+    $requestPort = (int) ($requestParts['port'] ?? ($requestScheme === 'https' ? 443 : 80));
+    if ($originScheme === '' || $originHost === '' || $requestHost === ''
+        || !hash_equals($requestScheme, $originScheme)
+        || !hash_equals($requestHost, $originHost)
+        || $originPort !== $requestPort) {
         tv_json_response(['ok' => false, 'error' => 'Запрос с другого сайта отклонён.'], 403);
     }
 }
@@ -606,18 +617,236 @@ function tv_atomic_write(string $path, string $contents, int $permissions = 0640
     }
 }
 
-function tv_prune_history(int $keep = 100): void
+function tv_history_files(): array
 {
     $files = glob(TV_HISTORY_DIR . DIRECTORY_SEPARATOR . 'site-r*.json');
-    if (!is_array($files) || count($files) <= $keep) {
+    if (!is_array($files)) {
+        return [];
+    }
+
+    $files = array_values(array_filter($files, static function (string $file): bool {
+        return is_file($file) && preg_match('/^site-r[0-9]{6,12}-[0-9]{8}-[0-9]{6}\.json$/', basename($file)) === 1;
+    }));
+    usort($files, static function (string $left, string $right): int {
+        $timeComparison = ((int) filemtime($left)) <=> ((int) filemtime($right));
+        return $timeComparison !== 0 ? $timeComparison : strcmp(basename($left), basename($right));
+    });
+    return $files;
+}
+
+function tv_history_snapshot_name(array $content): string
+{
+    return sprintf('site-r%06d-%s.json', (int) ($content['revision'] ?? 0), gmdate('Ymd-His'));
+}
+
+function tv_write_history_snapshot(array $content): string
+{
+    if (!is_dir(TV_HISTORY_DIR) && !mkdir(TV_HISTORY_DIR, 0750, true) && !is_dir(TV_HISTORY_DIR)) {
+        throw new RuntimeException('Не удалось создать историю версий.');
+    }
+    $name = tv_history_snapshot_name($content);
+    tv_atomic_write(
+        TV_HISTORY_DIR . DIRECTORY_SEPARATOR . $name,
+        json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n"
+    );
+    return pathinfo($name, PATHINFO_FILENAME);
+}
+
+function tv_prune_history(): void
+{
+    $files = tv_history_files();
+    if (!$files) {
         return;
     }
-    sort($files, SORT_STRING);
-    foreach (array_slice($files, 0, count($files) - $keep) as $oldFile) {
+
+    while (count($files) > TV_HISTORY_HARD_LIMIT) {
+        $oldFile = array_shift($files);
+        if (is_string($oldFile) && is_file($oldFile) && !@unlink($oldFile)) {
+            error_log('TV admin could not prune history file: ' . basename($oldFile));
+        }
+    }
+
+    $cutoff = time() - (TV_HISTORY_RECOVERY_HOURS * 3600);
+    while (count($files) > TV_HISTORY_MIN_KEEP) {
+        $oldFile = $files[0] ?? null;
+        if (!is_string($oldFile) || (int) filemtime($oldFile) >= $cutoff) {
+            break;
+        }
+        array_shift($files);
         if (is_file($oldFile) && !@unlink($oldFile)) {
             error_log('TV admin could not prune history file: ' . basename($oldFile));
         }
     }
+}
+
+function tv_history_path(string $historyId): string
+{
+    $historyId = trim($historyId);
+    if ($historyId === '' || basename($historyId) !== $historyId
+        || preg_match('/^site-r[0-9]{6,12}-[0-9]{8}-[0-9]{6}$/', $historyId) !== 1) {
+        throw new TvValidationException('Выбрана некорректная версия истории.');
+    }
+    $path = TV_HISTORY_DIR . DIRECTORY_SEPARATOR . $historyId . '.json';
+    if (!is_file($path)) {
+        throw new TvValidationException('Эта версия больше не найдена. Обновите список истории.');
+    }
+    return $path;
+}
+
+function tv_read_history_snapshot(string $historyId): array
+{
+    $path = tv_history_path($historyId);
+    $raw = file_get_contents($path);
+    if ($raw === false) {
+        throw new RuntimeException('Не удалось прочитать выбранную версию.');
+    }
+    $snapshot = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($snapshot) || (int) ($snapshot['schemaVersion'] ?? 0) !== 1) {
+        throw new TvValidationException('Выбранная версия повреждена или имеет неподдерживаемый формат.');
+    }
+    return $snapshot;
+}
+
+function tv_history_captured_at(string $file): string
+{
+    $name = basename($file);
+    if (preg_match('/^site-r[0-9]{6,12}-([0-9]{8}-[0-9]{6})\.json$/', $name, $matches) === 1) {
+        $date = DateTimeImmutable::createFromFormat('!Ymd-His', $matches[1], new DateTimeZone('UTC'));
+        if ($date instanceof DateTimeImmutable) {
+            return $date->format(DateTimeInterface::ATOM);
+        }
+    }
+    return gmdate(DateTimeInterface::ATOM, (int) filemtime($file));
+}
+
+function tv_content_stats(array $content): array
+{
+    $projects = is_array($content['projects'] ?? null) ? $content['projects'] : [];
+    $media = is_array($content['site']['media'] ?? null) ? $content['site']['media'] : [];
+    $projectPhotos = 0;
+    $hiddenProjects = 0;
+    foreach ($projects as $project) {
+        if (!is_array($project)) {
+            continue;
+        }
+        $projectPhotos += is_array($project['photos'] ?? null) ? count($project['photos']) : 0;
+        if (empty($project['visible'])) {
+            $hiddenProjects++;
+        }
+    }
+    $sitePhotos = 0;
+    foreach ($media as $items) {
+        $sitePhotos += is_array($items) ? count($items) : 0;
+    }
+    return [
+        'projects' => count($projects),
+        'hiddenProjects' => $hiddenProjects,
+        'projectPhotos' => $projectPhotos,
+        'sitePhotos' => $sitePhotos,
+    ];
+}
+
+function tv_project_label(array $project): string
+{
+    $title = trim((string) ($project['title'] ?? '') . ' ' . (string) ($project['accent'] ?? ''));
+    return $title !== '' ? $title : (string) ($project['id'] ?? 'Проект');
+}
+
+function tv_content_change_summary(array $current, array $target): array
+{
+    $currentProjects = [];
+    foreach (($current['projects'] ?? []) as $project) {
+        if (is_array($project) && isset($project['id'])) {
+            $currentProjects[(string) $project['id']] = $project;
+        }
+    }
+    $targetProjects = [];
+    foreach (($target['projects'] ?? []) as $project) {
+        if (is_array($project) && isset($project['id'])) {
+            $targetProjects[(string) $project['id']] = $project;
+        }
+    }
+
+    $returnedIds = array_values(array_diff(array_keys($targetProjects), array_keys($currentProjects)));
+    $removedIds = array_values(array_diff(array_keys($currentProjects), array_keys($targetProjects)));
+    $changedIds = [];
+    foreach (array_intersect(array_keys($currentProjects), array_keys($targetProjects)) as $id) {
+        $currentProject = $currentProjects[$id];
+        $targetProject = $targetProjects[$id];
+        unset($currentProject['order'], $targetProject['order']);
+        if ($currentProject !== $targetProject) {
+            $changedIds[] = $id;
+        }
+    }
+    $currentOrder = array_values(array_map(static fn(array $project): string => (string) ($project['id'] ?? ''), $current['projects'] ?? []));
+    $targetOrder = array_values(array_map(static fn(array $project): string => (string) ($project['id'] ?? ''), $target['projects'] ?? []));
+    $orderChanged = $currentOrder !== $targetOrder;
+    $contactsChanged = ($current['site']['contacts'] ?? null) !== ($target['site']['contacts'] ?? null);
+    $mediaChanged = ($current['site']['media'] ?? null) !== ($target['site']['media'] ?? null);
+
+    $details = [];
+    if ($returnedIds) {
+        $labels = array_map(static fn(string $id): string => tv_project_label($targetProjects[$id]), array_slice($returnedIds, 0, 3));
+        $suffix = count($returnedIds) > 3 ? ' и ещё ' . (count($returnedIds) - 3) : '';
+        $details[] = 'Вернутся проекты: ' . implode(', ', $labels) . $suffix . '.';
+    }
+    if ($removedIds) {
+        $labels = array_map(static fn(string $id): string => tv_project_label($currentProjects[$id]), array_slice($removedIds, 0, 3));
+        $suffix = count($removedIds) > 3 ? ' и ещё ' . (count($removedIds) - 3) : '';
+        $details[] = 'Из текущей версии уйдут проекты: ' . implode(', ', $labels) . $suffix . '.';
+    }
+    if ($changedIds) {
+        $details[] = 'Изменятся карточки проектов: ' . count($changedIds) . '.';
+    }
+    if ($orderChanged) {
+        $details[] = 'Изменится порядок проектов.';
+    }
+    if ($mediaChanged) {
+        $details[] = 'Изменятся фотографии основных разделов.';
+    }
+    if ($contactsChanged) {
+        $details[] = 'Изменятся контакты или ссылки на соцсети.';
+    }
+    if (!$details) {
+        $details[] = 'Содержимое этой версии совпадает с текущим.';
+    }
+
+    return [
+        'projectsReturned' => count($returnedIds),
+        'projectsRemoved' => count($removedIds),
+        'projectsChanged' => count($changedIds),
+        'orderChanged' => $orderChanged,
+        'mediaChanged' => $mediaChanged,
+        'contactsChanged' => $contactsChanged,
+        'hasChanges' => (bool) ($returnedIds || $removedIds || $changedIds || $orderChanged || $mediaChanged || $contactsChanged),
+        'details' => $details,
+    ];
+}
+
+function tv_list_history(int $limit = TV_HISTORY_MIN_KEEP): array
+{
+    $current = tv_read_content();
+    $files = array_reverse(tv_history_files());
+    $entries = [];
+    foreach (array_slice($files, 0, max(1, min($limit, TV_HISTORY_HARD_LIMIT))) as $file) {
+        try {
+            $historyId = pathinfo($file, PATHINFO_FILENAME);
+            $snapshot = tv_read_history_snapshot($historyId);
+            $capturedAt = tv_history_captured_at($file);
+            $capturedTimestamp = strtotime($capturedAt) ?: 0;
+            $entries[] = [
+                'id' => $historyId,
+                'revision' => (int) ($snapshot['revision'] ?? 0),
+                'capturedAt' => $capturedAt,
+                'withinRecoveryWindow' => $capturedTimestamp >= time() - (TV_HISTORY_RECOVERY_HOURS * 3600),
+                'stats' => tv_content_stats($snapshot),
+                'changes' => tv_content_change_summary($current, $snapshot),
+            ];
+        } catch (Throwable $error) {
+            error_log('TV admin skipped history file ' . basename($file) . ': ' . $error->getMessage());
+        }
+    }
+    return $entries;
 }
 
 function tv_save_content(mixed $candidate, int $expectedRevision): array
@@ -638,14 +867,44 @@ function tv_save_content(mixed $candidate, int $expectedRevision): array
         $normalized['revision'] = $currentRevision + 1;
         $normalized['updatedAt'] = gmdate('c');
 
-        if (!is_dir(TV_HISTORY_DIR) && !mkdir(TV_HISTORY_DIR, 0750, true) && !is_dir(TV_HISTORY_DIR)) {
-            throw new RuntimeException('Не удалось создать историю версий.');
-        }
-        $historyName = sprintf('site-r%06d-%s.json', $currentRevision, gmdate('Ymd-His'));
+        tv_write_history_snapshot($current);
         tv_atomic_write(
-            TV_HISTORY_DIR . DIRECTORY_SEPARATOR . $historyName,
-            json_encode($current, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n"
+            TV_CONTENT_FILE,
+            json_encode($normalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n"
         );
+        tv_prune_history();
+        return $normalized;
+    } finally {
+        flock($lock, LOCK_UN);
+        fclose($lock);
+    }
+}
+
+function tv_restore_content(string $historyId, int $expectedRevision): array
+{
+    tv_ensure_storage();
+    $lockPath = TV_STORAGE_DIR . DIRECTORY_SEPARATOR . 'content.lock';
+    $lock = fopen($lockPath, 'c+');
+    if ($lock === false || !flock($lock, LOCK_EX)) {
+        throw new RuntimeException('Не удалось заблокировать контент для восстановления.');
+    }
+    try {
+        $current = tv_read_content();
+        $currentRevision = (int) ($current['revision'] ?? 0);
+        if ($expectedRevision !== $currentRevision) {
+            throw new TvConflictException('Контент уже изменён в другой вкладке. Обновите историю и повторите восстановление.');
+        }
+
+        $snapshot = tv_read_history_snapshot($historyId);
+        $normalizedCurrent = tv_normalize_content($current);
+        $normalized = tv_normalize_content($snapshot);
+        if ($normalizedCurrent === $normalized) {
+            throw new TvValidationException('Эта версия уже совпадает с текущим содержимым сайта.');
+        }
+
+        $normalized['revision'] = $currentRevision + 1;
+        $normalized['updatedAt'] = gmdate('c');
+        tv_write_history_snapshot($current);
         tv_atomic_write(
             TV_CONTENT_FILE,
             json_encode($normalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n"

@@ -60,7 +60,7 @@ $authenticated = tv_is_authenticated();
   <meta name="csrf-token" content="<?= tv_h(tv_csrf_token()) ?>">
   <title><?= $authenticated ? 'Управление сайтом' : 'Вход' ?> · Твоё Время</title>
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon-mark.svg?v=2">
-  <link rel="stylesheet" href="assets/admin.css?v=3">
+  <link rel="stylesheet" href="assets/admin.css?v=4">
 </head>
 <body class="<?= $authenticated ? 'admin-app-page' : 'login-page' ?>">
 <?php if (!$authenticated): ?>
@@ -91,7 +91,7 @@ $authenticated = tv_is_authenticated();
       <a class="back-link" href="../">← Вернуться на сайт</a>
     </section>
   </main>
-  <script src="assets/admin.js?v=3"></script>
+  <script src="assets/admin.js?v=4"></script>
 <?php else: ?>
   <div class="app-shell" id="adminApp">
     <header class="topbar">
@@ -102,7 +102,7 @@ $authenticated = tv_is_authenticated();
       </a>
       <div class="topbar-actions">
         <span class="save-indicator" id="saveIndicator" data-state="saved">Все изменения сохранены</span>
-        <a class="button button-ghost" href="../" target="_blank" rel="noopener">Открыть сайт ↗</a>
+        <a class="button button-ghost" href="../" target="_blank" rel="noopener">Проверить сайт ↗</a>
         <form method="post" id="logoutForm">
           <input type="hidden" name="action" value="logout">
           <input type="hidden" name="csrf" value="<?= tv_h(tv_csrf_token()) ?>">
@@ -117,9 +117,11 @@ $authenticated = tv_is_authenticated();
         <button class="nav-item" type="button" data-section-target="projects"><span>02</span>Проекты</button>
         <button class="nav-item" type="button" data-section-target="media"><span>03</span>Фотографии сайта</button>
         <button class="nav-item" type="button" data-section-target="contacts"><span>04</span>Контакты и соцсети</button>
-        <button class="nav-item" type="button" data-section-target="security"><span>05</span>Безопасность</button>
+        <button class="nav-item" type="button" data-section-target="history"><span>05</span>История и откат</button>
+        <button class="nav-item" type="button" data-section-target="security"><span>06</span>Безопасность</button>
+        <button class="nav-item" type="button" data-section-target="help"><span>07</span>Как пользоваться</button>
       </nav>
-      <div class="sidebar-note">Изменения становятся видны на сайте сразу после публикации.</div>
+      <div class="sidebar-note"><strong>Важно:</strong> ввод и загрузка ещё ничего не меняют на сайте. Посетители увидят правки только после кнопки «Опубликовать».</div>
     </aside>
 
     <main class="admin-main" aria-live="polite">
@@ -140,12 +142,27 @@ $authenticated = tv_is_authenticated();
           <article class="metric-card"><span>Версия контента</span><strong id="metricRevision">—</strong><small id="metricUpdated">—</small></article>
         </div>
         <div class="panel two-column-panel">
-          <div><h2>Быстрый старт</h2><p>Добавляйте проекты как черновики, загружайте фотографии, проверяйте карточку и только потом включайте видимость.</p></div>
+          <div><h2>Быстрый старт</h2><p>Добавляйте проекты скрытыми, заполняйте карточку, загружайте фотографии и только после проверки включайте показ на сайте.</p></div>
           <div class="quick-actions">
             <button class="button button-secondary new-project" type="button">+ Новый проект</button>
             <button class="button button-secondary" type="button" data-go-section="media">Заменить фотографию</button>
             <button class="button button-secondary" type="button" data-go-section="contacts">Обновить контакты</button>
           </div>
+        </div>
+        <div class="dashboard-support-grid">
+          <article class="panel readiness-panel">
+            <div class="panel-title-row"><div><div class="eyebrow">Перед публикацией</div><h2>Проверка заполнения</h2></div><span class="readiness-score" id="readinessScore">—</span></div>
+            <div class="readiness-list" id="readinessChecklist"></div>
+          </article>
+          <article class="panel recovery-panel">
+            <div class="eyebrow">Если что-то пошло не так</div>
+            <h2>Вернуть прошлую версию</h2>
+            <p>Каждая публикация создаёт страховочную копию. Текущая версия также сохранится перед откатом, поэтому восстановление можно отменить.</p>
+            <div class="recovery-actions">
+              <button class="button button-secondary" type="button" data-go-section="history">Открыть историю</button>
+              <button class="button button-ghost download-backup" type="button">Скачать копию контента</button>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -153,6 +170,12 @@ $authenticated = tv_is_authenticated();
         <div class="section-heading">
           <div><div class="eyebrow">Карточки и галереи</div><h1>Проекты</h1><p>Перетаскивайте карточки или используйте стрелки. Скрытый проект остаётся в панели, но исчезает с сайта.</p></div>
           <div class="heading-actions"><button class="button button-secondary new-project" type="button">+ Новый проект</button><button class="button button-primary save-all" type="button">Опубликовать</button></div>
+        </div>
+        <div class="projects-toolbar panel" role="search">
+          <label class="project-search">Найти проект<input id="projectSearch" type="search" placeholder="Название или категория" autocomplete="off"></label>
+          <label>Показать<select id="projectFilter"><option value="all">Все проекты</option><option value="visible">Только на сайте</option><option value="hidden">Только скрытые</option><option value="attention">Нужно проверить</option></select></label>
+          <div class="projects-found" id="projectsFound" aria-live="polite"></div>
+          <p class="toolbar-note" id="projectFilterNote" hidden>При поиске или фильтре порядок менять нельзя. Очистите фильтр, чтобы снова использовать стрелки и перетаскивание.</p>
         </div>
         <div class="projects-list" id="projectsList"></div>
       </section>
@@ -185,6 +208,20 @@ $authenticated = tv_is_authenticated();
         </form>
       </section>
 
+      <section class="admin-section" id="section-history" data-section="history" hidden>
+        <div class="section-heading">
+          <div><div class="eyebrow">Страховочные копии</div><h1>История и откат</h1><p>Здесь находятся предыдущие опубликованные состояния сайта. Перед восстановлением панель покажет, что именно изменится.</p></div>
+          <div class="heading-actions"><button class="button button-secondary download-backup" type="button">Скачать текущую копию</button><button class="button button-ghost" id="refreshHistory" type="button">Обновить список</button></div>
+        </div>
+        <div class="history-explainer panel">
+          <div class="history-step"><span>1</span><div><strong>Выберите время</strong><small>Ориентируйтесь на дату и номер версии.</small></div></div>
+          <div class="history-step"><span>2</span><div><strong>Прочитайте отличия</strong><small>Панель перечислит проекты, фотографии и контакты, которые поменяются.</small></div></div>
+          <div class="history-step"><span>3</span><div><strong>Подтвердите откат</strong><small>Версия сразу появится на сайте, а нынешняя останется в истории.</small></div></div>
+        </div>
+        <div class="history-status" id="historyStatus" role="status">Загружаю историю…</div>
+        <div class="history-list" id="historyList"></div>
+      </section>
+
       <section class="admin-section" id="section-security" data-section="security" hidden>
         <div class="section-heading"><div><div class="eyebrow">Доступ владельца</div><h1>Безопасность</h1><p>Используйте уникальную длинную парольную фразу. После смены пароля другие открытые сессии завершатся.</p></div></div>
         <form class="panel security-form" id="passwordForm">
@@ -194,11 +231,26 @@ $authenticated = tv_is_authenticated();
           <button class="button button-primary" type="submit">Изменить пароль</button>
         </form>
       </section>
+
+      <section class="admin-section" id="section-help" data-section="help" hidden>
+        <div class="section-heading"><div><div class="eyebrow">Короткая памятка</div><h1>Как пользоваться панелью</h1><p>Панель меняет только содержимое сайта: карточки, фотографии и контакты. Дизайн и расположение разделов она не перестраивает.</p></div></div>
+        <div class="help-steps">
+          <article class="panel help-card"><span class="help-number">01</span><h2>Сделайте правку</h2><p>Откройте нужный раздел. Текст можно печатать сразу; фотография сначала загружается во временно подготовленный файл.</p></article>
+          <article class="panel help-card"><span class="help-number">02</span><h2>Проверьте подсказки</h2><p>Надпись «Есть неопубликованные изменения» означает, что посетители пока видят старый вариант. Ошибочные поля панель не даст опубликовать.</p></article>
+          <article class="panel help-card"><span class="help-number">03</span><h2>Опубликуйте</h2><p>Нажмите золотую кнопку «Опубликовать». Только после успешного сообщения изменения становятся видны на сайте.</p></article>
+          <article class="panel help-card"><span class="help-number">04</span><h2>Посмотрите глазами посетителя</h2><p>Нажмите «Проверить сайт» вверху и обновите открытую страницу. Для нового проекта проверьте карточку и все фотографии галереи.</p></article>
+          <article class="panel help-card"><span class="help-number">05</span><h2>Исправьте ошибку</h2><p>До публикации нажмите «Отменить правки». После публикации откройте «История и откат» и верните подходящую версию.</p></article>
+        </div>
+        <div class="panel glossary-panel">
+          <h2>Что означают надписи</h2>
+          <dl><div><dt>Скрыт</dt><dd>Проект сохранён в панели, но посетители его не видят.</dd></div><div><dt>Неопубликованные изменения</dt><dd>Правки есть только в этой вкладке браузера и ещё не попали на сайт.</dd></div><div><dt>Версия</dt><dd>Номер успешной публикации. Чем он больше, тем состояние новее.</dd></div><div><dt>Описание фото</dt><dd>Короткое описание того, что изображено; оно помогает поиску и людям, использующим экранное чтение.</dd></div></dl>
+        </div>
+      </section>
     </main>
 
     <div class="publish-bar" id="publishBar" hidden>
-      <span>Есть неопубликованные изменения</span>
-      <button class="button button-primary save-all" type="button">Опубликовать</button>
+      <div class="publish-copy"><strong>Есть неопубликованные изменения</strong><small id="publishSummary">Проверьте и опубликуйте их.</small></div>
+      <div class="publish-actions"><button class="button button-ghost" id="discardChanges" type="button">Отменить правки</button><button class="button button-primary save-all" type="button">Опубликовать</button></div>
     </div>
   </div>
 
@@ -211,7 +263,7 @@ $authenticated = tv_is_authenticated();
       <div class="dialog-body">
         <input type="hidden" name="originalId">
         <div class="form-grid two-columns">
-          <label>ID / адрес карточки<input name="id" pattern="[a-z0-9][a-z0-9-]{0,63}" maxlength="64" required><small>Латиница, цифры и дефис. После публикации лучше не менять.</small></label>
+          <label>ID / адрес карточки<input name="id" pattern="[a-z0-9][a-z0-9\-]{0,63}" maxlength="64" required><small>Латиница, цифры и дефис. После публикации лучше не менять.</small></label>
           <label class="switch-label"><input name="visible" type="checkbox"><span>Показывать проект на сайте</span></label>
           <label>Основная часть названия<input name="title" maxlength="180" required></label>
           <label>Часть названия курсивом<input name="accent" maxlength="120"></label>
@@ -238,8 +290,27 @@ $authenticated = tv_is_authenticated();
     </form>
   </dialog>
 
+  <dialog class="restore-dialog" id="restoreDialog" aria-labelledby="restoreDialogTitle">
+    <div class="restore-dialog-shell">
+      <header class="dialog-header">
+        <div><div class="eyebrow">Проверка перед откатом</div><h2 id="restoreDialogTitle">Вернуть выбранную версию?</h2></div>
+        <button class="icon-button restore-close" type="button" aria-label="Закрыть">×</button>
+      </header>
+      <div class="dialog-body restore-dialog-body">
+        <div class="restore-version-meta" id="restoreVersionMeta"></div>
+        <h3>После восстановления</h3>
+        <ul class="restore-change-list" id="restoreChangeList"></ul>
+        <div class="safety-note"><strong>Это обратимо.</strong> Нынешнее состояние автоматически сохранится как ещё одна версия истории. Восстановление публикуется на сайте сразу.</div>
+      </div>
+      <footer class="dialog-footer">
+        <button class="button button-ghost restore-close" type="button">Ничего не менять</button>
+        <button class="button button-primary" id="confirmRestore" type="button">Восстановить и опубликовать</button>
+      </footer>
+    </div>
+  </dialog>
+
   <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
-  <script src="assets/admin.js?v=3"></script>
+  <script src="assets/admin.js?v=4"></script>
 <?php endif; ?>
 </body>
 </html>

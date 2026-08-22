@@ -20,14 +20,22 @@
 
   var state = {
     content: null,
+    baselineContent: null,
     capabilities: null,
+    history: [],
+    historyLoaded: false,
+    historyLoading: false,
+    historyError: "",
+    selectedHistory: null,
     csrf: (document.querySelector('meta[name="csrf-token"]') || {}).content || "",
     dirty: false,
     saving: false,
     currentDraft: null,
     currentDraftIndex: -1,
     draggedProjectId: "",
-    changeVersion: 0
+    changeVersion: 0,
+    projectQuery: "",
+    projectFilter: "all"
   };
 
   var groupTitles = {
@@ -55,7 +63,22 @@
     projectDialogTitle: document.getElementById("projectDialogTitle"),
     projectPhotos: document.getElementById("projectPhotosEditor"),
     projectPhotoUpload: document.getElementById("projectPhotoUpload"),
-    projectUploadProgress: document.getElementById("projectUploadProgress")
+    projectUploadProgress: document.getElementById("projectUploadProgress"),
+    projectSearch: document.getElementById("projectSearch"),
+    projectFilter: document.getElementById("projectFilter"),
+    projectsFound: document.getElementById("projectsFound"),
+    projectFilterNote: document.getElementById("projectFilterNote"),
+    readinessScore: document.getElementById("readinessScore"),
+    readinessChecklist: document.getElementById("readinessChecklist"),
+    publishSummary: document.getElementById("publishSummary"),
+    discardChanges: document.getElementById("discardChanges"),
+    historyList: document.getElementById("historyList"),
+    historyStatus: document.getElementById("historyStatus"),
+    refreshHistory: document.getElementById("refreshHistory"),
+    restoreDialog: document.getElementById("restoreDialog"),
+    restoreVersionMeta: document.getElementById("restoreVersionMeta"),
+    restoreChangeList: document.getElementById("restoreChangeList"),
+    confirmRestore: document.getElementById("confirmRestore")
   };
 
   function createElement(tag, className, text) {
@@ -101,6 +124,82 @@
     return (value / (1024 * 1024)).toFixed(1).replace(".", ",") + " МБ";
   }
 
+  function sameData(left, right) {
+    return JSON.stringify(left === undefined ? null : left) === JSON.stringify(right === undefined ? null : right);
+  }
+
+  function changedSectionLabels() {
+    if (!state.content || !state.baselineContent) return [];
+    var labels = [];
+    if (!sameData(state.content.projects, state.baselineContent.projects)) labels.push("проекты");
+    if (!sameData(state.content.site.media, state.baselineContent.site.media)) labels.push("фотографии сайта");
+    if (!sameData(state.content.site.contacts, state.baselineContent.site.contacts)) labels.push("контакты и соцсети");
+    return labels;
+  }
+
+  function updatePublishSummary() {
+    if (!dom.publishSummary) return;
+    var labels = changedSectionLabels();
+    dom.publishSummary.textContent = labels.length
+      ? "Изменены: " + labels.join(", ") + "."
+      : "Проверьте и опубликуйте правки.";
+  }
+
+  function projectNeedsAttention(project) {
+    var photos = Array.isArray(project.photos) ? project.photos : [];
+    if (!photos.length) return true;
+    if (!String(project.coverAlt || "").trim()) return true;
+    return photos.some(function (photo) { return !String(photo.alt || "").trim(); });
+  }
+
+  function renderReadiness() {
+    if (!dom.readinessChecklist || !state.content) return;
+    dom.readinessChecklist.replaceChildren();
+    var projects = state.content.projects || [];
+    var visibleWithoutPhotos = projects.filter(function (project) {
+      return project.visible && (!Array.isArray(project.photos) || !project.photos.length);
+    }).length;
+    var missingProjectAlt = projects.reduce(function (total, project) {
+      var photoMissing = (project.photos || []).filter(function (photo) { return !String(photo.alt || "").trim(); }).length;
+      return total + photoMissing + (!String(project.coverAlt || "").trim() && project.cover ? 1 : 0);
+    }, 0);
+    var missingMediaAlt = Object.keys(state.content.site.media || {}).reduce(function (total, group) {
+      return total + (state.content.site.media[group] || []).filter(function (item) { return !String(item.alt || "").trim(); }).length;
+    }, 0);
+    var contactsValid = dom.contacts ? dom.contacts.checkValidity() : true;
+    var checks = [
+      {
+        ok: visibleWithoutPhotos === 0,
+        label: visibleWithoutPhotos ? "У видимых проектов нет фотографий: " + visibleWithoutPhotos : "У всех видимых проектов есть фотографии",
+        note: visibleWithoutPhotos ? "Такие проекты нельзя публиковать — добавьте хотя бы один снимок." : "Карточки не останутся без обложки."
+      },
+      {
+        ok: missingProjectAlt + missingMediaAlt === 0,
+        label: missingProjectAlt + missingMediaAlt ? "Не заполнены описания фотографий: " + (missingProjectAlt + missingMediaAlt) : "Описания фотографий заполнены",
+        note: missingProjectAlt + missingMediaAlt ? "Сайт будет работать, но описания полезны для доступности и поиска." : "Фотографии понятны поиску и экранному чтению.",
+        optional: true
+      },
+      {
+        ok: contactsValid,
+        label: contactsValid ? "Контакты имеют правильный формат" : "В контактах есть незаполненное или неверное поле",
+        note: contactsValid ? "Телефон и ссылки прошли проверку браузера." : "Откройте раздел контактов и исправьте подсвеченные поля."
+      }
+    ];
+    checks.forEach(function (check) {
+      var row = createElement("div", "readiness-item " + (check.ok ? "is-ready" : (check.optional ? "is-advice" : "is-warning")));
+      row.appendChild(createElement("span", "readiness-mark", check.ok ? "✓" : (check.optional ? "i" : "!")));
+      var copy = createElement("div");
+      copy.appendChild(createElement("strong", "", check.label));
+      copy.appendChild(createElement("small", "", check.note));
+      row.appendChild(copy);
+      dom.readinessChecklist.appendChild(row);
+    });
+    var blocking = checks.filter(function (check) { return !check.ok && !check.optional; }).length;
+    var advice = checks.filter(function (check) { return !check.ok && check.optional; }).length;
+    dom.readinessScore.textContent = blocking ? "Исправить" : (advice ? "Можно улучшить" : "Готово");
+    dom.readinessScore.dataset.state = blocking ? "warning" : (advice ? "advice" : "ready");
+  }
+
   function toast(message, kind) {
     if (!dom.toastRegion) return;
     var item = createElement("div", "toast " + (kind || ""), message);
@@ -140,8 +239,8 @@
     return data;
   }
 
-  async function apiGet() {
-    var response = await fetch("api.php?action=content", {
+  async function apiGet(action) {
+    var response = await fetch("api.php?action=" + encodeURIComponent(action || "content"), {
       credentials: "same-origin",
       cache: "no-store",
       headers: { Accept: "application/json" }
@@ -178,18 +277,33 @@
     dom.saveIndicator.textContent = text;
   }
 
+  function updateSaveButtons() {
+    document.querySelectorAll(".save-all").forEach(function (button) {
+      button.disabled = state.saving || !state.dirty;
+    });
+  }
+
   function markDirty() {
     if (!state.content) return;
     state.changeVersion += 1;
     state.dirty = true;
     if (dom.publishBar) dom.publishBar.hidden = false;
     setSaveState("dirty", "Есть неопубликованные изменения");
+    updateSaveButtons();
+    updatePublishSummary();
+    renderReadiness();
+    if (state.historyLoaded) renderHistory();
   }
 
-  function markSaved() {
+  function markSaved(serverContent) {
+    state.baselineContent = clone(serverContent || state.content);
     state.dirty = false;
     if (dom.publishBar) dom.publishBar.hidden = true;
     setSaveState("saved", "Все изменения сохранены");
+    updateSaveButtons();
+    updatePublishSummary();
+    renderReadiness();
+    if (state.historyLoaded) renderHistory();
   }
 
   function updateOrders() {
@@ -227,14 +341,39 @@
     updateOrders();
 
     if (!state.content.projects.length) {
+      if (dom.projectsFound) dom.projectsFound.textContent = "0 проектов";
       dom.projects.appendChild(createElement("div", "empty-state", "Проектов пока нет. Нажмите «Новый проект», чтобы создать первый."));
       return;
     }
 
-    state.content.projects.forEach(function (project, index) {
+    var query = state.projectQuery.trim().toLocaleLowerCase("ru-RU");
+    var filter = state.projectFilter || "all";
+    var filterActive = Boolean(query) || filter !== "all";
+    var matching = state.content.projects.map(function (project, index) {
+      return { project: project, index: index };
+    }).filter(function (entry) {
+      var project = entry.project;
+      var haystack = [project.title, project.accent, project.type, project.modalType, project.cardLead, project.id].join(" ").toLocaleLowerCase("ru-RU");
+      if (query && haystack.indexOf(query) < 0) return false;
+      if (filter === "visible" && !project.visible) return false;
+      if (filter === "hidden" && project.visible) return false;
+      if (filter === "attention" && !projectNeedsAttention(project)) return false;
+      return true;
+    });
+
+    if (dom.projectsFound) dom.projectsFound.textContent = "Найдено: " + matching.length + " из " + state.content.projects.length;
+    if (dom.projectFilterNote) dom.projectFilterNote.hidden = !filterActive;
+    if (!matching.length) {
+      dom.projects.appendChild(createElement("div", "empty-state", "По этому запросу проектов не найдено. Очистите поиск или выберите другой фильтр."));
+      return;
+    }
+
+    matching.forEach(function (entry) {
+      var project = entry.project;
+      var index = entry.index;
       var card = createElement("article", "project-admin-card" + (project.visible ? "" : " is-hidden"));
       card.dataset.projectId = project.id;
-      card.draggable = true;
+      card.draggable = !filterActive;
 
       var handle = createElement("div", "drag-handle", "⠿");
       handle.title = "Перетащить";
@@ -251,13 +390,14 @@
       copy.appendChild(createElement("h3", "", projectDisplayTitle(project) || "Без названия"));
       copy.appendChild(createElement("p", "", project.type + " · " + (project.photos || []).length + " фото · позиция " + (index + 1)));
       copy.appendChild(createElement("span", "status-badge" + (project.visible ? "" : " hidden"), project.visible ? "На сайте" : "Скрыт"));
+      if (projectNeedsAttention(project)) copy.appendChild(createElement("span", "status-badge attention", "Проверить фото"));
       card.appendChild(copy);
 
       var actions = createElement("div", "project-card-actions");
       var up = createButton("↑", "mini-button", "project-up", "Поднять проект выше");
-      up.disabled = index === 0;
+      up.disabled = filterActive || index === 0;
       var down = createButton("↓", "mini-button", "project-down", "Опустить проект ниже");
-      down.disabled = index === state.content.projects.length - 1;
+      down.disabled = filterActive || index === state.content.projects.length - 1;
       var visibility = createButton(project.visible ? "Скрыть" : "Показать", "button button-ghost", "project-visibility");
       var edit = createButton("Изменить", "button button-secondary", "project-edit");
       var duplicate = createButton("Копия", "button button-ghost", "project-duplicate", "Создать скрытую копию");
@@ -569,7 +709,7 @@
       var id = document.createElement("input");
       id.value = social.id || "";
       id.maxLength = 64;
-      id.pattern = "[a-z0-9][a-z0-9-]{0,63}";
+      id.pattern = "[a-z0-9][a-z0-9\\-]{0,63}";
       id.required = true;
       id.dataset.socialField = "id";
       idField.appendChild(id);
@@ -606,6 +746,187 @@
     });
   }
 
+  function formatHistoryDate(value) {
+    if (!value) return "Время неизвестно";
+    var date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return date.toLocaleString("ru-RU", {
+      weekday: "short",
+      day: "2-digit",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  function historyStatsText(entry) {
+    var stats = entry.stats || {};
+    return (stats.projects || 0) + " проектов · " + (stats.projectPhotos || 0) + " фото в проектах · " + (stats.sitePhotos || 0) + " фото сайта";
+  }
+
+  function renderHistory() {
+    if (!dom.historyList || !dom.historyStatus) return;
+    dom.historyList.replaceChildren();
+    var hours = Number((state.capabilities || {}).historyHours) || 72;
+    var minimum = Number((state.capabilities || {}).historyMinimumVersions) || 100;
+    if (state.historyError) {
+      dom.historyStatus.textContent = "Не удалось загрузить историю: " + state.historyError;
+      return;
+    }
+    if (!state.historyLoaded) {
+      dom.historyStatus.textContent = state.historyLoading ? "Загружаю историю…" : "История ещё не загружена.";
+      return;
+    }
+    if (!state.history.length) {
+      dom.historyStatus.textContent = "История пока пуста. Первая страховочная копия появится после следующей публикации.";
+      dom.historyList.appendChild(createElement("div", "empty-state", "Здесь появятся предыдущие версии сайта."));
+      return;
+    }
+    dom.historyStatus.textContent = "Доступно версий: " + state.history.length + ". Панель сохраняет версии минимум за " + hours + " часа и не менее " + minimum + " последних публикаций.";
+
+    state.history.forEach(function (entry, index) {
+      var card = createElement("article", "history-card" + (index === 0 ? " is-latest" : ""));
+      var header = createElement("div", "history-card-header");
+      var title = createElement("div");
+      title.appendChild(createElement("strong", "history-date", formatHistoryDate(entry.capturedAt)));
+      title.appendChild(createElement("span", "history-revision", "Версия № " + String(entry.revision || 0)));
+      header.appendChild(title);
+      var badges = createElement("div", "history-badges");
+      if (index === 0) badges.appendChild(createElement("span", "history-badge", "До последней публикации"));
+      if (entry.withinRecoveryWindow) badges.appendChild(createElement("span", "history-badge safe", "В пределах " + hours + " часов"));
+      header.appendChild(badges);
+      card.appendChild(header);
+      card.appendChild(createElement("p", "history-stats", historyStatsText(entry)));
+
+      var details = createElement("ul", "history-change-list");
+      ((entry.changes || {}).details || ["Сведения об отличиях недоступны."]).forEach(function (detail) {
+        details.appendChild(createElement("li", "", detail));
+      });
+      card.appendChild(details);
+
+      var footer = createElement("div", "history-card-footer");
+      var hint = state.dirty
+        ? "Сначала опубликуйте или отмените текущие правки."
+        : ((entry.changes || {}).hasChanges ? "Текущая версия сохранится автоматически." : "Эта версия совпадает с текущей.");
+      footer.appendChild(createElement("small", "", hint));
+      var restore = createButton("Посмотреть и восстановить", "button button-secondary", "history-restore");
+      restore.dataset.historyId = entry.id;
+      restore.disabled = state.dirty || !(entry.changes || {}).hasChanges;
+      footer.appendChild(restore);
+      card.appendChild(footer);
+      dom.historyList.appendChild(card);
+    });
+  }
+
+  async function loadHistory(force) {
+    if (state.historyLoading || (state.historyLoaded && !force)) return;
+    state.historyLoading = true;
+    state.historyError = "";
+    renderHistory();
+    if (dom.refreshHistory) dom.refreshHistory.disabled = true;
+    try {
+      var result = await apiGet("history");
+      state.history = Array.isArray(result.history) ? result.history : [];
+      state.historyLoaded = true;
+      if (result.policy) {
+        state.capabilities.historyHours = Number(result.policy.recoveryHours) || state.capabilities.historyHours;
+        state.capabilities.historyMinimumVersions = Number(result.policy.minimumVersions) || state.capabilities.historyMinimumVersions;
+      }
+    } catch (error) {
+      state.historyError = error.message;
+      toast(error.message, "error");
+    } finally {
+      state.historyLoading = false;
+      if (dom.refreshHistory) dom.refreshHistory.disabled = false;
+      renderHistory();
+    }
+  }
+
+  function closeRestoreDialog() {
+    state.selectedHistory = null;
+    if (!dom.restoreDialog) return;
+    if (typeof dom.restoreDialog.close === "function" && dom.restoreDialog.open) dom.restoreDialog.close();
+    else dom.restoreDialog.removeAttribute("open");
+  }
+
+  function openRestoreDialog(historyId) {
+    if (state.dirty) {
+      toast("Сначала опубликуйте текущие правки или нажмите «Отменить правки».", "error");
+      return;
+    }
+    var entry = state.history.find(function (item) { return item.id === historyId; });
+    if (!entry || !(entry.changes || {}).hasChanges) return;
+    state.selectedHistory = entry;
+    dom.restoreVersionMeta.textContent = formatHistoryDate(entry.capturedAt) + " · версия № " + String(entry.revision || 0) + " · " + historyStatsText(entry);
+    dom.restoreChangeList.replaceChildren();
+    (entry.changes.details || []).forEach(function (detail) {
+      dom.restoreChangeList.appendChild(createElement("li", "", detail));
+    });
+    if (typeof dom.restoreDialog.showModal === "function") dom.restoreDialog.showModal();
+    else dom.restoreDialog.setAttribute("open", "");
+    dom.confirmRestore.focus();
+  }
+
+  async function restoreSelectedHistory() {
+    if (!state.selectedHistory || state.saving || !state.content) return;
+    var entry = state.selectedHistory;
+    state.saving = true;
+    dom.confirmRestore.disabled = true;
+    setSaveState("saving", "Восстанавливаю версию…");
+    try {
+      var result = await apiPost("restore", {
+        historyId: entry.id,
+        revision: Number(state.content.revision || 0)
+      }, false);
+      state.content = result.content;
+      state.history = Array.isArray(result.history) ? result.history : [];
+      state.historyLoaded = true;
+      state.changeVersion += 1;
+      markSaved(result.content);
+      renderAll();
+      renderHistory();
+      closeRestoreDialog();
+      toast(result.message || "Версия восстановлена.", "success");
+    } catch (error) {
+      setSaveState("error", "Не удалось восстановить версию");
+      toast(error.message, "error");
+    } finally {
+      state.saving = false;
+      dom.confirmRestore.disabled = false;
+    }
+  }
+
+  function downloadContentBackup() {
+    var content = state.baselineContent || state.content;
+    if (!content) return;
+    var blob = new Blob([JSON.stringify(content, null, 2) + "\n"], { type: "application/json;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    var date = new Date().toISOString().slice(0, 10);
+    link.href = url;
+    link.download = "tv-content-r" + String(content.revision || 0).padStart(6, "0") + "-" + date + ".json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast("Копия опубликованного контента скачана.", "success");
+  }
+
+  function discardUnpublishedChanges() {
+    if (!state.dirty || !state.baselineContent) return;
+    if (!window.confirm("Отменить все неопубликованные правки в этой вкладке? Опубликованный сайт не изменится.")) return;
+    if (dom.projectDialog && dom.projectDialog.open) dom.projectDialog.close("discarded");
+    state.content = clone(state.baselineContent);
+    state.currentDraft = null;
+    state.currentDraftIndex = -1;
+    state.changeVersion += 1;
+    renderAll();
+    markSaved(state.baselineContent);
+    renderHistory();
+    toast("Неопубликованные правки отменены. Сайт не менялся.", "success");
+  }
+
   function switchSection(name, updateHash) {
     var target = document.querySelector('[data-section="' + name + '"]');
     if (!target) name = "dashboard";
@@ -621,6 +942,7 @@
     if (dom.sidebar) dom.sidebar.classList.remove("open");
     if (dom.sidebarToggle) dom.sidebarToggle.setAttribute("aria-expanded", "false");
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (name === "history") loadHistory(false);
   }
 
   async function publishChanges() {
@@ -634,22 +956,26 @@
     var versionAtSave = state.changeVersion;
     var contentToSave = clone(state.content);
     setSaveState("saving", "Публикую изменения…");
-    document.querySelectorAll(".save-all").forEach(function (button) { button.disabled = true; });
+    updateSaveButtons();
     try {
       var revision = Number(contentToSave.revision || 0);
       var result = await apiPost("save", { revision: revision, content: contentToSave }, false);
       if (state.changeVersion === versionAtSave) {
         state.content = result.content;
-        markSaved();
+        markSaved(result.content);
       } else {
         state.content.revision = result.content.revision;
         state.content.updatedAt = result.content.updatedAt;
+        state.baselineContent = clone(result.content);
         state.dirty = true;
         if (dom.publishBar) dom.publishBar.hidden = false;
         setSaveState("dirty", "Есть новые неопубликованные изменения");
+        updatePublishSummary();
+        renderReadiness();
       }
       updateMetrics();
       renderProjects();
+      loadHistory(true);
       toast(state.dirty ? "Предыдущие изменения опубликованы; новые ещё ждут публикации." : (result.message || "Изменения опубликованы."), "success");
     } catch (error) {
       setSaveState("error", "Не удалось опубликовать");
@@ -660,7 +986,7 @@
       }
     } finally {
       state.saving = false;
-      document.querySelectorAll(".save-all").forEach(function (button) { button.disabled = false; });
+      updateSaveButtons();
     }
   }
 
@@ -669,6 +995,7 @@
     renderProjects();
     renderMedia();
     populateContacts();
+    renderReadiness();
   }
 
   document.addEventListener("click", function (event) {
@@ -694,6 +1021,22 @@
     }
     if (target.matches(".save-all")) {
       publishChanges();
+      return;
+    }
+    if (target.matches(".download-backup")) {
+      downloadContentBackup();
+      return;
+    }
+    if (target.id === "refreshHistory") {
+      loadHistory(true);
+      return;
+    }
+    if (target.dataset.action === "history-restore") {
+      openRestoreDialog(target.dataset.historyId || "");
+      return;
+    }
+    if (target.matches(".restore-close")) {
+      closeRestoreDialog();
       return;
     }
 
@@ -765,19 +1108,51 @@
     if (socialRow && target.dataset.action) {
       var socialIndex = Number(socialRow.dataset.socialIndex);
       var socials = state.content.site.contacts.socials;
+      var socialChanged = false;
       if (target.dataset.action === "social-up" && socialIndex > 0) {
         var previous = socials.splice(socialIndex, 1)[0];
         socials.splice(socialIndex - 1, 0, previous);
+        socialChanged = true;
       }
       if (target.dataset.action === "social-down" && socialIndex < socials.length - 1) {
         var next = socials.splice(socialIndex, 1)[0];
         socials.splice(socialIndex + 1, 0, next);
+        socialChanged = true;
       }
-      if (target.dataset.action === "social-delete" && window.confirm("Удалить эту ссылку из списка?")) socials.splice(socialIndex, 1);
+      if (target.dataset.action === "social-delete") {
+        if (!window.confirm("Удалить эту ссылку из списка?")) return;
+        socials.splice(socialIndex, 1);
+        socialChanged = true;
+      }
+      if (!socialChanged) return;
       renderSocials();
       markDirty();
     }
   });
+
+  if (dom.projectSearch) {
+    dom.projectSearch.addEventListener("input", function () {
+      state.projectQuery = dom.projectSearch.value || "";
+      renderProjects();
+    });
+  }
+
+  if (dom.projectFilter) {
+    dom.projectFilter.addEventListener("change", function () {
+      state.projectFilter = dom.projectFilter.value || "all";
+      renderProjects();
+    });
+  }
+
+  if (dom.discardChanges) dom.discardChanges.addEventListener("click", discardUnpublishedChanges);
+  if (dom.confirmRestore) dom.confirmRestore.addEventListener("click", restoreSelectedHistory);
+
+  if (dom.restoreDialog) {
+    dom.restoreDialog.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      closeRestoreDialog();
+    });
+  }
 
   dom.projects.addEventListener("dragstart", function (event) {
     var card = event.target.closest(".project-admin-card");

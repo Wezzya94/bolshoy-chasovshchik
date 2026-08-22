@@ -12,19 +12,31 @@ $method = strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'));
 try {
     if ($method === 'GET') {
         tv_require_auth();
-        if ($action !== 'content') {
-            tv_json_response(['ok' => false, 'error' => 'Неизвестное действие.'], 404);
+        if ($action === 'content') {
+            tv_json_response([
+                'ok' => true,
+                'csrf' => tv_csrf_token(),
+                'content' => tv_read_content(),
+                'capabilities' => [
+                    'gd' => extension_loaded('gd') && function_exists('imagewebp'),
+                    'maxUploadBytes' => TV_MAX_UPLOAD_BYTES,
+                    'phpVersion' => PHP_VERSION,
+                    'historyHours' => TV_HISTORY_RECOVERY_HOURS,
+                    'historyMinimumVersions' => TV_HISTORY_MIN_KEEP,
+                ],
+            ]);
         }
-        tv_json_response([
-            'ok' => true,
-            'csrf' => tv_csrf_token(),
-            'content' => tv_read_content(),
-            'capabilities' => [
-                'gd' => extension_loaded('gd') && function_exists('imagewebp'),
-                'maxUploadBytes' => TV_MAX_UPLOAD_BYTES,
-                'phpVersion' => PHP_VERSION,
-            ],
-        ]);
+        if ($action === 'history') {
+            tv_json_response([
+                'ok' => true,
+                'history' => tv_list_history(),
+                'policy' => [
+                    'recoveryHours' => TV_HISTORY_RECOVERY_HOURS,
+                    'minimumVersions' => TV_HISTORY_MIN_KEEP,
+                ],
+            ]);
+        }
+        tv_json_response(['ok' => false, 'error' => 'Неизвестное действие.'], 404);
     }
 
     if ($method !== 'POST') {
@@ -52,6 +64,22 @@ try {
         }
         $photo = tv_handle_upload($_FILES['image']);
         tv_json_response(['ok' => true, 'photo' => $photo, 'message' => 'Фотография загружена.']);
+    }
+
+    if ($action === 'restore') {
+        $contentType = strtolower((string) ($_SERVER['CONTENT_TYPE'] ?? ''));
+        if (!str_starts_with($contentType, 'application/json')) {
+            tv_json_response(['ok' => false, 'error' => 'Для восстановления требуется application/json.'], 415);
+        }
+        $request = tv_read_json_body();
+        $historyId = is_string($request['historyId'] ?? null) ? $request['historyId'] : '';
+        $restored = tv_restore_content($historyId, (int) ($request['revision'] ?? -1));
+        tv_json_response([
+            'ok' => true,
+            'content' => $restored,
+            'history' => tv_list_history(),
+            'message' => 'Выбранная версия восстановлена и опубликована. Предыдущее состояние сохранено в истории.',
+        ]);
     }
 
     if ($action === 'change-password') {
