@@ -17,8 +17,13 @@ final class TvConflictException extends RuntimeException {}
 
 function tv_is_https(): bool
 {
-    return (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
+    $directHttps = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
         || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+    if ($directHttps) {
+        return true;
+    }
+
+    return (string) getenv('TV_EXTERNAL_HTTPS') === '1';
 }
 
 function tv_security_headers(): void

@@ -1,0 +1,23 @@
+{
+  "name": "Твоё Время — безопасный тест",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Тест сайта «Твоё Время»",
+      "onAutoForward": "openBrowser",
+      "protocol": "http"
+    }
+  },
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
+  },
+  "postCreateCommand": "bash .devcontainer/setup-preview.sh",
+  "postStartCommand": "bash .devcontainer/start-preview.sh",
+  "postAttachCommand": "bash .devcontainer/show-test-access.sh",
+  "remoteUser": "vscode",
+  "shutdownAction": "stopContainer"
+}
